@@ -1,0 +1,45 @@
+---
+name: North Adriatic
+
+domain:
+  minimum_latitude: 42.75000101154902,
+  maximum_latitude: 45.87500126317812,
+  minimum_longitude: 12.104167294929702,
+  maximum_longitude: 17.937500783409256,
+  resolution: 0.005208333333333333,
+  minimum_depth: 0.0,
+  maximum_depth: 300.0,
+  minimum_h_factor: 0.2
+
+bathymetry:
+  kind: "EMODnet"
+  smoother: True
+  smooth_level: 10
+
+actions:
+  - action: RemovePolygon
+    args:
+      polygonal: "polygonals/venice_lagoon.csv"
+  - action: RemoveSlice
+    args:
+      lat_min: 43
+      lat_max: 44
+      lon_min: 12.3
+      lon_max: 12.4
+  - action: SmoothAroundPoint
+    args:
+      lat: 43
+      lon: 14
+      radious: 0.2
+      coefficient: 0.5
+  - action: DigChannel
+    args:
+      start_point:
+        lat: 44
+        lon: 15
+      end_point:
+        lat: 44
+        lon: 16
+  - action: DigRivers
+    args:
+      river_config_path: "rivers.json"
