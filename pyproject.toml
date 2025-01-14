@@ -10,6 +10,9 @@ packages = [{include = "bathytools", from = "src"}]
 python = "^3.10"
 bitsea = { git = "https://github.com/inogs/bit.sea.git", branch = "master" }
 pyyaml = "^6.0.2"
+numpy = "^2.1.1"
+matplotlib = "^3.10.0"
+
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"
