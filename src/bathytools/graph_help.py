@@ -1,13 +1,15 @@
 import pylab as pl
 
-def imshow(M2d,title:str=""):
-    fig,ax = pl.subplots()
-    im=ax.imshow(M2d,origin='lower')
+
+def imshow(M2d, title: str = ""):
+    fig, ax = pl.subplots()
+    im = ax.imshow(M2d, origin="lower")
     fig.colorbar(im)
     ax.set_title(title)
-    #fig.set_size_inches((40, 30));
+    # fig.set_size_inches((40, 30));
     fig.show()
     return fig, ax
+
 
 def set_same_box(ax_src, ax_dest, fig_dest):
     """
