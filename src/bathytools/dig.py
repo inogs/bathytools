@@ -131,31 +131,30 @@ def sequence_side(nHorCells, i, j, DIGlist):
     return L_out
 
 
-A = np.zeros((50, 50))
+if __name__ == "__main__":
+    A = np.zeros((50, 50))
 
-# DIGlist=["5E","3S","10E","3N","3W","4N"]
-DIGlist = ["30E", "20S", "10W", "5N"]
+    # DIGlist=["5E","3S","10E","3N","3W","4N"]
+    DIGlist = ["30E", "20S", "10W", "5N"]
 
-seedx, seedy = 10, 40
-v = 10
-nHcells = 3
+    seedx, seedy = 10, 40
+    v = 10
+    nHcells = 3
 
+    L = sequence_side(nHcells, seedx, seedy, DIGlist)
 
-L = sequence_side(nHcells, seedx, seedy, DIGlist)
+    # L = main_river_cell_list(seedx, seedy, DIGlist)
+    # L1 = cells_side(L,segno=1)
+    # L2 = cells_side(L,segno=-1)
+    # L3 = cells_side(L1,segno=1)
+    #
+    A = apply_dig(A, L, v / 2)
+    # A = apply_dig(A,L1,v)
+    # A = apply_dig(A,L2,v*2)
+    # A = apply_dig(A,L3,v*3)
 
-# L = main_river_cell_list(seedx, seedy, DIGlist)
-# L1 = cells_side(L,segno=1)
-# L2 = cells_side(L,segno=-1)
-# L3 = cells_side(L1,segno=1)
-#
-A = apply_dig(A, L, v / 2)
-# A = apply_dig(A,L1,v)
-# A = apply_dig(A,L2,v*2)
-# A = apply_dig(A,L3,v*3)
-
-
-pl.close("all")
-fig, ax = pl.subplots()
-ax.imshow(A)
-ax.invert_yaxis()
-fig.show()
+    pl.close("all")
+    fig, ax = pl.subplots()
+    ax.imshow(A)
+    ax.invert_yaxis()
+    fig.show()
