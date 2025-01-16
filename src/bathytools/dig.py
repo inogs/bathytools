@@ -2,13 +2,23 @@ from typing import List
 from typing import Tuple
 
 import numpy as np
-import pylab as pl
 
 
-def main_river_cell_list(i: int, j: int, DIGlist: List) -> List:
-    """Returns a list of tuples(i,j)"""
-    L = [(i, j)]
-    for segment in DIGlist:
+def main_river_cell_list(
+    i_start: int, j_start: int, Segmentlist: List = ["20E", "10N"]
+) -> List:
+    """
+    Draws the path of the river
+    Arguments:
+    i_start,j_start: start point
+    Segmentlist:  list of segments in format "n_cells,direction"
+               example: ["30E", "20S", "10W", "5N"]
+    Returns a list of tuples(i,j) with the ordered positions of the river
+    """
+    L = [(i_start, j_start)]
+    i = i_start
+    j = j_start
+    for segment in Segmentlist:
         length = int(segment[:-1])
         direction = segment[-1]
         for k in range(length):
@@ -24,7 +34,16 @@ def main_river_cell_list(i: int, j: int, DIGlist: List) -> List:
     return L
 
 
-def lateral_point(L, segno) -> Tuple:
+def lateral_point(L, segno: int = 1) -> Tuple:
+    """
+    For a first point of a given segment, finds the nearest lateral point
+    - on the right, if segno=1, on the left otherwise
+    Arguments:
+    L: list of tuples(i,j) of positions
+    segno: 1 or -1
+    Returns: (i,j)
+    """
+    assert segno in [-1, 1]
     i0, j0 = L[0]
     i1, j1 = L[1]
     versor1 = (i1 - i0, j1 - j0, 0)
@@ -34,8 +53,15 @@ def lateral_point(L, segno) -> Tuple:
     return i_side, j_side
 
 
-def insert(i, j, L_orig, L):
-    # print("---",i,j)
+def insert(i: int, j: int, L_orig: List, L: List, verbose=False) -> Tuple:
+    """
+    Inserts a new point (i,j) a list of positions of a new river
+    by taking in account the segment we come up beside, in order to
+    - never overlap it. Returns i = 0, as an exception for the caller.
+    - don't proceed if we are already at the end of original river
+    """
+    if verbose:
+        print("---", i, j)
     if (i, j) in L_orig:
         print("hai sbattuto sull'originale")
         return 0, 0, L
@@ -44,7 +70,8 @@ def insert(i, j, L_orig, L):
     I2, J2 = lateral_point(hypothesis, -1)
     if not ((L_orig[-1] == (I1, J1)) | (L_orig[-1] == (I2, J2))):
         L.append((i, j))
-    # print(L)
+    if verbose:
+        print(L)
     return i, j, L
 
 
@@ -110,11 +137,31 @@ def apply_dig(A, L, v):
     return A
 
 
-def sequence_side(nHorCells, i, j, DIGlist):
+def sequence_side(
+    nHorCells: int, i_start: int, j_start: int, Segmentlist: List = ["20E,10N"]
+):
+    """
+    Draws the path of the river having width expressed in cells.
+    The sequence is:
+     - draw the the main path
+     - then a path on the right
+     - then a path of the left
+     and so on up to 5.
+
+    Arguments:
+    nHorCells: width in cells of the river, max=5
+    i_start,j_start: start point
+    Segmentlist:  list of segments in format "n_cells,direction"
+
+    Return:
+    List of tuples (i,j)
+    """
+    assert nHcells in range(1, 6)
+
     L_out = []
     for k in range(nHorCells):
         if k == 0:
-            L = main_river_cell_list(i, j, DIGlist)
+            L = main_river_cell_list(i_start, j_start, Segmentlist)
             L_out.extend(L)
         if k == 1:
             L1 = cells_side(L, segno=1)
@@ -132,6 +179,8 @@ def sequence_side(nHorCells, i, j, DIGlist):
 
 
 if __name__ == "__main__":
+    import pylab as pl
+
     A = np.zeros((50, 50))
 
     # DIGlist=["5E","3S","10E","3N","3W","4N"]
