@@ -75,9 +75,13 @@ def insert(i: int, j: int, L_orig: List, L: List, verbose=False) -> Tuple:
     return i, j, L
 
 
-def cells_side(L: List, segno=1) -> List:
-    """Arguments:
-    L: list of tuples(i,j)
+def cells_side(L: List, segno: int = 1) -> List:
+    """
+    Draws a new path placed side by side with the original
+    Arguments:
+    L: list of tuples(i,j) of positions
+    segno: if 1, the new path is on the right of the original
+           if -1, on the left
     Returns:
     L_trasv: list of tuples(i,j)
     """
@@ -129,7 +133,14 @@ def cells_side(L: List, segno=1) -> List:
     return L_TRASV
 
 
-def apply_dig(A, L, v):
+def apply_dig(A, L: List, v: float):
+    """
+    Applies a constant value the the bathymetry, on a list of positions
+    Arguments:
+    A : 2D ndarray, original bathymetry
+    L: list of tuples(i,j) of positions
+    Returns: 2D ndarray of the corrected bathymetry
+    """
     n = len(L)
     for k in range(n):
         i, j = L[k]
