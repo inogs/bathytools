@@ -2,19 +2,18 @@
 name: North Adriatic
 
 domain:
-  minimum_latitude: 42.75000101154902,
-  maximum_latitude: 45.87500126317812,
-  minimum_longitude: 12.104167294929702,
-  maximum_longitude: 17.937500783409256,
-  resolution: 0.005208333333333333,
-  minimum_depth: 0.0,
-  maximum_depth: 300.0,
+  minimum_latitude: 42.75000101154902
+  maximum_latitude: 45.87500126317812
+  minimum_longitude: 12.104167294929702
+  maximum_longitude: 17.937500783409256
+  resolution: 0.005208333333333333
+  minimum_depth: 0.0
+  maximum_depth: 300.0
   minimum_h_factor: 0.2
 
 bathymetry:
   kind: "EMODnet"
   smoother: True
-  smooth_level: 10
 
 actions:
   - action: RemovePolygon
