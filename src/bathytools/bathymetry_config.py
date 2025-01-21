@@ -60,11 +60,19 @@ class DomainGeometry:
         Returns:
             bytes: A SHA-256 hash representing the object.
         """
-        attributes = [
-            attr
-            for attr in dir(self)
-            if not callable(getattr(self, attr)) and not attr.startswith("_")
-        ]
+
+        def is_data_attribute(attr_name: str) -> bool:
+            if attr_name.startswith("_"):
+                return False
+            if callable(getattr(self, attr_name)):
+                return False
+            if isinstance(getattr(type(self), attr_name, None), property):
+                return False
+
+            return True
+
+        attributes = [attr for attr in dir(self) if is_data_attribute(attr)]
+
         values_str = "___".join(
             [f"{getattr(self, f):.8e}" for f in attributes]
         )
@@ -122,6 +130,7 @@ class DomainGeometry:
             self.n_x,
         )
 
+    @property
     def latitude(self):
         """
         Gets the latitude values as a NumPy array based on provided minimum
