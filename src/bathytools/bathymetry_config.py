@@ -2,6 +2,7 @@ import hashlib
 from dataclasses import dataclass
 from os import PathLike
 
+import numpy as np
 import yaml
 
 
@@ -70,6 +71,73 @@ class DomainGeometry:
 
         hasher = hashlib.new("sha256", values_str.encode("utf-8"))
         return hasher.digest()
+
+    @property
+    def n_x(self):
+        """
+        Calculates and returns the number of grid cells along the longitudinal
+        direction based on the specified resolution and the range of
+        longitudes. The resolution defines the size of each grid cell in
+        degrees, while the longitudinal range is determined by the maximum and
+        minimum longitude values.
+
+        Returns:
+            int: The number of grid cells along the longitudinal direction calculated by
+            dividing the longitudinal range by the resolution.
+        """
+        return int(
+            (self.maximum_longitude - self.minimum_longitude) / self.resolution
+        )
+
+    @property
+    def n_y(self):
+        """
+        Calculates the number of latitude grid points (n_y) based on the resolution
+        and given latitudinal boundaries. The value is computed by dividing the
+        difference between the maximum and minimum latitude by the spatial
+        resolution and rounding it to the nearest integer.
+
+        Returns:
+            int: The number of latitude grid points based on the input parameters.
+        """
+        return int(
+            (self.maximum_latitude - self.minimum_latitude) / self.resolution
+        )
+
+    @property
+    def longitude(self):
+        """
+        Gets the longitude values as a NumPy array based on provided minimum
+        longitude, maximum longitude, resolution, and the number of points
+        in the x-dimension (n_x). The resulting array is spaced linearly
+        between the adjusted bounds, accounting for the specified resolution.
+
+        Returns:
+            numpy.ndarray: A NumPy array containing the linearly spaced
+            longitude values.
+        """
+        return np.linspace(
+            self.minimum_longitude + self.resolution * 0.5,
+            self.maximum_longitude - self.resolution * 0.5,
+            self.n_x,
+        )
+
+    def latitude(self):
+        """
+        Gets the latitude values as a NumPy array based on provided minimum
+        latitude, maximum latitude, resolution, and the number of points
+        in the y-dimension (n_y). The resulting array is spaced linearly
+        between the adjusted bounds, accounting for the specified resolution.
+
+        Returns:
+            numpy.ndarray: A NumPy array containing the linearly spaced
+            longitude values.
+        """
+        return np.linspace(
+            self.minimum_latitude + self.resolution * 0.5,
+            self.maximum_latitude - self.resolution * 0.5,
+            self.n_y,
+        )
 
 
 @dataclass
