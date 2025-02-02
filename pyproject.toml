@@ -19,6 +19,12 @@ pre-commit = "^3.8.0"
 deptry = "^0.21.2"
 pytest = "^8.3.4"
 
+[tool.poetry.group.tools]
+optional = true
+
+[tool.poetry.group.tools.dependencies]
+openpyxl = "^3.1.5"
+
 [tool.poetry.scripts]
 bathytools = "bathytools.__main__:main"
 
