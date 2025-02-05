@@ -7,9 +7,12 @@ domain:
   minimum_longitude: 12.104167294929702
   maximum_longitude: 17.937500783409256
   resolution: 0.005208333333333333
-  minimum_depth: 0.0
-  maximum_depth: 300.0
   minimum_h_factor: 0.2
+  vertical_levels:
+    minimum_depth: 0.0
+    maximum_depth: 300.0
+    first_layer_thickness: 1
+
 
 bathymetry:
   kind: "EMODnet"
@@ -29,7 +32,7 @@ actions:
     args:
       lat: 43
       lon: 14
-      radious: 0.2
+      radius: 0.2
       coefficient: 0.5
   - action: DigChannel
     args:

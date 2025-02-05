@@ -1,5 +1,6 @@
 import hashlib
 from dataclasses import dataclass
+from dataclasses import is_dataclass
 from os import PathLike
 
 import numpy as np
@@ -24,6 +25,22 @@ class InvalidBathymetrySourceError(Exception):
 
 
 @dataclass
+class DomainLevels:
+    """
+    All the properties used to define the depth of the vertical levels
+
+    Attributes:
+        maximum_depth: The maximum depth in the domain.
+        first_layer_thickness: The thickness of the first layer. Defaults to 1.
+        minimum_depth: The minimum depth in the domain. Defaults to 0.
+    """
+
+    maximum_depth: float
+    first_layer_thickness: float = 1.0
+    minimum_depth: float = 0.0
+
+
+@dataclass
 class DomainGeometry:
     """
     Represents the geographical description of a domain for grid construction.
@@ -34,9 +51,9 @@ class DomainGeometry:
         minimum_longitude: The minimum longitude of the domain.
         maximum_longitude: The maximum longitude of the domain.
         resolution: The resolution of the grid in the domain.
-        minimum_h_factor: The minimum h-factor, describing grid quality.
-        maximum_depth: The maximum depth in the domain.
-        minimum_depth: The minimum depth in the domain. Defaults to 0.
+        minimum_h_factor: The minimum h-factor; the minimum percentage of
+            water of each cell on the bottom.
+        vertical_levels: a DomainLevels object
     """
 
     minimum_latitude: float
@@ -45,8 +62,7 @@ class DomainGeometry:
     maximum_longitude: float
     resolution: float
     minimum_h_factor: float
-    maximum_depth: float
-    minimum_depth: float = 0
+    vertical_levels: DomainLevels
 
     def stable_hash(self) -> bytes:
         """
@@ -61,21 +77,44 @@ class DomainGeometry:
             bytes: A SHA-256 hash representing the object.
         """
 
-        def is_data_attribute(attr_name: str) -> bool:
+        # A function that checks if a name of an attribute represents some data
+        # or a method of the target. Usually the target is the object itself
+        # but, if some attributes of this object are instances of another
+        # dataclass, the target can be used to specify this new object.
+        def is_data_attribute(attr_name: str, target=self) -> bool:
             if attr_name.startswith("_"):
                 return False
-            if callable(getattr(self, attr_name)):
+            if callable(getattr(target, attr_name)):
                 return False
-            if isinstance(getattr(type(self), attr_name, None), property):
+            # Avoid properties
+            if isinstance(getattr(type(target), attr_name, None), property):
                 return False
 
             return True
 
         attributes = [attr for attr in dir(self) if is_data_attribute(attr)]
 
-        values_str = "___".join(
-            [f"{getattr(self, f):.8e}" for f in attributes]
-        )
+        values_str_list = []
+        for attr in attributes:
+            # If an attribute points to a dataclass, add all the data
+            # attributes of this data to the hash
+            if is_dataclass(getattr(self, attr)):
+                for sub_attr in dir(getattr(self, attr)):
+                    if not is_data_attribute(sub_attr, getattr(self, attr)):
+                        continue
+                    sub_attr_value = getattr(getattr(self, attr), sub_attr)
+                    if isinstance(sub_attr_value, float):
+                        values_str_list.append(
+                            f"{attr}__{sub_attr}={sub_attr_value:.8e}"
+                        )
+                    else:
+                        values_str_list.append(
+                            f"{attr}__{sub_attr}={sub_attr_value}"
+                        )
+            else:
+                values_str_list.append(f"{attr}={getattr(self, attr):.8e}")
+
+        values_str = "___".join(values_str_list)
 
         hasher = hashlib.new("sha256", values_str.encode("utf-8"))
         return hasher.digest()
@@ -227,6 +266,12 @@ class BathymetryConfig:
                 )
 
         name = yaml_content["name"]
+
+        domain_args = yaml_content["domain"]
+        if "vertical_levels" in domain_args:
+            domain_args["vertical_levels"] = DomainLevels(
+                **domain_args["vertical_levels"]
+            )
         domain = DomainGeometry(**yaml_content["domain"])
         bathymetry_source = BathymetrySource(**yaml_content["bathymetry"])
 
