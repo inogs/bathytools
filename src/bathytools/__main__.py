@@ -6,10 +6,10 @@ from pathlib import Path
 from sys import exit as sys_exit
 
 import xarray as xr
-from bitsea.utilities.argparse_types import existing_dir_path
 from bitsea.utilities.argparse_types import existing_file_path
 from bitsea.utilities.argparse_types import path_inside_an_existing_dir
 
+from bathytools.actions import Action
 from bathytools.bathymetry_config import BathymetryConfig
 from bathytools.bathymetry_config import DomainGeometry
 from bathytools.bathymetry_sources import download_bathymetry_data
@@ -69,7 +69,7 @@ def argument():
     parser.add_argument(
         "--cache",
         "-k",
-        type=existing_dir_path,
+        type=path_inside_an_existing_dir,
         required=False,
         default=None,
         help="""
@@ -161,6 +161,14 @@ def interpolate_raw_bathymetry_on_domain(
     return ds_dom
 
 
+def apply_actions(bathymetry, actions):
+    for action_config in actions:
+        LOGGER.info('Applying action "%s"', action_config["name"])
+        action = Action.read_description(action_config)
+        bathymetry = action(bathymetry)
+    return bathymetry
+
+
 def write_output_files(bathymetry, domain_geometry, output_dir: PathLike):
     output_dir = Path(output_dir)
 
@@ -243,6 +251,10 @@ def generate_bathymetry(
         raw_bathymetry_data, bathymetry_config.domain
     )
 
+    domain_bathymetry = apply_actions(
+        domain_bathymetry, bathymetry_config.actions
+    )
+
     write_output_files(
         domain_bathymetry,
         domain_geometry=bathymetry_config.domain,
@@ -274,6 +286,7 @@ def main():
             )
     else:
         LOGGER.debug("Using temporary directory %s", args.cache)
+        args.cache.mkdir(exist_ok=True)
         output_status = generate_bathymetry(
             bathy_config, Path(args.cache), output_dir, volatile_cache=False
         )

@@ -18,30 +18,9 @@ bathymetry:
   kind: "EMODnet"
   smoother: True
 
+
 actions:
-  - action: RemovePolygon
+  - action: CapDepth
+    description: Remove deep pits
     args:
-      polygonal: "polygonals/venice_lagoon.csv"
-  - action: RemoveSlice
-    args:
-      lat_min: 43
-      lat_max: 44
-      lon_min: 12.3
-      lon_max: 12.4
-  - action: SmoothAroundPoint
-    args:
-      lat: 43
-      lon: 14
-      radius: 0.2
-      coefficient: 0.5
-  - action: DigChannel
-    args:
-      start_point:
-        lat: 44
-        lon: 15
-      end_point:
-        lat: 44
-        lon: 16
-  - action: DigRivers
-    args:
-      river_config_path: "rivers.json"
+      max_depth: 250.

@@ -1,16 +1,36 @@
 import hashlib
+import warnings
 from dataclasses import dataclass
 from dataclasses import is_dataclass
 from os import PathLike
+from typing import Any
 
 import numpy as np
 import yaml
 
 
-class ConfigFieldMissingError(Exception):
+class InvalidBathymetryConfigFile(Exception):
+    """
+    An Exception that is raised if the content of the YAML config file
+    is invalid.
+    """
+
+    pass
+
+
+class ConfigFieldMissingError(InvalidBathymetryConfigFile):
     """
     An error that is raised when a mandatory field is missing in the YAML
     config file
+    """
+
+    pass
+
+
+class InvalidActionDescription(InvalidBathymetryConfigFile):
+    """
+    An exception that is raised when a descrption of an action inside the
+    YAML config file is invalid.
     """
 
     pass
@@ -236,10 +256,12 @@ class BathymetryConfig:
         name: str,
         domain: DomainGeometry,
         bathymetry_source: BathymetrySource,
+        actions: list[dict[str, Any]],
     ):
         self.name = name
         self.domain = domain
         self.bathymetry_source = bathymetry_source
+        self.actions = actions
 
     @staticmethod
     def from_yaml(file_path: PathLike):
@@ -275,7 +297,35 @@ class BathymetryConfig:
         domain = DomainGeometry(**yaml_content["domain"])
         bathymetry_source = BathymetrySource(**yaml_content["bathymetry"])
 
-        return BathymetryConfig(name, domain, bathymetry_source)
+        if "actions" in yaml_content:
+            actions = yaml_content["actions"]
+        else:
+            actions = []
+
+        for i, action in enumerate(actions):
+            if not isinstance(action, dict):
+                raise InvalidActionDescription(
+                    f"Invalid action description: {action}"
+                )
+            if "action" not in action:
+                raise InvalidActionDescription(
+                    f'Action description missing "action" field: {action}'
+                )
+            if "description" not in action:
+                warnings.warn(
+                    'No "description" field has been submitted for action '
+                    f"number {i + 1}: {action['action']}",
+                )
+            if "name" in action:
+                raise InvalidActionDescription(
+                    f'Actions can not have a field named "name"; invalid '
+                    f'action number {i + 1}: {action["action"]}'
+                )
+
+            action["name"] = action["action"]
+            del action["action"]
+
+        return BathymetryConfig(name, domain, bathymetry_source, actions)
 
     def source_stable_hash(self) -> bytes:
         """
