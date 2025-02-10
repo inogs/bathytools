@@ -15,6 +15,8 @@ from bathytools.bathymetry_config import DomainGeometry
 from bathytools.bathymetry_sources import download_bathymetry_data
 from bathytools.depth_levels import generate_level_heights
 from bathytools.geoarrays import GeoArrays
+from bathytools.utilities.logtools import LoggingNanMax
+from bathytools.utilities.logtools import LoggingNanMin
 from bathytools.water_fractions import WaterFractions
 
 
@@ -247,12 +249,30 @@ def generate_bathymetry(
             bathymetry_config, cache_path, volatile_cache
         )
 
+    LOGGER.debug(
+        "Raw bathymetry has values between %s and %s",
+        LoggingNanMin(raw_bathymetry_data.elevation),
+        LoggingNanMax(raw_bathymetry_data.elevation),
+    )
+
     domain_bathymetry = interpolate_raw_bathymetry_on_domain(
         raw_bathymetry_data, bathymetry_config.domain
     )
 
+    LOGGER.debug(
+        "Interpolated bathymetry has values between %s and %s",
+        LoggingNanMin(domain_bathymetry.elevation),
+        LoggingNanMax(domain_bathymetry.elevation),
+    )
+
     domain_bathymetry = apply_actions(
         domain_bathymetry, bathymetry_config.actions
+    )
+
+    LOGGER.debug(
+        "After having applied the actions, bathymetry has values between %s and %s",
+        LoggingNanMin(domain_bathymetry.elevation),
+        LoggingNanMax(domain_bathymetry.elevation),
     )
 
     write_output_files(
