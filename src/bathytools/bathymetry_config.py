@@ -1,14 +1,36 @@
 import hashlib
+import warnings
 from dataclasses import dataclass
+from dataclasses import is_dataclass
 from os import PathLike
+from typing import Any
 
+import numpy as np
 import yaml
 
 
-class ConfigFieldMissingError(Exception):
+class InvalidBathymetryConfigFile(Exception):
+    """
+    An Exception that is raised if the content of the YAML config file
+    is invalid.
+    """
+
+    pass
+
+
+class ConfigFieldMissingError(InvalidBathymetryConfigFile):
     """
     An error that is raised when a mandatory field is missing in the YAML
     config file
+    """
+
+    pass
+
+
+class InvalidActionDescription(InvalidBathymetryConfigFile):
+    """
+    An exception that is raised when a descrption of an action inside the
+    YAML config file is invalid.
     """
 
     pass
@@ -23,6 +45,22 @@ class InvalidBathymetrySourceError(Exception):
 
 
 @dataclass
+class DomainLevels:
+    """
+    All the properties used to define the depth of the vertical levels
+
+    Attributes:
+        maximum_depth: The maximum depth in the domain.
+        first_layer_thickness: The thickness of the first layer. Defaults to 1.
+        minimum_depth: The minimum depth in the domain. Defaults to 0.
+    """
+
+    maximum_depth: float
+    first_layer_thickness: float = 1.0
+    minimum_depth: float = 0.0
+
+
+@dataclass
 class DomainGeometry:
     """
     Represents the geographical description of a domain for grid construction.
@@ -33,9 +71,9 @@ class DomainGeometry:
         minimum_longitude: The minimum longitude of the domain.
         maximum_longitude: The maximum longitude of the domain.
         resolution: The resolution of the grid in the domain.
-        minimum_h_factor: The minimum h-factor, describing grid quality.
-        maximum_depth: The maximum depth in the domain.
-        minimum_depth: The minimum depth in the domain. Defaults to 0.
+        minimum_h_factor: The minimum h-factor; the minimum percentage of
+            water of each cell on the bottom.
+        vertical_levels: a DomainLevels object
     """
 
     minimum_latitude: float
@@ -44,8 +82,7 @@ class DomainGeometry:
     maximum_longitude: float
     resolution: float
     minimum_h_factor: float
-    maximum_depth: float
-    minimum_depth: float = 0
+    vertical_levels: DomainLevels
 
     def stable_hash(self) -> bytes:
         """
@@ -59,17 +96,116 @@ class DomainGeometry:
         Returns:
             bytes: A SHA-256 hash representing the object.
         """
-        attributes = [
-            attr
-            for attr in dir(self)
-            if not callable(getattr(self, attr)) and not attr.startswith("_")
-        ]
-        values_str = "___".join(
-            [f"{getattr(self, f):.8e}" for f in attributes]
-        )
+
+        # A function that checks if a name of an attribute represents some data
+        # or a method of the target. Usually the target is the object itself
+        # but, if some attributes of this object are instances of another
+        # dataclass, the target can be used to specify this new object.
+        def is_data_attribute(attr_name: str, target=self) -> bool:
+            if attr_name.startswith("_"):
+                return False
+            if callable(getattr(target, attr_name)):
+                return False
+            # Avoid properties
+            if isinstance(getattr(type(target), attr_name, None), property):
+                return False
+
+            return True
+
+        attributes = [attr for attr in dir(self) if is_data_attribute(attr)]
+
+        values_str_list = []
+        for attr in attributes:
+            # If an attribute points to a dataclass, add all the data
+            # attributes of this data to the hash
+            if is_dataclass(getattr(self, attr)):
+                for sub_attr in dir(getattr(self, attr)):
+                    if not is_data_attribute(sub_attr, getattr(self, attr)):
+                        continue
+                    sub_attr_value = getattr(getattr(self, attr), sub_attr)
+                    if isinstance(sub_attr_value, float):
+                        values_str_list.append(
+                            f"{attr}__{sub_attr}={sub_attr_value:.8e}"
+                        )
+                    else:
+                        values_str_list.append(
+                            f"{attr}__{sub_attr}={sub_attr_value}"
+                        )
+            else:
+                values_str_list.append(f"{attr}={getattr(self, attr):.8e}")
+
+        values_str = "___".join(values_str_list)
 
         hasher = hashlib.new("sha256", values_str.encode("utf-8"))
         return hasher.digest()
+
+    @property
+    def n_x(self):
+        """
+        Calculates and returns the number of grid cells along the longitudinal
+        direction based on the specified resolution and the range of
+        longitudes. The resolution defines the size of each grid cell in
+        degrees, while the longitudinal range is determined by the maximum and
+        minimum longitude values.
+
+        Returns:
+            int: The number of grid cells along the longitudinal direction calculated by
+            dividing the longitudinal range by the resolution.
+        """
+        return int(
+            (self.maximum_longitude - self.minimum_longitude) / self.resolution
+        )
+
+    @property
+    def n_y(self):
+        """
+        Calculates the number of latitude grid points (n_y) based on the resolution
+        and given latitudinal boundaries. The value is computed by dividing the
+        difference between the maximum and minimum latitude by the spatial
+        resolution and rounding it to the nearest integer.
+
+        Returns:
+            int: The number of latitude grid points based on the input parameters.
+        """
+        return int(
+            (self.maximum_latitude - self.minimum_latitude) / self.resolution
+        )
+
+    @property
+    def longitude(self):
+        """
+        Gets the longitude values as a NumPy array based on provided minimum
+        longitude, maximum longitude, resolution, and the number of points
+        in the x-dimension (n_x). The resulting array is spaced linearly
+        between the adjusted bounds, accounting for the specified resolution.
+
+        Returns:
+            numpy.ndarray: A NumPy array containing the linearly spaced
+            longitude values.
+        """
+        return np.linspace(
+            self.minimum_longitude + self.resolution * 0.5,
+            self.maximum_longitude - self.resolution * 0.5,
+            self.n_x,
+        )
+
+    @property
+    def latitude(self):
+        """
+        Gets the latitude values as a NumPy array based on provided minimum
+        latitude, maximum latitude, resolution, and the number of points
+        in the y-dimension (n_y). The resulting array is spaced linearly
+        between the adjusted bounds, accounting for the specified resolution.
+
+        Returns:
+            numpy.ndarray: A NumPy array containing the linearly spaced
+            longitude values.
+        """
+        return np.linspace(
+            self.minimum_latitude + self.resolution * 0.5,
+            self.maximum_latitude - self.resolution * 0.5,
+            self.n_y,
+        )
 
 
 @dataclass
@@ -120,10 +256,12 @@ class BathymetryConfig:
         name: str,
         domain: DomainGeometry,
         bathymetry_source: BathymetrySource,
+        actions: list[dict[str, Any]],
     ):
         self.name = name
         self.domain = domain
         self.bathymetry_source = bathymetry_source
+        self.actions = actions
 
     @staticmethod
     def from_yaml(file_path: PathLike):
@@ -150,10 +288,44 @@ class BathymetryConfig:
                 )
 
         name = yaml_content["name"]
+
+        domain_args = yaml_content["domain"]
+        if "vertical_levels" in domain_args:
+            domain_args["vertical_levels"] = DomainLevels(
+                **domain_args["vertical_levels"]
+            )
         domain = DomainGeometry(**yaml_content["domain"])
         bathymetry_source = BathymetrySource(**yaml_content["bathymetry"])
 
-        return BathymetryConfig(name, domain, bathymetry_source)
+        if "actions" in yaml_content:
+            actions = yaml_content["actions"]
+        else:
+            actions = []
+
+        for i, action in enumerate(actions):
+            if not isinstance(action, dict):
+                raise InvalidActionDescription(
+                    f"Invalid action description: {action}"
+                )
+            if "action" not in action:
+                raise InvalidActionDescription(
+                    f'Action description missing "action" field: {action}'
+                )
+            if "description" not in action:
+                warnings.warn(
+                    'No "description" field has been submitted for action '
+                    f"number {i + 1}: {action['action']}",
+                )
+            if "name" in action:
+                raise InvalidActionDescription(
+                    f'Actions can not have a field named "name"; invalid '
+                    f'action number {i + 1}: {action["action"]}'
+                )
+
+            action["name"] = action["action"]
+            del action["action"]
+
+        return BathymetryConfig(name, domain, bathymetry_source, actions)
 
     def source_stable_hash(self) -> bytes:
         """

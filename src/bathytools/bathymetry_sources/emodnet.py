@@ -28,7 +28,9 @@ class EMODnetBathymetryDownloader:
             data will be stored. Defaults to "bathymetry_raw.nc".
     """
 
-    URL: str = "https://erddap.emodnet.eu/erddap/griddap/bathymetry_2022"
+    URL: str = (
+        "https://erddap.emodnet.eu/erddap/griddap/dtm_2020_v2_e0bf_e7e4_5b8f"
+    )
 
     def __init__(
         self,
