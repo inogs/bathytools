@@ -2,12 +2,15 @@ import argparse
 import dataclasses
 import json
 import re
+import warnings
 from collections import OrderedDict
 from sys import exit as sys_exit
 from typing import Literal
 
 import pandas as pd
+from bitsea.utilities.argparse_types import dir_to_be_created_if_not_exists
 from bitsea.utilities.argparse_types import existing_file_path
+from bitsea.utilities.argparse_types import path_inside_an_existing_dir
 
 MAIN_SHEET_NAME = "ITA"
 BGC_SHEET_NAME = "BGC_table_ref"
@@ -195,7 +198,59 @@ def argument():
         """,
     )
 
+    parser.add_argument(
+        "--output-file",
+        "-o",
+        type=path_inside_an_existing_dir,
+        required=True,
+        help="""
+        The path where the main output file will be written
+        """,
+    )
+
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        required=False,
+        help="""
+        If this flag is specified and the output file already exists, it will
+        be overwritten. Otherwise, an error will be raised.
+        """,
+    )
+
+    parser.add_argument(
+        "--domain-specific-output-files",
+        "-d",
+        type=dir_to_be_created_if_not_exists,
+        required=False,
+        default=None,
+        help="""
+        If this flag is specified, the script will also create a separate JSON
+        file for each domain inside the specified directory. The name of the
+        file of each domain will be the same as the name of the sheet in the
+        XLSX file. The output file will only include rivers that have different
+        options on that domain respect to the main file. If a file with the same
+        name already exists, it will not be overwritten unless the --overwrite
+        flag is specified.
+        """,
+    )
+
     return parser.parse_args()
+
+
+def read_stem_value(raw_value: str):
+    raw_value = raw_value.strip()
+    if raw_value.startswith("[") and raw_value.endswith("]"):
+        values = raw_value[1:-1].split(";")
+        return [read_stem_value(v) for v in values]
+
+    # Remove mac curly quotes
+    raw_value = raw_value.replace("\u201c", '"').replace("\u201d", '"')
+
+    # Remove quotes
+    while raw_value.startswith('"') and raw_value.endswith('"'):
+        raw_value = raw_value[1:-1].strip()
+    return raw_value
 
 
 def read_bgc_reference_table(bgc_sheet):
@@ -241,6 +296,57 @@ def read_bgc_reference_table(bgc_sheet):
     return variables, profiles
 
 
+def generate_domain_specific_file(domain_sheet, rivers) -> list:
+    domain_rivers = []
+    for _, row in domain_sheet.iterrows():
+        river_id = row["ir"]
+        river_name = row["rivername"]
+        for river in rivers:
+            if river.id == river_id:
+                if river.name != river_name:
+                    raise ValueError(
+                        f"River with id = {river_id} is named "
+                        f"\"{river_name}\" into the domain specific file, "
+                        f"while is called \"{row['rivername']}\" into the main "
+                        f"file."
+                    )
+                main_river = river
+                break
+            if river.name == river_name:
+                raise ValueError(
+                    f"River with name = {river_name} has id {river_id} into "
+                    f"the domain specific file, while has id {river.id} into "
+                    f"the main file."
+                )
+        else:
+            raise ValueError(
+                f"River with name = {river_name} is not present into the main "
+                f"file."
+            )
+
+        river_dict = OrderedDict([("id", river_id), ("name", river_name)])
+
+        river_side = row["SIDE"]
+        if river_side != main_river.geometry.side:
+            if "geometry" not in river_dict:
+                river_dict["geometry"] = {}
+            river_dict["geometry"]["side"] = river_side
+
+        river_stem = row["shift_from_mouth"].strip()
+        if river_stem.lower() != "default" and river_stem.lower() != "none":
+            river_stem = read_stem_value(river_stem)
+            if "geometry" not in river_dict:
+                river_dict["geometry"] = {}
+            river_dict["geometry"]["stem"] = river_stem
+
+        # If this river does not contain just its id and its name, save it in
+        # the final list
+        if len(river_dict) > 2:
+            domain_rivers.append(river_dict)
+
+    return domain_rivers
+
+
 def generate_main_json(main_sheet, domain_sheets, variables, profiles):
     defaults = OrderedDict()
     geometry_defaults = OrderedDict(
@@ -263,6 +369,7 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
         )
 
         river_sides = []
+        # Read all the sides in all the domain-specific files
         for domain in domain_sheets:
             if row["ir"] in set(domain["ir"]):
                 domain_row = domain.loc[domain["ir"] == row["ir"]].iloc[0]
@@ -309,6 +416,13 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
 def main() -> int:
     args = argument()
 
+    output_file = args.output_file
+    if output_file.exists() and not args.overwrite:
+        raise FileExistsError(
+            f"The output file {output_file} already exists. "
+            "Use the --overwrite flag to overwrite it."
+        )
+
     xl_file = pd.ExcelFile(args.input_file)
     sheets = xl_file.sheet_names
     main_sheet = xl_file.parse(MAIN_SHEET_NAME)
@@ -316,16 +430,33 @@ def main() -> int:
 
     variables, profiles = read_bgc_reference_table(bgc_sheet)
 
-    domains = []
+    domains = OrderedDict()
     for sheet in sheets:
         if re.match("^D[0-9]+$", sheet):
-            domains.append(xl_file.parse(sheet))
+            domains[sheet] = xl_file.parse(sheet)
 
     main_json, rivers = generate_main_json(
-        main_sheet, domains, variables, profiles
+        main_sheet, domains.values(), variables, profiles
     )
 
-    print(main_json)
+    with open(output_file, "w") as f:
+        f.write(main_json)
+
+    # If we do not have to create the domain files, we can stop now the
+    # execution
+    if not args.domain_specific_output_files:
+        return 0
+
+    for domain_name, domain_sheet in domains.items():
+        domain_file = args.domain_specific_output_files / f"{domain_name}.json"
+        if domain_file.exists() and not args.overwrite:
+            warnings.warn(
+                f"The output file {domain_file} already exists. "
+                "Use the --overwrite flag to overwrite it."
+            )
+        domain_river = generate_domain_specific_file(domain_sheet, rivers)
+        with open(domain_file, "w") as f:
+            f.write(json.dumps(domain_river, indent=2))
 
     return 0
 
