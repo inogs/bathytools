@@ -23,5 +23,7 @@ class CapDepth(SimpleAction):
         self.depth_cap = float(max_depth)
 
     def __call__(self, bathymetry: xr.DataArray) -> xr.DataArray:
-        bathymetry["elevation"] = -bathymetry.elevation.clip(-self.depth_cap)
+        bathymetry["elevation"] = -(-bathymetry).elevation.clip(
+            max=self.depth_cap
+        )
         return bathymetry
