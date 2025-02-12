@@ -166,7 +166,7 @@ def interpolate_raw_bathymetry_on_domain(
 def apply_actions(bathymetry, actions):
     for action_config in actions:
         LOGGER.info('Applying action "%s"', action_config["name"])
-        action = Action.read_description(action_config)
+        action = Action.build(action_config)
         bathymetry = action(bathymetry)
     return bathymetry
 
