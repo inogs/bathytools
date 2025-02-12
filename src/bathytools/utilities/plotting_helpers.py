@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import pylab as pl
 
 
-def imshow(M2d, title: str = ""):
+def imshow(matrix_2d, title: str | None = None):
     fig, ax = pl.subplots()
-    im = ax.imshow(M2d, origin="lower")
+    im = ax.imshow(matrix_2d, origin="lower")
     fig.colorbar(im)
-    ax.set_title(title)
+
+    if title is not None:
+        ax.set_title(title)
+
     # fig.set_size_inches((40, 30));
     fig.show()
     return fig, ax
