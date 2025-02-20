@@ -28,3 +28,12 @@ def build_logging_lazy_function(name: str, f: Callable):
 
 LoggingNanMin = build_logging_lazy_function("LoggingNanMin", np.nanmin)
 LoggingNanMax = build_logging_lazy_function("LoggingNanMax", np.nanmax)
+
+
+def _count_common_cells(a, b):
+    return np.count_nonzero(np.logical_and(a, b))
+
+
+count_common_cells = build_logging_lazy_function(
+    "CountCommonCells", _count_common_cells
+)
