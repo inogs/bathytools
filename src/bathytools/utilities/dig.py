@@ -1,3 +1,7 @@
+import re
+from dataclasses import dataclass
+from enum import Enum
+from logging import getLogger
 from typing import List
 from typing import Tuple
 
@@ -5,36 +9,98 @@ import numpy as np
 
 
 DIG = List[Tuple[int, int]]
+LOGGER = getLogger(__name__)
+
+
+class Direction(Enum):
+    EAST = "E"
+    WEST = "W"
+    NORTH = "N"
+    SOUTH = "S"
+
+    def move_indices(self, i, j):
+        if self == Direction.EAST:
+            i = i + 1
+        elif self == Direction.WEST:
+            i = i - 1
+        elif self == Direction.NORTH:
+            j = j + 1
+        elif self == Direction.SOUTH:
+            j = j - 1
+        else:
+            raise ValueError(f"Invalid direction: {self}")
+        return i, j
+
+    def __neg__(self):
+        if self == Direction.EAST:
+            return Direction.WEST
+        elif self == Direction.WEST:
+            return Direction.EAST
+        elif self == Direction.NORTH:
+            return Direction.SOUTH
+        elif self == Direction.SOUTH:
+            return Direction.NORTH
+        else:
+            raise ValueError(f"Invalid direction: {self}")
+
+
+@dataclass
+class Movement:
+    length: int
+    direction: Direction
+
+    @staticmethod
+    def from_str(s: str):
+        string_mask = re.compile(r"^(\d+)([EWNS])$")
+        match = string_mask.match(s)
+        if match is None:
+            raise ValueError(f"Invalid movement string: {s}")
+        return Movement(int(match.group(1)), Direction(match.group(2)))
+
+    def from_zonal_meridional_description(s: str):
+        string_mask = re.compile(r"^([+-]?\d+)([mMzZ])$")
+        match = string_mask.match(s)
+        if match is None:
+            raise ValueError(f"Invalid movement string: {s}")
+        value = int(match.group(1))
+        if match.group(2) in ["m", "M"]:
+            direction = Direction.NORTH
+        elif match.group(2) in ["z", "Z"]:
+            direction = Direction.WEST
+        else:
+            raise ValueError(f"Invalid direction: {match.group(2)}")
+
+        if value < 0:
+            direction = -direction
+            value = -value
+
+        return Movement(value, direction)
 
 
 def main_river_cell_list(
-    i_start: int, j_start: int, Segmentlist: List = ["20E", "10N"]
+    i_start: int, j_start: int, movement_list: List[Movement]
 ) -> DIG:
     """
-    Draws the path of the river
-    Arguments:
-    i_start,j_start: start point
-    Segmentlist:  list of segments in format "n_cells,direction"
-               example: ["30E", "20S", "10W", "5N"]
-    Returns a list of tuples(i,j) with the ordered positions of the river
+    Draws the path of a river whose width is exactly one cell.
+
+    Args:
+        i_start: start point first coordinate
+        j_start: start point second coordinate
+        movement_list: list of movements
+
+    Returns:
+        a list of tuples(i,j) with the ordered positions of the river
     """
-    L = [(i_start, j_start)]
+    output_indices = [(i_start, j_start)]
     i = i_start
     j = j_start
-    for segment in Segmentlist:
-        length = int(segment[:-1])
-        direction = segment[-1]
+    for segment in movement_list:
+        length = segment.length
+        direction = segment.direction
         for k in range(length):
-            if direction == "E":
-                i = i + 1
-            if direction == "W":
-                i = i - 1
-            if direction == "N":
-                j = j + 1
-            if direction == "S":
-                j = j - 1
-            L.append((i, j))
-    return L
+            i, j = direction.move_indices(i, j)
+            output_indices.append((i, j))
+    return output_indices
 
 
 def lateral_point(L, segno: int = 1) -> Tuple:
@@ -56,27 +122,26 @@ def lateral_point(L, segno: int = 1) -> Tuple:
     return i_side, j_side
 
 
-def insert(
-    i: int, j: int, L_orig: DIG, L: DIG, verbose=False
-) -> Tuple[int, int, DIG]:
+def insert(i: int, j: int, L_orig: DIG, L: DIG) -> Tuple[int, int, DIG]:
     """
     Inserts a new point (i,j) a list of positions of a new river
     by taking in account the segment we come up beside, in order to
     - never overlap it. Returns i = 0, as an exception for the caller.
     - don't proceed if we are already at the end of original river
     """
-    if verbose:
-        print("---", i, j)
+    LOGGER.debug("--- %s %s", i, j)
+
     if (i, j) in L_orig:
-        print("hai sbattuto sull'originale")
+        LOGGER.warning("hai sbattuto sull'originale")
         return 0, 0, L
+
     hypothesis = [L[-1], (i, j)]
     I1, J1 = lateral_point(hypothesis, 1)
     I2, J2 = lateral_point(hypothesis, -1)
     if not ((L_orig[-1] == (I1, J1)) | (L_orig[-1] == (I2, J2))):
         L.append((i, j))
-    if verbose:
-        print(L)
+
+    LOGGER.debug("Final output: %s", L)
     return i, j, L
 
 
@@ -156,7 +221,7 @@ def apply_dig(A, L: DIG, v: float):
 
 
 def sequence_side(
-    nHorCells: int, i_start: int, j_start: int, Segmentlist: List = ["20E,10N"]
+    nHorCells: int, i_start: int, j_start: int, movements: List[Movement]
 ) -> DIG:
     """
     Draws the path of the river having width expressed in cells.
@@ -169,7 +234,7 @@ def sequence_side(
     Arguments:
     nHorCells: width in cells of the river, max=5
     i_start,j_start: start point
-    Segmentlist:  list of segments in format "n_cells,direction"
+    Segmentlist:  list of movements
 
     Return:
     List of tuples (i,j)
@@ -180,7 +245,7 @@ def sequence_side(
     L_out = []
     for k in range(nHorCells):
         if k == 0:
-            L = main_river_cell_list(i_start, j_start, Segmentlist)
+            L = main_river_cell_list(i_start, j_start, movements)
             L_out.extend(L)
         if k == 1:
             L1 = cells_side(L, segno=1)
