@@ -1,56 +1,65 @@
+from typing import List
+
 import numpy as np
+from pytest import fixture
 
-from bathytools.dig import apply_dig
-from bathytools.dig import sequence_side
+from bathytools.utilities.dig import apply_dig
+from bathytools.utilities.dig import Direction
+from bathytools.utilities.dig import Movement
+from bathytools.utilities.dig import sequence_side
 
 
-def test_sequence_side_thin():
-    dig_list = ["30E", "20S", "10W", "5N"]
+@fixture
+def list_of_movements():
+    return [
+        Movement(30, Direction.EAST),
+        Movement(20, Direction.SOUTH),
+        Movement(10, Direction.WEST),
+        Movement(5, Direction.NORTH),
+    ]
 
+
+def test_sequence_side_thin(list_of_movements: List[Movement]):
     # Compute the length of the curve; we start from one because we have for
     # sure the first cell
     curve_length = 1
-    for movement in dig_list:
-        current_length = int(movement[:-1])
-        curve_length += current_length
+    for movement in list_of_movements:
+        curve_length += movement.length
 
     seed_x, seed_y = 10, 40
     n_h_cells = 1
 
-    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, dig_list)
+    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
 
     assert len(dig_cells) == curve_length
 
 
-def test_sequence_side_fat():
-    dig_list = ["30E", "20S", "10W", "5N"]
-
+def test_sequence_side_fat(list_of_movements: List[Movement]):
     # Compute the length of the curve; we start from one because we have for
     # sure the first cell
     curve_length = 1
-    for movement in dig_list:
-        current_length = int(movement[:-1])
-        curve_length += current_length
+    for movement in list_of_movements:
+        curve_length += movement.length
 
     seed_x, seed_y = 10, 40
     n_h_cells = 5
 
-    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, dig_list)
+    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
+    print()
+    print(dig_cells)
+    print(len(dig_cells))
 
     assert len(dig_cells) == curve_length * n_h_cells
 
 
-def test_apply_dig():
+def test_apply_dig(list_of_movements: List[Movement]):
     test_matrix = np.zeros((50, 50))
-
-    # DIGlist=["5E","3S","10E","3N","3W","4N"]
-    dig_list = ["30E", "20S", "10W", "5N"]
 
     seed_x, seed_y = 10, 40
     v = 10
     n_h_cells = 3
 
-    curve_cells = sequence_side(n_h_cells, seed_x, seed_y, dig_list)
+    curve_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
 
     n_cells = len(curve_cells)
 
