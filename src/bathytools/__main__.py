@@ -31,6 +31,9 @@ def configure_logger():
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
+    # Disable logging from numba
+    logging.getLogger("numba").setLevel(logging.INFO)
+
     LOGGER.setLevel(logging.INFO)
 
     handler = logging.StreamHandler()
