@@ -221,7 +221,7 @@ class BathymetrySource:
     """
 
     kind: str
-    smoother: bool
+    smoother: bool = False
 
     def source_stable_hash(self) -> bytes:
         """

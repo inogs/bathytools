@@ -1,0 +1,50 @@
+[
+  {
+    "id": 31,
+    "name": "Trionto",
+    "geometry": {
+      "side": "S"
+    }
+  },
+  {
+    "id": 32,
+    "name": "Crati",
+    "geometry": {
+      "side": "W"
+    }
+  },
+  {
+    "id": 39,
+    "name": "Canale d'Aiedda",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 40,
+    "name": "Scolmatore dell'Asso",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 41,
+    "name": "Canale Reale",
+    "geometry": {
+      "stem": [
+        "-2m",
+        "-8z"
+      ]
+    }
+  },
+  {
+    "id": 90,
+    "name": "Mat",
+    "geometry": {
+      "stem": [
+        "+3m",
+        "+7z"
+      ]
+    }
+  }
+]

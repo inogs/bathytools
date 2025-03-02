@@ -1,0 +1,36 @@
+[
+  {
+    "id": 25,
+    "name": "Amato",
+    "geometry": {
+      "side": "E",
+      "stem": [
+        "+1z"
+      ]
+    }
+  },
+  {
+    "id": 26,
+    "name": "Mesima",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 27,
+    "name": "Petrace",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 99,
+    "name": "Alcantara",
+    "geometry": {
+      "stem": [
+        "+87m",
+        "+2z"
+      ]
+    }
+  }
+]

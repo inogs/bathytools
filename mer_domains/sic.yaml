@@ -1,0 +1,29 @@
+---
+name: SIC
+
+domain:
+  minimum_latitude: 35.2500004076391
+  maximum_latitude: 39.000000709594
+  minimum_longitude: 11.437500610532
+  maximum_longitude: 16.2291674046402
+  resolution: 0.005208333333333333
+  minimum_h_factor: 0.2
+  vertical_levels:
+    minimum_depth: 0.0
+    maximum_depth: 300.0
+    first_layer_thickness: 1
+
+
+bathymetry:
+  kind: "EMODnet"
+
+
+actions:
+  - action: RemoveDetachedCells
+    description: Keep only the biggest connected component
+
+  - action: DigRivers
+    description: Dig the stems for the rivers
+    args:
+      main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
+      domain_file: ${MAIN_DIR}/mer_domains/rivers/SIC.json

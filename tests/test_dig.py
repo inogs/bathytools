@@ -45,9 +45,6 @@ def test_sequence_side_fat(list_of_movements: List[Movement]):
     n_h_cells = 5
 
     dig_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
-    print()
-    print(dig_cells)
-    print(len(dig_cells))
 
     assert len(dig_cells) == curve_length * n_h_cells
 

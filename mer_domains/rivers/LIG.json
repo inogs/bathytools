@@ -1,0 +1,53 @@
+[
+  {
+    "id": 112,
+    "name": "Le Golo",
+    "geometry": {
+      "stem": [
+        "-8z",
+        "+2m"
+      ]
+    }
+  },
+  {
+    "id": 113,
+    "name": "Le Tavignano",
+    "geometry": {
+      "stem": [
+        "-10z",
+        "+2m"
+      ]
+    }
+  },
+  {
+    "id": 114,
+    "name": "Le Rizzanese",
+    "geometry": {
+      "side": "S",
+      "stem": [
+        "+2z",
+        "-8m"
+      ]
+    }
+  },
+  {
+    "id": 115,
+    "name": "La Gravona",
+    "geometry": {
+      "stem": [
+        "+2z",
+        "+8m"
+      ]
+    }
+  },
+  {
+    "id": 116,
+    "name": "Liamone",
+    "geometry": {
+      "stem": [
+        "+2z",
+        "+8m"
+      ]
+    }
+  }
+]

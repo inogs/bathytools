@@ -1,0 +1,23 @@
+[
+  {
+    "id": 22,
+    "name": "Noce",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 23,
+    "name": "Lao",
+    "geometry": {
+      "side": "E"
+    }
+  },
+  {
+    "id": 24,
+    "name": "Savuto",
+    "geometry": {
+      "side": "E"
+    }
+  }
+]

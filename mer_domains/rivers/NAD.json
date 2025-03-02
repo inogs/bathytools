@@ -1,0 +1,67 @@
+[
+  {
+    "id": 66,
+    "name": "Brenta",
+    "geometry": {
+      "stem": [
+        "-2z",
+        "-2m",
+        "-6z"
+      ]
+    }
+  },
+  {
+    "id": 67,
+    "name": "Naviglio del Brenta",
+    "geometry": {
+      "stem": [
+        "-2z",
+        "+2m",
+        "-6z"
+      ]
+    }
+  },
+  {
+    "id": 69,
+    "name": "Sile",
+    "geometry": {
+      "stem": [
+        "+4m",
+        "+4z",
+        "+2m",
+        "+6z",
+        "+1m"
+      ]
+    }
+  },
+  {
+    "id": 73,
+    "name": "Tagliamento",
+    "geometry": {
+      "stem": [
+        "-8z",
+        "+2m"
+      ]
+    }
+  },
+  {
+    "id": 78,
+    "name": "Isonzo",
+    "geometry": {
+      "stem": [
+        "-9z",
+        "+2m"
+      ]
+    }
+  },
+  {
+    "id": 85,
+    "name": "Cetina",
+    "geometry": {
+      "stem": [
+        "+3m",
+        "+7z"
+      ]
+    }
+  }
+]

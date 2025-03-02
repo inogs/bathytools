@@ -2,7 +2,6 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from logging import getLogger
-from pathlib import Path
 from typing import Dict
 from typing import List
 from typing import Literal
@@ -17,6 +16,7 @@ from bathytools.utilities.dig import apply_dig
 from bathytools.utilities.dig import Direction
 from bathytools.utilities.dig import Movement
 from bathytools.utilities.dig import sequence_side
+from bathytools.utilities.relative_paths import read_path
 
 
 LOGGER = getLogger(__name__)
@@ -156,8 +156,10 @@ class DigRivers(SimpleAction):
         domain_file: Optional[str] = None,
     ):
         super().__init__(name, description)
-        self._main_file_path = Path(main_file)
-        self._domain_file_path = Path(domain_file) if domain_file else None
+        self._main_file_path = read_path(main_file)
+        self._domain_file_path = (
+            read_path(domain_file) if domain_file else None
+        )
 
         # Parse the main file and load its data
         with open(self._main_file_path, "r") as f:
