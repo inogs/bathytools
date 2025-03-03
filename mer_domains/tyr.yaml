@@ -10,7 +10,7 @@ domain:
   minimum_h_factor: 0.2
   vertical_levels:
     minimum_depth: 0.0
-    maximum_depth: 300.0
+    maximum_depth: 1500.0
     first_layer_thickness: 1
 
 
