@@ -66,7 +66,7 @@ class Movement:
         if match.group(2) in ["m", "M"]:
             direction = Direction.NORTH
         elif match.group(2) in ["z", "Z"]:
-            direction = Direction.WEST
+            direction = Direction.EAST
         else:
             raise ValueError(f"Invalid direction: {match.group(2)}")
 
