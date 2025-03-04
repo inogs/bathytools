@@ -1,73 +1,49 @@
-[
-  {
-    "id": 105,
-    "name": "Coghinas",
-    "geometry": {
-      "stem": [
-        "+8z",
-        "+2m"
-      ]
+{
+  "rivers": [
+    {
+      "id": 114,
+      "name": "Le Rizzanese",
+      "geometry": {
+        "side": "N",
+        "stem": [
+          "+11z",
+          "+2m"
+        ]
+      }
     }
-  },
-  {
-    "id": 106,
-    "name": "Posada",
-    "geometry": {
-      "stem": [
-        "-75z",
-        "+2m"
-      ]
+  ],
+  "enabled_only": [
+    {
+      "id": 105,
+      "name": "Coghinas"
+    },
+    {
+      "id": 106,
+      "name": "Posada"
+    },
+    {
+      "id": 107,
+      "name": "Cedrino"
+    },
+    {
+      "id": 108,
+      "name": "Flumendosa"
+    },
+    {
+      "id": 109,
+      "name": "Mannu"
+    },
+    {
+      "id": 110,
+      "name": "Tirso"
+    },
+    {
+      "id": 111,
+      "name": "Temo"
+    },
+    {
+      "id": 114,
+      "name": "Le Rizzanese"
     }
-  },
-  {
-    "id": 107,
-    "name": "Cedrino",
-    "geometry": {
-      "stem": [
-        "-76z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 108,
-    "name": "Flumendosa",
-    "geometry": {
-      "stem": [
-        "-58z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 110,
-    "name": "Tirso",
-    "geometry": {
-      "stem": [
-        "+49z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 111,
-    "name": "Temo",
-    "geometry": {
-      "stem": [
-        "+59z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 114,
-    "name": "Le Rizzanese",
-    "geometry": {
-      "side": "N",
-      "stem": [
-        "+11m",
-        "+2z"
-      ]
-    }
-  }
-]
+  ]
+}

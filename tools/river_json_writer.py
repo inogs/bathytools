@@ -5,6 +5,7 @@ import re
 import warnings
 from collections import OrderedDict
 from sys import exit as sys_exit
+from typing import Any
 from typing import Literal
 
 import pandas as pd
@@ -296,8 +297,11 @@ def read_bgc_reference_table(bgc_sheet):
     return variables, profiles
 
 
-def generate_domain_specific_file(domain_sheet, rivers) -> list:
+def generate_domain_specific_file(
+    domain_sheet, rivers
+) -> OrderedDict[str, Any]:
     domain_rivers = []
+    enabled_only = []
     for _, row in domain_sheet.iterrows():
         river_id = row["ir"]
         river_name = row["rivername"]
@@ -344,7 +348,14 @@ def generate_domain_specific_file(domain_sheet, rivers) -> list:
         if len(river_dict) > 2:
             domain_rivers.append(river_dict)
 
-    return domain_rivers
+        # Save the fact that this river is enabled for this domain
+        enabled_only.append(
+            OrderedDict([("id", river_id), ("name", river_name)])
+        )
+
+    return OrderedDict(
+        [("rivers", domain_rivers), ("enabled_only", enabled_only)]
+    )
 
 
 def generate_main_json(main_sheet, domain_sheets, variables, profiles):
