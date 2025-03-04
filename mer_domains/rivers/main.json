@@ -2146,7 +2146,7 @@
       "geometry": {
         "mouth_longitude": 13.6893968562069,
         "mouth_latitude": 37.9930219676794,
-        "side": "E"
+        "side": "S"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2165,7 +2165,7 @@
       "geometry": {
         "mouth_longitude": 15.2573831931562,
         "mouth_latitude": 37.8077367180036,
-        "side": "E"
+        "side": "W"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2184,7 +2184,7 @@
       "geometry": {
         "mouth_longitude": 15.0893940848092,
         "mouth_latitude": 37.3977915296802,
-        "side": "E"
+        "side": "W"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2203,7 +2203,7 @@
       "geometry": {
         "mouth_longitude": 13.9482847669818,
         "mouth_latitude": 37.0993223839934,
-        "side": "E"
+        "side": "N"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2222,7 +2222,7 @@
       "geometry": {
         "mouth_longitude": 13.2667395186219,
         "mouth_latitude": 37.39601174298,
-        "side": "E"
+        "side": "N"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2241,7 +2241,7 @@
       "geometry": {
         "mouth_longitude": 13.2011823718187,
         "mouth_latitude": 37.4638778978456,
-        "side": "E"
+        "side": "N"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2260,7 +2260,7 @@
       "geometry": {
         "mouth_longitude": 12.8627076066945,
         "mouth_latitude": 37.5816308030276,
-        "side": "E"
+        "side": "N"
       },
       "biogeochemical": {
         "profile": "adr_ion"
@@ -2279,7 +2279,7 @@
       "geometry": {
         "mouth_longitude": 8.8095291427551,
         "mouth_latitude": 40.9334348139316,
-        "side": "N"
+        "side": "S"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2298,7 +2298,7 @@
       "geometry": {
         "mouth_longitude": 9.7369202,
         "mouth_latitude": 40.6497637,
-        "side": "N"
+        "side": "W"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2317,7 +2317,7 @@
       "geometry": {
         "mouth_longitude": 9.73544525470903,
         "mouth_latitude": 40.3775011609462,
-        "side": "N"
+        "side": "W"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2336,7 +2336,7 @@
       "geometry": {
         "mouth_longitude": 9.62867502862101,
         "mouth_latitude": 39.4276090299266,
-        "side": "N"
+        "side": "W"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2374,7 +2374,7 @@
       "geometry": {
         "mouth_longitude": 8.54511393307127,
         "mouth_latitude": 39.8844163607121,
-        "side": "N"
+        "side": "E"
       },
       "biogeochemical": {
         "profile": "tyr"
@@ -2393,7 +2393,7 @@
       "geometry": {
         "mouth_longitude": 8.47294845205123,
         "mouth_latitude": 40.2910150548303,
-        "side": "N"
+        "side": "E"
       },
       "biogeochemical": {
         "profile": "tyr"

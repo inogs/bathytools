@@ -1,36 +1,70 @@
-[
-  {
-    "id": 25,
-    "name": "Amato",
-    "geometry": {
-      "side": "E",
-      "stem": [
-        "+1z"
-      ]
+{
+  "rivers": [
+    {
+      "id": 25,
+      "name": "Amato",
+      "geometry": {
+        "side": "E",
+        "stem": [
+          "+1z"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "name": "Mesima",
+      "geometry": {
+        "side": "E"
+      }
+    },
+    {
+      "id": 27,
+      "name": "Petrace",
+      "geometry": {
+        "side": "E"
+      }
     }
-  },
-  {
-    "id": 26,
-    "name": "Mesima",
-    "geometry": {
-      "side": "E"
+  ],
+  "enabled_only": [
+    {
+      "id": 25,
+      "name": "Amato"
+    },
+    {
+      "id": 26,
+      "name": "Mesima"
+    },
+    {
+      "id": 27,
+      "name": "Petrace"
+    },
+    {
+      "id": 98,
+      "name": "S. Leonardo"
+    },
+    {
+      "id": 99,
+      "name": "Alcantara"
+    },
+    {
+      "id": 100,
+      "name": "Simeto"
+    },
+    {
+      "id": 101,
+      "name": "Salso"
+    },
+    {
+      "id": 102,
+      "name": "Platani"
+    },
+    {
+      "id": 103,
+      "name": "Verdura"
+    },
+    {
+      "id": 104,
+      "name": "Belice"
     }
-  },
-  {
-    "id": 27,
-    "name": "Petrace",
-    "geometry": {
-      "side": "E"
-    }
-  },
-  {
-    "id": 99,
-    "name": "Alcantara",
-    "geometry": {
-      "stem": [
-        "+87m",
-        "+2z"
-      ]
-    }
-  }
-]
+  ]
+}

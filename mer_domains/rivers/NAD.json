@@ -1,67 +1,211 @@
-[
-  {
-    "id": 66,
-    "name": "Brenta",
-    "geometry": {
-      "stem": [
-        "-2z",
-        "-2m",
-        "-6z"
-      ]
+{
+  "rivers": [
+    {
+      "id": 66,
+      "name": "Brenta",
+      "geometry": {
+        "stem": [
+          "-2z",
+          "-2m",
+          "-6z"
+        ]
+      }
+    },
+    {
+      "id": 67,
+      "name": "Naviglio del Brenta",
+      "geometry": {
+        "stem": [
+          "-2z",
+          "+2m",
+          "-6z"
+        ]
+      }
+    },
+    {
+      "id": 69,
+      "name": "Sile",
+      "geometry": {
+        "stem": [
+          "+4m",
+          "+4z",
+          "+2m",
+          "+6z",
+          "+1m"
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "name": "Tagliamento",
+      "geometry": {
+        "stem": [
+          "-8z",
+          "+2m"
+        ]
+      }
+    },
+    {
+      "id": 78,
+      "name": "Isonzo",
+      "geometry": {
+        "stem": [
+          "-9z",
+          "+2m"
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "name": "Cetina",
+      "geometry": {
+        "stem": [
+          "+3m",
+          "+7z"
+        ]
+      }
     }
-  },
-  {
-    "id": 67,
-    "name": "Naviglio del Brenta",
-    "geometry": {
-      "stem": [
-        "-2z",
-        "+2m",
-        "-6z"
-      ]
+  ],
+  "enabled_only": [
+    {
+      "id": 52,
+      "name": "Tronto"
+    },
+    {
+      "id": 53,
+      "name": "Chienti"
+    },
+    {
+      "id": 54,
+      "name": "Potenza"
+    },
+    {
+      "id": 55,
+      "name": "Musone"
+    },
+    {
+      "id": 56,
+      "name": "Esino"
+    },
+    {
+      "id": 57,
+      "name": "Metauro"
+    },
+    {
+      "id": 58,
+      "name": "Foglia"
+    },
+    {
+      "id": 59,
+      "name": "Marecchia"
+    },
+    {
+      "id": 60,
+      "name": "Savio"
+    },
+    {
+      "id": 61,
+      "name": "Fiumi uniti"
+    },
+    {
+      "id": 62,
+      "name": "Lamone"
+    },
+    {
+      "id": 63,
+      "name": "Reno"
+    },
+    {
+      "id": 64,
+      "name": "Po"
+    },
+    {
+      "id": 65,
+      "name": "Adige"
+    },
+    {
+      "id": 66,
+      "name": "Brenta"
+    },
+    {
+      "id": 67,
+      "name": "Naviglio del Brenta"
+    },
+    {
+      "id": 68,
+      "name": "Dese"
+    },
+    {
+      "id": 69,
+      "name": "Sile"
+    },
+    {
+      "id": 70,
+      "name": "Piave"
+    },
+    {
+      "id": 71,
+      "name": "Livenza"
+    },
+    {
+      "id": 72,
+      "name": "Lemene"
+    },
+    {
+      "id": 73,
+      "name": "Tagliamento"
+    },
+    {
+      "id": 74,
+      "name": "Stella"
+    },
+    {
+      "id": 75,
+      "name": "Cormor"
+    },
+    {
+      "id": 76,
+      "name": "Aussa"
+    },
+    {
+      "id": 77,
+      "name": "Timavo"
+    },
+    {
+      "id": 78,
+      "name": "Isonzo"
+    },
+    {
+      "id": 79,
+      "name": "Mirna"
+    },
+    {
+      "id": 80,
+      "name": "Rasa"
+    },
+    {
+      "id": 81,
+      "name": "Rjecina"
+    },
+    {
+      "id": 82,
+      "name": "Zrmanja "
+    },
+    {
+      "id": 83,
+      "name": "Krka"
+    },
+    {
+      "id": 84,
+      "name": "Dabar (Morinje)"
+    },
+    {
+      "id": 85,
+      "name": "Cetina"
+    },
+    {
+      "id": 86,
+      "name": "Neretva"
     }
-  },
-  {
-    "id": 69,
-    "name": "Sile",
-    "geometry": {
-      "stem": [
-        "+4m",
-        "+4z",
-        "+2m",
-        "+6z",
-        "+1m"
-      ]
-    }
-  },
-  {
-    "id": 73,
-    "name": "Tagliamento",
-    "geometry": {
-      "stem": [
-        "-8z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 78,
-    "name": "Isonzo",
-    "geometry": {
-      "stem": [
-        "-9z",
-        "+2m"
-      ]
-    }
-  },
-  {
-    "id": 85,
-    "name": "Cetina",
-    "geometry": {
-      "stem": [
-        "+3m",
-        "+7z"
-      ]
-    }
-  }
-]
+  ]
+}

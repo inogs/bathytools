@@ -1,53 +1,133 @@
-[
-  {
-    "id": 112,
-    "name": "Le Golo",
-    "geometry": {
-      "stem": [
-        "-8z",
-        "+2m"
-      ]
+{
+  "rivers": [
+    {
+      "id": 112,
+      "name": "Le Golo",
+      "geometry": {
+        "stem": [
+          "-8z",
+          "+2m"
+        ]
+      }
+    },
+    {
+      "id": 113,
+      "name": "Le Tavignano",
+      "geometry": {
+        "stem": [
+          "-10z",
+          "+2m"
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "name": "Le Rizzanese",
+      "geometry": {
+        "side": "S",
+        "stem": [
+          "+2z",
+          "-8m"
+        ]
+      }
+    },
+    {
+      "id": 115,
+      "name": "La Gravona",
+      "geometry": {
+        "stem": [
+          "+2z",
+          "+8m"
+        ]
+      }
+    },
+    {
+      "id": 116,
+      "name": "Liamone",
+      "geometry": {
+        "stem": [
+          "+2z",
+          "+8m"
+        ]
+      }
     }
-  },
-  {
-    "id": 113,
-    "name": "Le Tavignano",
-    "geometry": {
-      "stem": [
-        "-10z",
-        "+2m"
-      ]
+  ],
+  "enabled_only": [
+    {
+      "id": 0,
+      "name": "Roia"
+    },
+    {
+      "id": 1,
+      "name": "Centa"
+    },
+    {
+      "id": 2,
+      "name": "Entella"
+    },
+    {
+      "id": 3,
+      "name": "Magra Ligure"
+    },
+    {
+      "id": 4,
+      "name": "Serchio"
+    },
+    {
+      "id": 5,
+      "name": "Arno"
+    },
+    {
+      "id": 6,
+      "name": "Scolmatore dell'Arno"
+    },
+    {
+      "id": 7,
+      "name": "Cecina"
+    },
+    {
+      "id": 8,
+      "name": "Bruna"
+    },
+    {
+      "id": 9,
+      "name": "Ombrone"
+    },
+    {
+      "id": 10,
+      "name": "Albegna"
+    },
+    {
+      "id": 11,
+      "name": "Fiora"
+    },
+    {
+      "id": 12,
+      "name": "Mignone"
+    },
+    {
+      "id": 13,
+      "name": "Tevere"
+    },
+    {
+      "id": 112,
+      "name": "Le Golo"
+    },
+    {
+      "id": 113,
+      "name": "Le Tavignano"
+    },
+    {
+      "id": 114,
+      "name": "Le Rizzanese"
+    },
+    {
+      "id": 115,
+      "name": "La Gravona"
+    },
+    {
+      "id": 116,
+      "name": "Liamone"
     }
-  },
-  {
-    "id": 114,
-    "name": "Le Rizzanese",
-    "geometry": {
-      "side": "S",
-      "stem": [
-        "+2z",
-        "-8m"
-      ]
-    }
-  },
-  {
-    "id": 115,
-    "name": "La Gravona",
-    "geometry": {
-      "stem": [
-        "+2z",
-        "+8m"
-      ]
-    }
-  },
-  {
-    "id": 116,
-    "name": "Liamone",
-    "geometry": {
-      "stem": [
-        "+2z",
-        "+8m"
-      ]
-    }
-  }
-]
+  ]
+}

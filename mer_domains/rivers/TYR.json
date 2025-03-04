@@ -1,23 +1,83 @@
-[
-  {
-    "id": 22,
-    "name": "Noce",
-    "geometry": {
-      "side": "E"
+{
+  "rivers": [
+    {
+      "id": 22,
+      "name": "Noce",
+      "geometry": {
+        "side": "E"
+      }
+    },
+    {
+      "id": 23,
+      "name": "Lao",
+      "geometry": {
+        "side": "E"
+      }
+    },
+    {
+      "id": 24,
+      "name": "Savuto",
+      "geometry": {
+        "side": "E"
+      }
     }
-  },
-  {
-    "id": 23,
-    "name": "Lao",
-    "geometry": {
-      "side": "E"
+  ],
+  "enabled_only": [
+    {
+      "id": 11,
+      "name": "Fiora"
+    },
+    {
+      "id": 12,
+      "name": "Mignone"
+    },
+    {
+      "id": 13,
+      "name": "Tevere"
+    },
+    {
+      "id": 14,
+      "name": "Portatore"
+    },
+    {
+      "id": 15,
+      "name": "Garigliano"
+    },
+    {
+      "id": 16,
+      "name": "Volturno"
+    },
+    {
+      "id": 17,
+      "name": "Regi Lagni"
+    },
+    {
+      "id": 18,
+      "name": "Sarno"
+    },
+    {
+      "id": 19,
+      "name": "Sele"
+    },
+    {
+      "id": 20,
+      "name": "Alento"
+    },
+    {
+      "id": 21,
+      "name": "Bussento"
+    },
+    {
+      "id": 22,
+      "name": "Noce"
+    },
+    {
+      "id": 23,
+      "name": "Lao"
+    },
+    {
+      "id": 24,
+      "name": "Savuto"
     }
-  },
-  {
-    "id": 24,
-    "name": "Savuto",
-    "geometry": {
-      "side": "E"
-    }
-  }
-]
+  ]
+}
