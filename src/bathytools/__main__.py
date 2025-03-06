@@ -167,7 +167,9 @@ def write_output_files(bathymetry, domain_geometry, output_dir: PathLike):
 
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)
-    bathymetry_values.astype("float32", copy=False).tofile(bathy_file)
+    water_fractions.refined_bathymetry.astype("float32", copy=False).tofile(
+        bathy_file
+    )
     LOGGER.info("Done!")
 
     water_fraction_file = output_dir / "hFacC.bin"
