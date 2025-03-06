@@ -1,4 +1,5 @@
 import json
+import warnings
 from collections.abc import Mapping
 from dataclasses import dataclass
 from logging import getLogger
@@ -8,6 +9,7 @@ from typing import Literal
 from typing import Optional
 
 import xarray as xr
+from bitsea.commons.geodistances import compute_geodesic_distance
 from bitsea.commons.grid import RegularGrid
 from bitsea.commons.mask import Mask
 
@@ -92,7 +94,7 @@ class DigRivers(SimpleAction):
             )
         river_side = Direction(side)
 
-        output = [Movement(steam_length, -river_side)]
+        output = [Movement(steam_length, river_side)]
         LOGGER.debug(
             'Converting steam length "%s" from side "%s" to stem %s',
             steam_length,
@@ -218,10 +220,13 @@ class DigRivers(SimpleAction):
                 domain_data = json.load(f)
         else:
             LOGGER.debug("No domain file provided; using main file data only")
-            domain_data = []
+            domain_data = {"rivers": []}
+
+        if "rivers" not in domain_data:
+            raise ValueError('No "rivers" section found in domain file')
 
         # Update rivers_dig_data with the new values from the domain file
-        for river in domain_data:
+        for river in domain_data["rivers"]:
             river_id = river["id"]
             river_name = river["name"]
             if (river_id, river_name) not in rivers_dig_data:
@@ -241,6 +246,30 @@ class DigRivers(SimpleAction):
                 ) from e
             main_geometry.update(domain_geometry)
             rivers_dig_data[(river_id, river_name)] = (main_geometry, stem)
+
+        if "enabled_only" in domain_data:
+            LOGGER.debug('Reading section "enabled_only" from domain file')
+            previous_rivers = rivers_dig_data
+            rivers_dig_data = {}
+            enabled_only = domain_data["enabled_only"]
+            for river in enabled_only:
+                river_id = river["id"]
+                river_name = river["name"]
+                if (river_id, river_name) not in previous_rivers:
+                    raise ValueError(
+                        f"River with id = {river_id} and name = {river_name} "
+                        'defined in the "enabled_only" section of the file '
+                        f"{self._domain_file_path} is not defined "
+                        f"in the main file {self._main_file_path}"
+                    )
+                LOGGER.debug(
+                    "Enabling river %s (id = %s)", river_name, river_id
+                )
+                rivers_dig_data[(river_id, river_name)] = previous_rivers[
+                    (river_id, river_name)
+                ]
+        else:
+            LOGGER.debug('No "enabled_only" section found in domain file')
 
         # We create a new RiverDig for each river, and we save each one
         # into a list
@@ -323,10 +352,11 @@ class DigRivers(SimpleAction):
         # Create a fake mask with only 1 level ad depth 0.5 meter. We will use
         # it to locate the closest wet cell near the river mouth
         grid = RegularGrid(lon=bathymetry.longitude, lat=bathymetry.latitude)
+        mask_v = bathymetry.elevation.transpose("latitude", "longitude") < -0.5
         mask = Mask(
             grid=grid,
             zlevels=[0.5],
-            mask_array=bathymetry.elevation < -0.5,
+            mask_array=mask_v,
             allow_broadcast=True,
         )
 
@@ -387,6 +417,18 @@ class DigRivers(SimpleAction):
                 river_lat,
                 river_lon,
             )
+            mouth_distance = compute_geodesic_distance(
+                lat1=river_lat, lon1=river_lon, lat2=new_lat, lon2=new_lon
+            )
+            # From metres to km
+            mouth_distance /= 1e3
+            if mouth_distance > 20.0:
+                warnings.warn(
+                    f"Mouth of river {river.name} (id = {river.id}) has been "
+                    f"moved more than 20 km ({mouth_distance:.3f} km) from "
+                    f"its original position; it is probably an error in the "
+                    "configuration file"
+                )
 
             # We approximate the size of the face with the size in the center
             # of the cell. This is a good approximation, since the grid is
@@ -416,6 +458,10 @@ class DigRivers(SimpleAction):
                 len(digging_cells),
             )
 
-            apply_dig(bathymetry.elevation, digging_cells, -river.depth)
+            apply_dig(
+                bathymetry.elevation.transpose("latitude", "longitude"),
+                digging_cells,
+                -river.depth,
+            )
 
         return bathymetry

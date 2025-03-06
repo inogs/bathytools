@@ -50,10 +50,12 @@ class EMODnetBathymetryDownloader:
         returns it as an xarray dataset.
         """
         lon_slice = slice(
-            self._domain.minimum_longitude, self._domain.maximum_longitude
+            self._domain.minimum_longitude - self._domain.resolution,
+            self._domain.maximum_longitude + self._domain.resolution,
         )
         lat_slice = slice(
-            self._domain.minimum_latitude, self._domain.maximum_latitude
+            self._domain.minimum_latitude - self._domain.resolution,
+            self._domain.maximum_latitude + self._domain.resolution,
         )
         ds = xr.open_dataset(self.URL).sel(
             longitude=lon_slice, latitude=lat_slice

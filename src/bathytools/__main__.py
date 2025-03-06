@@ -11,8 +11,8 @@ from bitsea.utilities.argparse_types import path_inside_an_existing_dir
 
 from bathytools.actions import Action
 from bathytools.bathymetry_config import BathymetryConfig
-from bathytools.bathymetry_config import DomainGeometry
 from bathytools.bathymetry_sources import download_bathymetry_data
+from bathytools.bathymetry_sources import integrate_raw_bathymetry_on_domain
 from bathytools.depth_levels import generate_level_heights
 from bathytools.geoarrays import GeoArrays
 from bathytools.utilities.logtools import LoggingNanMax
@@ -34,7 +34,7 @@ def configure_logger():
     # Disable logging from numba
     logging.getLogger("numba").setLevel(logging.INFO)
 
-    LOGGER.setLevel(logging.INFO)
+    LOGGER.setLevel(logging.DEBUG)
 
     handler = logging.StreamHandler()
     handler.setLevel(logging.DEBUG)
@@ -134,38 +134,6 @@ def _check_cache_validity(
     return invalid_cache
 
 
-def interpolate_raw_bathymetry_on_domain(
-    raw_bathymetry: xr.Dataset, domain: DomainGeometry
-) -> xr.Dataset:
-    """
-    Interpolates a raw bathymetry dataset onto a given domain geometry and
-    ensures valid bathymetry values by capping positive values to zero. This
-    function assumes that the raw bathymetry data and domain geometry are
-    compatible for interpolation.
-
-    Args:
-        raw_bathymetry: The raw bathymetry dataset containing depth values
-            over a certain region. It must include longitude and latitude
-            dimensions to enable interpolation.
-        domain: An object containing the domain geometry description,
-            including longitude and latitude coordinates for the interpolation
-            domain.
-
-    Returns:
-        xr.Dataset: A bathymetry dataset interpolated onto the given domain
-            geometry. Positive bathymetry values are replaced with zero to
-            ensure valid underwater depth values.
-    """
-    ds_dom = raw_bathymetry.interp(
-        longitude=domain.longitude, latitude=domain.latitude, method="linear"
-    )
-    ds_dom = xr.where(ds_dom.elevation > 0.0, 0, ds_dom)
-
-    # Remove all NaNs and put 0 instead
-    ds_dom = xr.where(ds_dom.elevation.isnull(), 0, ds_dom)
-    return ds_dom
-
-
 def apply_actions(bathymetry, actions):
     for action_config in actions:
         LOGGER.info('Applying action "%s"', action_config["name"])
@@ -258,7 +226,7 @@ def generate_bathymetry(
         LoggingNanMax(raw_bathymetry_data.elevation),
     )
 
-    domain_bathymetry = interpolate_raw_bathymetry_on_domain(
+    domain_bathymetry = integrate_raw_bathymetry_on_domain(
         raw_bathymetry_data, bathymetry_config.domain
     )
 
