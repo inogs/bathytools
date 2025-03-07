@@ -2,11 +2,16 @@ import hashlib
 import warnings
 from dataclasses import dataclass
 from dataclasses import is_dataclass
+from enum import Enum
+from logging import getLogger
 from os import PathLike
 from typing import Any
 
 import numpy as np
 import yaml
+
+
+LOGGER = getLogger(__name__)
 
 
 class InvalidBathymetryConfigFile(Exception):
@@ -29,7 +34,7 @@ class ConfigFieldMissingError(InvalidBathymetryConfigFile):
 
 class InvalidActionDescription(InvalidBathymetryConfigFile):
     """
-    An exception that is raised when a descrption of an action inside the
+    An exception that is raised when a description of an action inside the
     YAML config file is invalid.
     """
 
@@ -208,27 +213,36 @@ class DomainGeometry:
         )
 
 
+class BathyInterpolationMethod(Enum):
+    LINEAR = "linear"
+    INTEGRAL_AVERAGE = "integrate"
+
+
 @dataclass
 class BathymetrySource:
     """
     Represents the source of bathymetry data, including the raw data source
-    and smoothing options.
+    and the type of the interpolation method used to generate the bathymetry
+    on the domain.
 
     Attributes:
         kind: The type or identifier of the bathymetry source.
-        smoother: Whether to apply smoothing to the data.
+        interpolation_method: How the bathymetry should be interpolated onto
+            the new domain
 
     """
 
     kind: str
-    smoother: bool = False
+    interpolation_method: BathyInterpolationMethod = (
+        BathyInterpolationMethod.INTEGRAL_AVERAGE
+    )
 
     def source_stable_hash(self) -> bytes:
         """
         Computes a stable SHA-256 hash for the bathymetry source.
 
         This hash changes if a different download source is specified,
-        but remains the same if smoothing options are adjusted. It ensures
+        but remains the same if interpolation method changes. It ensures
         that subsequent script executions can determine whether to reuse
         previously downloaded data or perform a new download.
 
@@ -236,6 +250,25 @@ class BathymetrySource:
             bytes: A SHA-256 hash based on the source type.
         """
         hasher = hashlib.new("sha256", self.kind.lower().encode("utf-8"))
+        return hasher.digest()
+
+    def interpolated_source_stable_hash(self) -> bytes:
+        """
+        Computes a stable SHA-256 hash for the bathymetry source that also
+        take into account the interpolation method used to generate the
+        bathymetry.
+
+        This hash changes if a different download source is specified or if the
+        interpolation method changes. It ensures that subsequent script
+        executions can determine whether to reuse previously raw interpolated
+        data or perform a new interpolation.
+
+        Returns:
+            bytes: A SHA-256 hash based on the source type and the
+                interpolation method.
+        """
+        hasher = hashlib.new("sha256", self.kind.lower().encode("utf-8"))
+        hasher.update(self.interpolation_method.value.encode("utf-8"))
         return hasher.digest()
 
 
@@ -295,6 +328,23 @@ class BathymetryConfig:
                 **domain_args["vertical_levels"]
             )
         domain = DomainGeometry(**yaml_content["domain"])
+
+        if "bathymetry" not in yaml_content:
+            raise ConfigFieldMissingError(
+                'Field "bathymetry" is missing in config file'
+            )
+        if "interpolation_method" in yaml_content["bathymetry"]:
+            interpolation_method = BathyInterpolationMethod(
+                yaml_content["bathymetry"]["interpolation_method"]
+            )
+        else:
+            interpolation_method = BathyInterpolationMethod.INTEGRAL_AVERAGE
+        LOGGER.debug(
+            "Bathymetry interpolation method = %s", interpolation_method
+        )
+        yaml_content["bathymetry"]["interpolation_method"] = (
+            interpolation_method
+        )
         bathymetry_source = BathymetrySource(**yaml_content["bathymetry"])
 
         if "actions" in yaml_content:

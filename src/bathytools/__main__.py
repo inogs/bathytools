@@ -12,7 +12,7 @@ from bitsea.utilities.argparse_types import path_inside_an_existing_dir
 from bathytools.actions import Action
 from bathytools.bathymetry_config import BathymetryConfig
 from bathytools.bathymetry_sources import download_bathymetry_data
-from bathytools.bathymetry_sources import integrate_raw_bathymetry_on_domain
+from bathytools.bathymetry_sources import interpolate_raw_bathymetry_on_domain
 from bathytools.depth_levels import generate_level_heights
 from bathytools.geoarrays import GeoArrays
 from bathytools.utilities.logtools import LoggingNanMax
@@ -228,8 +228,10 @@ def generate_bathymetry(
         LoggingNanMax(raw_bathymetry_data.elevation),
     )
 
-    domain_bathymetry = integrate_raw_bathymetry_on_domain(
-        raw_bathymetry_data, bathymetry_config.domain
+    domain_bathymetry = interpolate_raw_bathymetry_on_domain(
+        raw_bathymetry_data,
+        bathymetry_config.domain,
+        bathymetry_config.bathymetry_source.interpolation_method,
     )
 
     LOGGER.debug(
