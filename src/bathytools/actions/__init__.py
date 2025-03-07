@@ -225,6 +225,10 @@ class MultipleChoiceAction(Action, ABC):
     def get_choices(cls) -> dict[str, Callable]:
         raise NotImplementedError
 
+    @classmethod
+    def default_choice(cls) -> str | None:
+        return None
+
     def __init__(self, name: str, description: str, choice: str, kwargs: dict):
         super().__init__(name, description)
         self._choice = choice
@@ -253,11 +257,15 @@ class MultipleChoiceAction(Action, ABC):
             )
 
         if choice_field not in init_dict:
-            raise ValueError(
-                f'The "{choice_field}" argument must be specified when '
-                f'defining an action of type "{cls.__name__}".'
-            )
-        choice = init_dict[choice_field]
+            default_choice = cls.default_choice()
+            if default_choice is None:
+                raise ValueError(
+                    f'The "{choice_field}" argument must be specified when '
+                    f'defining an action of type "{cls.__name__}".'
+                )
+            choice = default_choice
+        else:
+            choice = init_dict[choice_field]
 
         valid_choices = sorted(tuple(cls.get_choices().keys()))
         if init_dict[choice_field] not in valid_choices:
