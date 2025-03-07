@@ -8,6 +8,7 @@ import xarray as xr
 from bitsea.commons.geodistances import compute_great_circle_distance
 from bitsea.commons.utils import search_closest_sorted
 
+from bathytools.bathymetry_config import BathyInterpolationMethod
 from bathytools.bathymetry_config import BathymetryConfig
 from bathytools.bathymetry_config import DomainGeometry
 from bathytools.bathymetry_config import InvalidBathymetrySourceError
@@ -57,6 +58,42 @@ def download_bathymetry_data(
 
 
 def interpolate_raw_bathymetry_on_domain(
+    raw_bathymetry: xr.Dataset,
+    domain: DomainGeometry,
+    algorithm: BathyInterpolationMethod,
+):
+    """
+    Interpolates raw bathymetric data onto a specified domain using the
+    provided interpolation method. The function supports different
+    interpolation algorithms to process the raw bathymetry data appropriately
+    and map it onto the target domain geometry.
+
+    Args:
+        raw_bathymetry: Dataset containing raw bathymetric data to be
+            interpolated.
+        domain: Geometry of the domain onto which the bathymetric data will be
+            interpolated.
+        algorithm: Method used for interpolation of the bathymetry data.
+            Supported methods include linear interpolation and integration.
+
+    Returns:
+        The interpolated bathymetry data as a result of applying the chosen
+        interpolation method on the raw bathymetric dataset.
+
+    Raises:
+        ValueError: If the specified interpolation algorithm is not recognized.
+    """
+    if algorithm == BathyInterpolationMethod.LINEAR:
+        return interpolate_raw_bathymetry_on_domain_linearly(
+            raw_bathymetry, domain
+        )
+    elif algorithm == BathyInterpolationMethod.INTEGRAL_AVERAGE:
+        return integrate_raw_bathymetry_on_domain(raw_bathymetry, domain)
+    else:
+        raise ValueError(f"Unknown interpolation method: {algorithm}")
+
+
+def interpolate_raw_bathymetry_on_domain_linearly(
     raw_bathymetry: xr.Dataset, domain: DomainGeometry
 ) -> xr.Dataset:
     """
