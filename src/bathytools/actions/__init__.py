@@ -9,7 +9,11 @@ from pathlib import Path
 from typing import Callable
 from warnings import warn
 
+import numpy as np
 import xarray as xr
+from bitsea.basins.region import Polygon
+
+from bathytools.utilities.relative_paths import read_path
 
 
 if __name__ == "__main__":
@@ -236,7 +240,7 @@ class MultipleChoiceAction(Action, ABC):
 
     def __call__(self, bathymetry: xr.DataArray) -> xr.DataArray:
         choice_func = self.get_choices()[self._choice]
-        return choice_func(bathymetry, **self._kwargs)
+        return choice_func(self, bathymetry, **self._kwargs)
 
     @classmethod
     def from_dict(cls, init_dict: dict):
@@ -268,7 +272,7 @@ class MultipleChoiceAction(Action, ABC):
             choice = init_dict[choice_field]
 
         valid_choices = sorted(tuple(cls.get_choices().keys()))
-        if init_dict[choice_field] not in valid_choices:
+        if choice not in valid_choices:
             valid_choices_str = ", ".join([f'"{v}"' for v in valid_choices])
             raise ValueError(
                 f'Invalid value "{choice}" received for field '
@@ -289,3 +293,143 @@ class MultipleChoiceAction(Action, ABC):
             choice=choice,
             kwargs=init_dict["args"],
         )
+
+
+class CellBroadcastAction(MultipleChoiceAction, ABC):
+    """
+    A common use case for a MultipleChoiceAction is applying the same operation
+    to a subset of bathymetry data, cell by cell.
+
+    In this scenario, each selected cell in the subset is processed independently.
+    This class provides a convenient way to implement such algorithms, ensuring
+    that the same function can be applied to each cell of the domain, a slice,
+    or a polygon.
+
+    To create a class that inherits from this one, the `build_callable` method
+    must be implemented. This method returns a callable to be applied to each
+    cell (i.e., the callable operates on a NumPy array and is expected to return
+    a NumPy array with the same shape).
+
+    The `build_callable` method is invoked with the arguments passed to the
+    `__init__` method, excluding those in the `STANDARD_KEYS` tuple. These
+    arguments are reserved for specifying the domain in which the callable
+    is applied. Thus, they should not be used as argument names in your
+    implementation of `build_callable`.
+
+    The `build_callable` method can utilize all initialization values to create
+    a callable that accepts a single argument: the bathymetry data values to
+    be processed.
+
+    The resulting action will apply the callable to all cells in the domain if
+    the `where` field is set to "everywhere" or is not specified. If the `where`
+    field is set to "slice", the `args` field must include the following keys:
+    `min_lat`, `max_lat`, `min_lon`, `max_lon`, which define the slice's position.
+    Any additional values in `args` are passed to the `build_callable` method.
+    Similarly, if the `where` field is set to "polygon", the `args` field must
+    contain the following keys: `polygon_name` and `wkt_file`. These specify
+    the polygon to be used. Any other values in `args` are passed to
+    the `build_callable` method.
+    """
+
+    STANDARD_KEYS = (
+        "min_lat",
+        "max_lat",
+        "min_lon",
+        "max_lon",
+        "polygon_name",
+        "wkt_file",
+    )
+
+    def __init__(self, name: str, description: str, choice: str, kwargs: dict):
+        build_callable_kwargs = kwargs.copy()
+        for standard_key in self.STANDARD_KEYS:
+            if standard_key in build_callable_kwargs:
+                del build_callable_kwargs[standard_key]
+        self._callable = self.build_callable(**build_callable_kwargs)
+
+        kwargs_domain = {
+            c: v for c, v in kwargs.items() if c in self.STANDARD_KEYS
+        }
+        if "wkt_file" in kwargs_domain:
+            kwargs_domain["wkt_file"] = read_path(kwargs_domain["wkt_file"])
+
+        super().__init__(name, description, choice, kwargs_domain)
+
+    @abstractmethod
+    def build_callable(
+        self, **kwargs
+    ) -> Callable[[np.ndarray | xr.DataArray], np.ndarray | xr.DataArray]:
+        raise NotImplementedError
+
+    @classmethod
+    def get_choice_field(cls) -> str:
+        return "where"
+
+    @classmethod
+    def get_choices(cls) -> dict[str, Callable]:
+        return {
+            "everywhere": cls.apply_everywhere,
+            "slice": cls.apply_on_slice,
+            "polygon": cls.apply_on_polygon,
+        }
+
+    @classmethod
+    def default_choice(cls) -> str | None:
+        return "everywhere"
+
+    def apply_everywhere(self, bathymetry: xr.DataArray) -> xr.DataArray:
+        bathymetry["elevation"] = self._callable(bathymetry.elevation.copy())
+        return bathymetry
+
+    def apply_on_slice(
+        self,
+        bathymetry: xr.DataArray,
+        *,
+        min_lat: float,
+        max_lat: float,
+        min_lon: float,
+        max_lon: float,
+    ) -> xr.DataArray:
+        data = (
+            bathymetry["elevation"]
+            .sel(
+                latitude=slice(min_lat, max_lat),
+                longitude=slice(min_lon, max_lon),
+            )
+            .copy()
+        )
+        bathymetry["elevation"].sel(
+            latitude=slice(min_lat, max_lat), longitude=slice(min_lon, max_lon)
+        )[:] = self._callable(data)
+        return bathymetry
+
+    def apply_on_polygon(
+        self, bathymetry: xr.DataArray, *, polygon_name: str, wkt_file: Path
+    ):
+        with open(wkt_file, "r") as f:
+            available_polys = Polygon.read_WKT_file(f)
+
+        try:
+            poly = available_polys[polygon_name]
+        except KeyError as e:
+            available_polys_str = ('"' + pl + '"' for pl in available_polys)
+            error_message = (
+                f'Polygon "{polygon_name}" not found in {wkt_file}; available '
+                f"choices: {', '.join(available_polys_str)}"
+            )
+            raise KeyError(error_message) from e
+
+        is_inside = poly.is_inside(
+            lon=bathymetry.longitude.values,
+            lat=bathymetry.latitude.values[:, np.newaxis],
+        )
+        data = (
+            bathymetry["elevation"]
+            .transpose("latitude", "longitude")
+            .values[is_inside]
+            .copy()
+        )
+        bathymetry["elevation"].transpose("latitude", "longitude").values[
+            is_inside
+        ] = self._callable(data)
+        return bathymetry
