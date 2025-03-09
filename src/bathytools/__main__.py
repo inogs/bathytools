@@ -33,7 +33,7 @@ def configure_logger():
     # Disable logging from numba
     logging.getLogger("numba").setLevel(logging.INFO)
 
-    LOGGER.setLevel(logging.DEBUG)
+    LOGGER.setLevel(logging.INFO)
 
     handler = logging.StreamHandler()
     handler.setLevel(logging.DEBUG)
@@ -232,8 +232,13 @@ def generate_bathymetry(
     bathymetry_file_path = cache_path / bathymetry_file_name
 
     if bathymetry_file_path.exists() and not invalid_cache:
+        LOGGER.info("Loading bathymetry data from cache")
         raw_bathymetry_data = xr.load_dataset(bathymetry_file_path)
     else:
+        LOGGER.info(
+            "Downloading bathymetry data from %s",
+            bathymetry_config.bathymetry_source.kind,
+        )
         raw_bathymetry_data = download_bathymetry_data(
             bathymetry_config, cache_path, volatile_cache
         )
@@ -244,6 +249,9 @@ def generate_bathymetry(
         LoggingNanMax(raw_bathymetry_data.elevation),
     )
 
+    LOGGER.info(
+        "Interpolating bathymetry on domain %s", bathymetry_config.name
+    )
     domain_bathymetry = interpolate_raw_bathymetry_on_domain(
         raw_bathymetry_data,
         bathymetry_config.domain,
@@ -279,6 +287,7 @@ def generate_bathymetry(
         output_dir=output_dir,
         compression_level=compression_level,
     )
+    LOGGER.info("Execution completed successfully!")
 
     return 0
 
