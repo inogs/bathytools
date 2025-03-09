@@ -19,6 +19,16 @@ bathymetry:
 
 
 actions:
+  - action: SetDepth
+    description: |
+      Set the depth of all the cells that are shallower than 3 meters to exactly
+      3 meters. We believe that this should guarantee a better behaviour
+      around the coasts.
+    where: everywhere
+    args:
+      value: 3.
+      shallower_than: 3.
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
