@@ -378,7 +378,9 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         return "everywhere"
 
     def apply_everywhere(self, bathymetry: xr.DataArray) -> xr.DataArray:
-        bathymetry["elevation"] = self._callable(bathymetry.elevation.copy())
+        bathymetry["elevation"].values = self._callable(
+            bathymetry.elevation.values.copy()
+        )
         return bathymetry
 
     def apply_on_slice(
@@ -396,7 +398,7 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
                 latitude=slice(min_lat, max_lat),
                 longitude=slice(min_lon, max_lon),
             )
-            .copy()
+            .values.copy()
         )
         bathymetry["elevation"].sel(
             latitude=slice(min_lat, max_lat), longitude=slice(min_lon, max_lon)
