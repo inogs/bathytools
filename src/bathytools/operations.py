@@ -7,6 +7,8 @@ from abc import ABC
 from abc import abstractmethod
 from pathlib import Path
 
+from bathytools.output_appendix import OutputAppendix
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,9 +36,12 @@ class Operation(ABC):
     module.
     """
 
-    def __init__(self, name: str, description: str):
+    def __init__(
+        self, name: str, description: str, output_appendix: OutputAppendix
+    ):
         self.name = name
         self.description = description
+        self._output_appendix = output_appendix
 
     @classmethod
     def get_subclasses(cls) -> dict[str, type]:
@@ -95,7 +100,12 @@ class Operation(ABC):
         return subclasses
 
     @classmethod
-    def build(cls, init_dict: dict, subclasses: dict[str, type] | None = None):
+    def build(
+        cls,
+        init_dict: dict,
+        output_appendix: OutputAppendix,
+        subclasses: dict[str, type] | None = None,
+    ):
         """
         Instantiates a subclass of `Operation` based on the `name` field
         provided in the input dictionary, and initializes it using the
@@ -116,6 +126,8 @@ class Operation(ABC):
         Args:
             init_dict (dict): Dictionary containing initialization data for
                 the operation.
+            output_appendix: an output_appendix that the new Operation
+                returned as output may use to save some additional output files.
             subclasses (dict, optional): A dictionary mapping subclass names
                 to their types. If not provided, the method will automatically
                 retrieve subclasses using `get_subclasses`.
@@ -136,11 +148,11 @@ class Operation(ABC):
             init_dict["args"] = {}
 
         # noinspection PyUnresolvedReferences
-        return operation.from_dict(init_dict)
+        return operation.from_dict(init_dict, output_appendix=output_appendix)
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, init_dict: dict):
+    def from_dict(cls, init_dict: dict, output_appendix: OutputAppendix):
         """
         Defines how each `Operation` subclass should be initialized from a
         dictionary, typically loaded from a configuration file.
@@ -152,7 +164,8 @@ class Operation(ABC):
         Args:
             init_dict (dict): A dictionary containing the necessary fields
                 for initializing the operation.
-
+            output_appendix: an output_appendix that the new Operation
+                returned as output may use to save some additional output.
         Returns:
             Operation: An instance of the subclass initialized with the
                 provided dictionary data.

@@ -5,6 +5,7 @@ import numpy as np
 from bitsea.basins.region import Polygon
 
 from bathytools.actions import SimpleAction
+from bathytools.output_appendix import OutputAppendix
 from bathytools.utilities.points import Point
 from bathytools.utilities.points import Segment
 
@@ -32,11 +33,12 @@ class DigChannel(SimpleAction):
         self,
         name: str,
         description: str,
+        output_appendix: OutputAppendix,
         start_point: dict[str, float],
         end_point: dict[str, float],
         width: float,
     ):
-        super().__init__(name, description)
+        super().__init__(name, description, output_appendix=output_appendix)
 
         self._start_point = Point(**start_point)
         self._end_point = Point(**end_point)
