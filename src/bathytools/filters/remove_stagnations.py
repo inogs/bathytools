@@ -5,6 +5,7 @@ from numpy.lib.stride_tricks import sliding_window_view
 
 from bathytools.domain_discretization import DomainDiscretization
 from bathytools.filters import Filter
+from bathytools.output_appendix import OutputAppendix
 
 
 LOGGER = getLogger(__name__)
@@ -113,7 +114,7 @@ class RemoveStagnations(Filter):
         )
 
     @classmethod
-    def from_dict(cls, init_dict: dict):
+    def from_dict(cls, init_dict: dict, output_appendix: OutputAppendix):
         name = init_dict["name"]
         description = init_dict.get("description", "")
 
@@ -129,4 +130,6 @@ class RemoveStagnations(Filter):
                 )
 
         # noinspection PyArgumentList
-        return cls(name=name, description=description)
+        return cls(
+            name=name, description=description, output_appendix=output_appendix
+        )

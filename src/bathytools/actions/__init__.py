@@ -12,6 +12,7 @@ import xarray as xr
 from bitsea.basins.region import Polygon
 
 from bathytools.operations import Operation
+from bathytools.output_appendix import OutputAppendix
 from bathytools.utilities.relative_paths import read_path
 
 
@@ -78,7 +79,7 @@ class SimpleAction(Action, ABC):
     """
 
     @classmethod
-    def from_dict(cls, init_dict: dict):
+    def from_dict(cls, init_dict: dict, output_appendix: OutputAppendix):
         if "args" not in init_dict:
             init_dict["args"] = {}
         name = init_dict["name"]
@@ -93,7 +94,12 @@ class SimpleAction(Action, ABC):
                 )
 
         # noinspection PyArgumentList
-        return cls(name=name, description=description, **init_dict["args"])
+        return cls(
+            name=name,
+            description=description,
+            output_appendix=output_appendix,
+            **init_dict["args"],
+        )
 
 
 class MultipleChoiceAction(Action, ABC):
@@ -143,8 +149,15 @@ class MultipleChoiceAction(Action, ABC):
     def default_choice(cls) -> str | None:
         return None
 
-    def __init__(self, name: str, description: str, choice: str, kwargs: dict):
-        super().__init__(name, description)
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        output_appendix: OutputAppendix,
+        choice: str,
+        kwargs: dict,
+    ):
+        super().__init__(name, description, output_appendix=output_appendix)
         self._choice = choice
         self._kwargs = kwargs
 
@@ -153,7 +166,7 @@ class MultipleChoiceAction(Action, ABC):
         return choice_func(self, bathymetry, **self._kwargs)
 
     @classmethod
-    def from_dict(cls, init_dict: dict):
+    def from_dict(cls, init_dict: dict, output_appendix: OutputAppendix):
         if "args" not in init_dict:
             init_dict["args"] = {}
         name = init_dict["name"]
@@ -200,6 +213,7 @@ class MultipleChoiceAction(Action, ABC):
         return cls(
             name=name,
             description=description,
+            output_appendix=output_appendix,
             choice=choice,
             kwargs=init_dict["args"],
         )
@@ -250,7 +264,14 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         "wkt_file",
     )
 
-    def __init__(self, name: str, description: str, choice: str, kwargs: dict):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        output_appendix: OutputAppendix,
+        choice: str,
+        kwargs: dict,
+    ):
         build_callable_kwargs = kwargs.copy()
         for standard_key in self.STANDARD_KEYS:
             if standard_key in build_callable_kwargs:
@@ -263,7 +284,13 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         if "wkt_file" in kwargs_domain:
             kwargs_domain["wkt_file"] = read_path(kwargs_domain["wkt_file"])
 
-        super().__init__(name, description, choice, kwargs_domain)
+        super().__init__(
+            name,
+            description,
+            output_appendix=output_appendix,
+            choice=choice,
+            kwargs=kwargs_domain,
+        )
 
     @abstractmethod
     def build_callable(
