@@ -16,11 +16,8 @@ domain:
 
 bathymetry:
   kind: "EMODnet"
-  smoother: True
-
 
 actions:
-  - action: CapDepth
-    description: Remove deep pits
-    args:
-      max_depth: 250.
+  - action: RemoveDetachedCells
+    description: |
+      Remove lakes or cells that are not connected to the main sea
