@@ -46,8 +46,9 @@ def configure_logger():
 def argument():
     parser = argparse.ArgumentParser(
         description="""
-        This tool generates a mesh for a model starting from a set of
-        instructions contained inside a YAML file
+        Bathytools is a suite of tools designed to create a suitable bathymetry
+        file for use with the MITgcm model, enabling the discretization of a
+        marine domain.
         """
     )
     parser.add_argument(
@@ -57,7 +58,7 @@ def argument():
         required=True,
         help="""
         The YAML config file that describes how the bathymetry must be
-        generated
+        generated;
         """,
     )
     parser.add_argument(
@@ -66,8 +67,7 @@ def argument():
         type=path_inside_an_existing_dir,
         required=True,
         help="""
-        The YAML config file that describes how the bathymetry must be
-        generated
+        The path of the directory where the output files must be written;
         """,
     )
 
@@ -80,7 +80,7 @@ def argument():
         help="""
         A path to a directory that will be used to store temporary files; if
         this is not submitted, a generic temporary directory will be used and
-        it will be deleted after the mesh generation is complete
+        it will be deleted after the generation of the outputs is complete
         """,
     )
 
