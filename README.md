@@ -66,3 +66,51 @@ If you do not have `poetry` installed, you have two options:
 ---
 
 ### Installing Poetry on G100
+
+If you are a user of G100, the computing cluster managed by CINECA, you can
+follow the steps below to create a virtual environment with `poetry` installed.
+
+1. **Load a Suitable Python Interpreter**
+   Begin by loading the appropriate Python module:
+   ```bash
+   module load python/3.11.7--gcc--10.2.0
+   ```
+
+2. **Choose a Location for the Virtual Environment**
+   Decide where you want to store your virtual environment. This location does
+   not need to exist beforehand. Set the chosen path as an environment variable:
+   ```bash
+   export VENV_PATH=$HOME/poetry_env
+   ```
+
+3. **Create the Virtual Environment**
+   Use the following command to create the virtual environment:
+   ```bash
+   python3 -m venv $VENV_PATH
+   ```
+
+4. **Activate the Virtual Environment**
+   Activate the virtual environment by running:
+   ```bash
+   source $VENV_PATH/bin/activate
+   ```
+
+   If the activation is successful, you should see the name of your virtual
+   environment appear in front of your shell prompt.
+
+5. **Install Poetry**
+   Now you can install `poetry` within the virtual environment using:
+   ```bash
+   pip install poetry
+   ```
+
+6. **Follow Instructions to Install Bathytools**
+   Once `poetry` is successfully installed, you can proceed with the eartlier
+   instructions in this document to install `bathytools`.
+
+**Important Note:**
+When you log in again, make sure to re-load the Python module and activate the virtual environment to continue using `poetry`. To do so, repeat the following two commands:
+```bash
+module load python/3.11.7--gcc--10.2.0
+source $VENV_PATH/bin/activate
+```
