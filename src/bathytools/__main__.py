@@ -13,11 +13,9 @@ from bathytools.actions import Action
 from bathytools.bathymetry_config import BathymetryConfig
 from bathytools.bathymetry_sources import download_bathymetry_data
 from bathytools.bathymetry_sources import interpolate_raw_bathymetry_on_domain
-from bathytools.depth_levels import generate_level_heights
-from bathytools.geoarrays import GeoArrays
+from bathytools.domain_discretization import DomainDiscretization
 from bathytools.utilities.logtools import LoggingNanMax
 from bathytools.utilities.logtools import LoggingNanMin
-from bathytools.water_fractions import WaterFractions
 
 
 if __name__ == "__main__":
@@ -142,45 +140,31 @@ def apply_actions(bathymetry, actions):
     return bathymetry
 
 
-def write_output_files(bathymetry, domain_geometry, output_dir: PathLike):
+def write_output_files(
+    domain_discretization: DomainDiscretization, output_dir: PathLike
+):
     output_dir = Path(output_dir)
 
     # Compression level
     compression = dict(zlib=True, complevel=9)
 
-    first_layer_height = domain_geometry.vertical_levels.first_layer_thickness
-    max_depth = domain_geometry.vertical_levels.maximum_depth
-    depth_levels = generate_level_heights(first_layer_height, max_depth)
-
-    bathymetry_values = bathymetry.elevation.transpose(
-        "latitude", "longitude"
-    ).values
-
-    water_fractions = WaterFractions.build(
-        depth_levels=depth_levels,
-        bathymetry_data=bathymetry_values,
-        domain_geometry=domain_geometry,
-    )
-    geo_arrays = GeoArrays.build(
-        domain_geometry=domain_geometry, depth_levels=depth_levels
-    )
-
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)
-    water_fractions.refined_bathymetry.astype("float32", copy=False).tofile(
+    domain_discretization.bathymetry.astype("float32", copy=False).tofile(
         bathy_file
     )
     LOGGER.info("Done!")
 
     water_fraction_file = output_dir / "hFacC.bin"
     LOGGER.info('Writing water cell fractions to "%s"', water_fraction_file)
-    water_fractions.on_cells.astype("float32", copy=False).tofile(
-        water_fraction_file
+    h_fac_content = domain_discretization.water_fractions.on_cells.astype(
+        "float32", copy=False
     )
+    h_fac_content.tofile(water_fraction_file)
     LOGGER.info("Done!")
 
     LOGGER.debug("Building meshmask arrays")
-    mesh_mask = geo_arrays.build_mesh_mask(water_fractions)
+    mesh_mask = domain_discretization.build_mesh_mask()
 
     mesh_mask_file = output_dir / "meshmask.nc"
     LOGGER.info('Writing meshmask to "%s"', mesh_mask_file)
@@ -190,7 +174,7 @@ def write_output_files(bathymetry, domain_geometry, output_dir: PathLike):
     LOGGER.info("Done!")
 
     LOGGER.debug("Building MitGCM static files")
-    mitgcm_statics = geo_arrays.build_mit_static_data(water_fractions)
+    mitgcm_statics = domain_discretization.build_mit_static_data()
 
     statics_file = output_dir / "MIT_static.nc"
     LOGGER.info('Writing static arrays to "%s"', statics_file)
@@ -250,9 +234,12 @@ def generate_bathymetry(
         LoggingNanMax(domain_bathymetry.elevation),
     )
 
+    domain_discretization = DomainDiscretization.build(
+        bathymetry=domain_bathymetry, domain_geometry=bathymetry_config.domain
+    )
+
     write_output_files(
-        domain_bathymetry,
-        domain_geometry=bathymetry_config.domain,
+        domain_discretization=domain_discretization,
         output_dir=output_dir,
     )
 
