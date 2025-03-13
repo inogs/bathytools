@@ -14,6 +14,7 @@ from bathytools.bathymetry_config import BathymetryConfig
 from bathytools.bathymetry_sources import download_bathymetry_data
 from bathytools.bathymetry_sources import interpolate_raw_bathymetry_on_domain
 from bathytools.domain_discretization import DomainDiscretization
+from bathytools.filters import Filter
 from bathytools.utilities.logtools import LoggingNanMax
 from bathytools.utilities.logtools import LoggingNanMin
 
@@ -142,6 +143,16 @@ def apply_actions(bathymetry, actions):
     return bathymetry
 
 
+def apply_filters(domain_discretization, filters) -> DomainDiscretization:
+    filter_classes = Filter.get_subclasses()
+    LOGGER.debug("Filter classes: %s", sorted(filter_classes.keys()))
+    for filter_config in filters:
+        LOGGER.info('Applying filter "%s"', filter_config["name"])
+        current_filter = Filter.build(filter_config, subclasses=filter_classes)
+        domain_discretization = current_filter(domain_discretization)
+    return domain_discretization
+
+
 def write_output_files(
     domain_discretization: DomainDiscretization, output_dir: PathLike
 ):
@@ -238,6 +249,10 @@ def generate_bathymetry(
 
     domain_discretization = DomainDiscretization.build(
         bathymetry=domain_bathymetry, domain_geometry=bathymetry_config.domain
+    )
+
+    domain_discretization = apply_filters(
+        domain_discretization, bathymetry_config.filters
     )
 
     write_output_files(
