@@ -60,6 +60,10 @@ class SetDepth(CellBroadcastAction):
             else:
                 k2 = -deeper_than
 
-            return np.where(np.logical_and(x < 0, x <= k2, x >= k1), -value, x)
+            return np.where(
+                np.logical_and(x < 0, np.logical_and(x >= k1, x <= k2)),
+                -value,
+                x,
+            )
 
         return fix_value
