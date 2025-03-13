@@ -133,9 +133,11 @@ def _check_cache_validity(
 
 
 def apply_actions(bathymetry, actions):
+    action_classes = Action.get_subclasses()
+    LOGGER.debug("Action classes: %s", sorted(action_classes.keys()))
     for action_config in actions:
         LOGGER.info('Applying action "%s"', action_config["name"])
-        action = Action.build(action_config)
+        action = Action.build(action_config, subclasses=action_classes)
         bathymetry = action(bathymetry)
     return bathymetry
 
