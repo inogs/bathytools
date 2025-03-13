@@ -31,9 +31,15 @@ class DomainDiscretization:
             from the bathymetry and domain geometry.
     """
 
-    def __init__(self, geo_arrays: GeoArrays, water_fractions: WaterFractions):
+    def __init__(
+        self,
+        geo_arrays: GeoArrays,
+        water_fractions: WaterFractions,
+        original_bathymetry: xr.Dataset,
+    ):
         self.geo_arrays = geo_arrays
         self.water_fractions = water_fractions
+        self.original_bathymetry = original_bathymetry
 
     @staticmethod
     def build(bathymetry: xr.Dataset, domain_geometry: DomainGeometry):
@@ -72,7 +78,9 @@ class DomainDiscretization:
             domain_geometry=domain_geometry, depth_levels=depth_levels
         )
 
-        return DomainDiscretization(geo_arrays, water_fractions)
+        return DomainDiscretization(
+            geo_arrays, water_fractions, original_bathymetry=bathymetry
+        )
 
     @property
     def bathymetry(self) -> np.ndarray:

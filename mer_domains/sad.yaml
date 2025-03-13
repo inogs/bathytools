@@ -37,3 +37,7 @@ actions:
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/SAD.json
+
+filters:
+  - filter: RemoveStagnations
+    description: Removes bottom water cells surrounded by land
