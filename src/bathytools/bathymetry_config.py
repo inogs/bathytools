@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import hashlib
 import warnings
+from collections.abc import Iterable
 from dataclasses import dataclass
 from dataclasses import is_dataclass
 from enum import Enum
@@ -35,6 +38,15 @@ class ConfigFieldMissingError(InvalidBathymetryConfigFile):
 class InvalidActionDescription(InvalidBathymetryConfigFile):
     """
     An exception that is raised when a description of an action inside the
+    YAML config file is invalid.
+    """
+
+    pass
+
+
+class InvalidFilterDescription(InvalidBathymetryConfigFile):
+    """
+    An exception that is raised when a description of a filter inside the
     YAML config file is invalid.
     """
 
@@ -289,12 +301,14 @@ class BathymetryConfig:
         name: str,
         domain: DomainGeometry,
         bathymetry_source: BathymetrySource,
-        actions: list[dict[str, Any]],
+        actions: Iterable[dict[str, Any]] | None = None,
+        filters: Iterable[dict[str, Any]] | None = None,
     ):
         self.name = name
         self.domain = domain
         self.bathymetry_source = bathymetry_source
-        self.actions = actions
+        self.actions = tuple(actions) if actions is not None else tuple()
+        self.filters = tuple(filters) if filters is not None else tuple()
 
     @staticmethod
     def from_yaml(file_path: PathLike):
@@ -375,7 +389,37 @@ class BathymetryConfig:
             action["name"] = action["action"]
             del action["action"]
 
-        return BathymetryConfig(name, domain, bathymetry_source, actions)
+        if "filters" in yaml_content:
+            filters = yaml_content["filters"]
+        else:
+            filters = []
+
+        for i, current_filter in enumerate(filters):
+            if not isinstance(current_filter, dict):
+                raise InvalidFilterDescription(
+                    f"Invalid filter description: {current_filter}"
+                )
+            if "filter" not in current_filter:
+                raise InvalidFilterDescription(
+                    f'Filter description missing "filter" field: {current_filter}'
+                )
+            if "description" not in current_filter:
+                warnings.warn(
+                    'No "description" field has been submitted for filter '
+                    f"number {i + 1}: {current_filter['filter']}",
+                )
+            if "name" in current_filter:
+                raise InvalidFilterDescription(
+                    f'Filters can not have a field named "name"; invalid '
+                    f'filter number {i + 1}: {current_filter["filter"]}'
+                )
+
+            current_filter["name"] = current_filter["filter"]
+            del current_filter["filter"]
+
+        return BathymetryConfig(
+            name, domain, bathymetry_source, actions, filters
+        )
 
     def source_stable_hash(self) -> bytes:
         """
