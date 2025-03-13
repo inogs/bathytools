@@ -37,6 +37,10 @@ class GeoArrays:
         self._boundary_latitudes = boundary_latitudes
         self._domain_geometry = domain_geometry
 
+    @property
+    def domain_geometry(self):
+        return self._domain_geometry
+
     @staticmethod
     def build(domain_geometry: DomainGeometry, depth_levels: DepthLevels):
         n_x = domain_geometry.n_x
