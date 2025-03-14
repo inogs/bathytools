@@ -29,7 +29,9 @@ def test_sequence_side_thin(list_of_movements: List[Movement]):
     seed_x, seed_y = 10, 40
     n_h_cells = 1
 
-    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
+    dig_cells, river_source = sequence_side(
+        n_h_cells, seed_x, seed_y, list_of_movements
+    )
 
     assert len(dig_cells) == curve_length
 
@@ -44,7 +46,9 @@ def test_sequence_side_fat(list_of_movements: List[Movement]):
     seed_x, seed_y = 10, 40
     n_h_cells = 5
 
-    dig_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
+    dig_cells, river_sources = sequence_side(
+        n_h_cells, seed_x, seed_y, list_of_movements
+    )
 
     assert len(dig_cells) == curve_length * n_h_cells
 
@@ -56,7 +60,9 @@ def test_apply_dig(list_of_movements: List[Movement]):
     v = 10
     n_h_cells = 3
 
-    curve_cells = sequence_side(n_h_cells, seed_x, seed_y, list_of_movements)
+    curve_cells, riversources = sequence_side(
+        n_h_cells, seed_x, seed_y, list_of_movements
+    )
 
     n_cells = len(curve_cells)
 
