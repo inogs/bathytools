@@ -19,7 +19,7 @@ from bathytools.utilities.logtools import LoggingNanMax
 from bathytools.utilities.logtools import LoggingNanMin
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" or __name__ == "bathytools.__main__":
     LOGGER = logging.getLogger()
 else:
     LOGGER = logging.getLogger(__name__)
@@ -80,6 +80,19 @@ def argument():
         A path to a directory that will be used to store temporary files; if
         this is not submitted, a generic temporary directory will be used and
         it will be deleted after the generation of the outputs is complete
+        """,
+    )
+
+    parser.add_argument(
+        "--compression-level",
+        "-l",
+        type=int,
+        required=False,
+        default=9,
+        help="""
+        The level of compression to be used for the netCDF output files; it
+        must be an integer number between 0 and 9; if 0, no compression will
+        be used". If it is not submitted, the default value of 9 will be used.
         """,
     )
 
@@ -154,12 +167,17 @@ def apply_filters(domain_discretization, filters) -> DomainDiscretization:
 
 
 def write_output_files(
-    domain_discretization: DomainDiscretization, output_dir: PathLike
+    domain_discretization: DomainDiscretization,
+    output_dir: PathLike,
+    compression_level: int = 9,
 ):
     output_dir = Path(output_dir)
 
-    # Compression level
-    compression = dict(zlib=True, complevel=9)
+    # Prepare the compression value for the encoding of the netCDF file
+    if compression_level == 0:
+        compression = dict(zlib=False)
+    else:
+        compression = dict(zlib=True, complevel=compression_level)
 
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)
@@ -203,6 +221,7 @@ def generate_bathymetry(
     cache_path: PathLike,
     output_dir: PathLike,
     volatile_cache: bool = True,
+    compression_level: int = 9,
 ) -> int:
     cache_path = Path(cache_path)
     invalid_cache = _check_cache_validity(
@@ -258,6 +277,7 @@ def generate_bathymetry(
     write_output_files(
         domain_discretization=domain_discretization,
         output_dir=output_dir,
+        compression_level=compression_level,
     )
 
     return 0
@@ -268,6 +288,13 @@ def main():
     configure_logger()
 
     config_path = args.config
+
+    compression_level = args.compression_level
+    if compression_level < 0 or compression_level > 9:
+        raise ValueError(
+            "Compression level must be an integer between 0 and 9. Received "
+            f"{compression_level}."
+        )
 
     LOGGER.debug("Reading config file from %s", config_path)
     bathy_config = BathymetryConfig.from_yaml(config_path)
@@ -281,13 +308,21 @@ def main():
         with tempfile.TemporaryDirectory() as tmpdir:
             LOGGER.debug("Using temporary directory %s", tmpdir)
             output_status = generate_bathymetry(
-                bathy_config, Path(tmpdir), output_dir, volatile_cache=True
+                bathy_config,
+                Path(tmpdir),
+                output_dir,
+                volatile_cache=True,
+                compression_level=compression_level,
             )
     else:
         LOGGER.debug("Using temporary directory %s", args.cache)
         args.cache.mkdir(exist_ok=True)
         output_status = generate_bathymetry(
-            bathy_config, Path(args.cache), output_dir, volatile_cache=False
+            bathy_config,
+            Path(args.cache),
+            output_dir,
+            volatile_cache=False,
+            compression_level=compression_level,
         )
 
     sys_exit(output_status)
