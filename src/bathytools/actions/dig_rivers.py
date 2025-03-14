@@ -452,7 +452,7 @@ class DigRivers(SimpleAction):
                 river_cell[1],
                 river.stem,
             )
-            digging_cells = sequence_side(
+            digging_cells, river_sources = sequence_side(
                 n_cells, river_cell[0], river_cell[1], river.stem
             )
             LOGGER.debug(
