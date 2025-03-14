@@ -38,6 +38,17 @@ actions:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/SAR.json
 
+  - action: DigChannel
+    description: Open a channel to separate Sant'Antioco island
+    args:
+      start_point:
+        lat: 39.109844
+        lon: 8.442927
+      end_point:
+        lat: 39.040271
+        lon: 8.501041
+      width: 1000
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land
