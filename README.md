@@ -27,10 +27,17 @@ git clone git@github.com:inogs/bathytools.git
 
 This software uses `poetry` as its package manager. If you have `poetry`
 installed, navigate into the `bathytools` directory created during cloning,
-and execute the following commands:
-
+and execute the following command:
 ```bash
 poetry install
+```
+
+If you are a developer (i.e., you think that you may need to modify the code),
+it is convenient to install this package together with the dev tools. In this
+case, instead of a simple "install", you may execute the following commands:
+
+```bash
+poetry install --with=dev
 poetry run pre-commit install
 ```
 
