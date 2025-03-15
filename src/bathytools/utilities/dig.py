@@ -222,7 +222,7 @@ def apply_dig(A, L: DIG, v: float):
 
 def sequence_side(
     nHorCells: int, i_start: int, j_start: int, movements: List[Movement]
-) -> DIG:
+) -> Tuple[DIG, DIG]:
     """
     Draws the path of the river having width expressed in cells.
     The sequence is:
@@ -237,29 +237,37 @@ def sequence_side(
     Segmentlist:  list of movements
 
     Return:
-    List of tuples (i,j)
+    Two list of tuples (i,j)
+    - L_out with the points (i,j) of the river bed
+    - riversources with the points (i,j) of the sources
     """
     if nHorCells not in range(1, 6):
         raise ValueError(f"nHorCells must be in range 1..5, got {nHorCells}")
 
     L_out = []
+    riversources = []
     for k in range(nHorCells):
         if k == 0:
             L = main_river_cell_list(i_start, j_start, movements)
             L_out.extend(L)
+            riversources.append(L[-1])
         if k == 1:
             L1 = cells_side(L, segno=1)
             L_out.extend(L1)
+            riversources.append(L1[-1])
         if k == 2:
             L2 = cells_side(L, segno=-1)
             L_out.extend(L2)
+            riversources.append(L2[-1])
         if k == 3:
             L3 = cells_side(L1, segno=1)
             L_out.extend(L3)
+            riversources.append(L3[-1])
         if k == 4:
             L4 = cells_side(L2, segno=-1)
             L_out.extend(L4)
-    return L_out
+            riversources.append(L4[-1])
+    return L_out, riversources
 
 
 if __name__ == "__main__":
@@ -269,12 +277,13 @@ if __name__ == "__main__":
 
     # DIGlist=["5E","3S","10E","3N","3W","4N"]
     DIGlist = ["30E", "20S", "10W", "5N"]
+    movement_list = [Movement.from_str(s) for s in DIGlist]
 
     seedx, seedy = 10, 40
     v = 10
     nHcells = 3
 
-    L = sequence_side(nHcells, seedx, seedy, DIGlist)
+    L, riversources = sequence_side(nHcells, seedx, seedy, movement_list)
 
     # L = main_river_cell_list(seedx, seedy, DIGlist)
     # L1 = cells_side(L,segno=1)

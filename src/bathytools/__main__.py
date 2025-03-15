@@ -15,6 +15,7 @@ from bathytools.bathymetry_sources import download_bathymetry_data
 from bathytools.bathymetry_sources import interpolate_raw_bathymetry_on_domain
 from bathytools.domain_discretization import DomainDiscretization
 from bathytools.filters import Filter
+from bathytools.output_appendix import OutputAppendix
 from bathytools.utilities.logtools import LoggingNanMax
 from bathytools.utilities.logtools import LoggingNanMin
 
@@ -33,7 +34,7 @@ def configure_logger():
     # Disable logging from numba
     logging.getLogger("numba").setLevel(logging.INFO)
 
-    LOGGER.setLevel(logging.DEBUG)
+    LOGGER.setLevel(logging.INFO)
 
     handler = logging.StreamHandler()
     handler.setLevel(logging.DEBUG)
@@ -146,22 +147,34 @@ def _check_cache_validity(
     return invalid_cache
 
 
-def apply_actions(bathymetry, actions):
+def apply_actions(
+    bathymetry, actions, output_appendix: OutputAppendix
+) -> xr.Dataset:
     action_classes = Action.get_subclasses()
     LOGGER.debug("Action classes: %s", sorted(action_classes.keys()))
     for action_config in actions:
         LOGGER.info('Applying action "%s"', action_config["name"])
-        action = Action.build(action_config, subclasses=action_classes)
+        action = Action.build(
+            action_config,
+            output_appendix=output_appendix,
+            subclasses=action_classes,
+        )
         bathymetry = action(bathymetry)
     return bathymetry
 
 
-def apply_filters(domain_discretization, filters) -> DomainDiscretization:
+def apply_filters(
+    domain_discretization, filters, output_appendix: OutputAppendix
+) -> DomainDiscretization:
     filter_classes = Filter.get_subclasses()
     LOGGER.debug("Filter classes: %s", sorted(filter_classes.keys()))
     for filter_config in filters:
         LOGGER.info('Applying filter "%s"', filter_config["name"])
-        current_filter = Filter.build(filter_config, subclasses=filter_classes)
+        current_filter = Filter.build(
+            filter_config,
+            output_appendix=output_appendix,
+            subclasses=filter_classes,
+        )
         domain_discretization = current_filter(domain_discretization)
     return domain_discretization
 
@@ -232,8 +245,13 @@ def generate_bathymetry(
     bathymetry_file_path = cache_path / bathymetry_file_name
 
     if bathymetry_file_path.exists() and not invalid_cache:
+        LOGGER.info("Loading bathymetry data from cache")
         raw_bathymetry_data = xr.load_dataset(bathymetry_file_path)
     else:
+        LOGGER.info(
+            "Downloading bathymetry data from %s",
+            bathymetry_config.bathymetry_source.kind,
+        )
         raw_bathymetry_data = download_bathymetry_data(
             bathymetry_config, cache_path, volatile_cache
         )
@@ -244,6 +262,9 @@ def generate_bathymetry(
         LoggingNanMax(raw_bathymetry_data.elevation),
     )
 
+    LOGGER.info(
+        "Interpolating bathymetry on domain %s", bathymetry_config.name
+    )
     domain_bathymetry = interpolate_raw_bathymetry_on_domain(
         raw_bathymetry_data,
         bathymetry_config.domain,
@@ -256,8 +277,9 @@ def generate_bathymetry(
         LoggingNanMax(domain_bathymetry.elevation),
     )
 
+    output_appendix = OutputAppendix(output_dir=output_dir)
     domain_bathymetry = apply_actions(
-        domain_bathymetry, bathymetry_config.actions
+        domain_bathymetry, bathymetry_config.actions, output_appendix
     )
 
     LOGGER.debug(
@@ -271,7 +293,7 @@ def generate_bathymetry(
     )
 
     domain_discretization = apply_filters(
-        domain_discretization, bathymetry_config.filters
+        domain_discretization, bathymetry_config.filters, output_appendix
     )
 
     write_output_files(
@@ -279,6 +301,7 @@ def generate_bathymetry(
         output_dir=output_dir,
         compression_level=compression_level,
     )
+    LOGGER.info("Execution completed successfully!")
 
     return 0
 

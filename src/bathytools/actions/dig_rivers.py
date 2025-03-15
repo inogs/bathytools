@@ -14,6 +14,7 @@ from bitsea.commons.grid import RegularGrid
 from bitsea.commons.mask import Mask
 
 from bathytools.actions import SimpleAction
+from bathytools.output_appendix import OutputAppendix
 from bathytools.utilities.dig import apply_dig
 from bathytools.utilities.dig import Direction
 from bathytools.utilities.dig import Movement
@@ -154,10 +155,11 @@ class DigRivers(SimpleAction):
         self,
         name: str,
         description: str,
+        output_appendix: OutputAppendix,
         main_file: str,
         domain_file: Optional[str] = None,
     ):
-        super().__init__(name, description)
+        super().__init__(name, description, output_appendix=output_appendix)
         self._main_file_path = read_path(main_file)
         self._domain_file_path = (
             read_path(domain_file) if domain_file else None
