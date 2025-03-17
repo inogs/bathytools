@@ -49,16 +49,18 @@ class RemoveStagnations(Filter):
             cells_per_column, (3, 3), writeable=False
         )
 
-        # Create a 3x3 mask that excludes the center
-        all_but_center = np.ones((3, 3), dtype=bool)
-        all_but_center[1, 1] = False
+        # Create a 3x3 mask that excludes the center and the diagonals
+        cross_neighbours = np.zeros((3, 3), dtype=bool)
+        cross_neighbours[:, 1] = True
+        cross_neighbours[1, :] = True
+        cross_neighbours[1, 1] = False
 
         # For every column, here we save the number of cell of the deepest
         # nearby column
         neighbour_max_columns = np.max(
             windowed_cells_per_column,
             axis=(-2, -1),
-            where=all_but_center,
+            where=cross_neighbours,
             initial=0,
         )
         # This mask is `True` where we have a stagnation. There can not be
@@ -91,7 +93,7 @@ class RemoveStagnations(Filter):
         stagnation_new_depth = np.max(
             windowed_depth[windowed_indices],
             axis=(-2, -1),
-            where=all_but_center,
+            where=cross_neighbours,
             initial=0.0,
         )
 
