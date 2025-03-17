@@ -29,6 +29,18 @@ actions:
       value: 3.
       shallower_than: 3.
 
+  - action: SetDepth
+    description: |
+      Put land on a region of water cells adjacent to the southern boundary (east)
+      since there is land above
+    where: slice
+    args:
+      min_lon: 20.14844
+      max_lon: 20.31
+      min_lat: 39.502
+      max_lat: 39.5287
+      value: 0.
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
