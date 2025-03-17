@@ -29,6 +29,19 @@ actions:
       value: 3.
       shallower_than: 3.
 
+  - action: SetDepth
+    description: |
+      Put land on a slice of water cells adjacent to the southern boundary since there
+      is land in the cells just above
+    where: slice
+    args:
+      min_lon: 9.35
+      max_lon: 9.3672
+      min_lat: 41.58
+      max_lat: 41.587
+      value: 0.
+
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
@@ -37,6 +50,17 @@ actions:
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/LIG.json
+
+  - action: DigChannel
+    description: Open a channel to separate Palmaria island
+    args:
+      start_point:
+        lat: 44.04948
+        lon: 9.841146
+      end_point:
+        lat: 44.03906
+        lon: 9.830729
+      width: 1000
 
 filters:
   - filter: RemoveStagnations
