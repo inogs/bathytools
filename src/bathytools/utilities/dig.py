@@ -131,6 +131,10 @@ def insert(i: int, j: int, L_orig: DIG, L: DIG) -> Tuple[int, int, DIG]:
     """
     LOGGER.debug("--- %s %s", i, j)
 
+    # Ensure i and j are integers and not numpy int
+    i = int(i)
+    j = int(j)
+
     if (i, j) in L_orig:
         LOGGER.warning("hai sbattuto sull'originale")
         return 0, 0, L
