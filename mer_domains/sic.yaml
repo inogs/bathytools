@@ -38,6 +38,28 @@ actions:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/SIC.json
 
+  - action: DigChannel
+    description: Open a channel to separate Isola Grande
+    args:
+      start_point:
+        lat: 37.873
+        lon: 12.45573
+      end_point:
+        lat: 37.9089
+        lon: 12.45573
+      width: 600
+
+  - action: DigChannel
+    description: Open a channel to reduce Isola di Mozia
+    args:
+      start_point:
+        lat: 37.86198
+        lon: 12.47135
+      end_point:
+        lat: 37.87239
+        lon: 12.47135
+      width: 600
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land

@@ -82,8 +82,8 @@
       "geometry": {
         "side": "N",
         "stem": [
-          "-4m",
-          "-4z",
+          "-6m",
+          "-2z",
           "+2m"
         ]
       }
@@ -194,10 +194,6 @@
     {
       "id": 38,
       "name": "Lato"
-    },
-    {
-      "id": 39,
-      "name": "Canale d'Aiedda"
     },
     {
       "id": 40,
