@@ -29,6 +29,132 @@ actions:
       value: 3.
       shallower_than: 3.
 
+actions:
+  - action: SetDepth
+    description: |
+      Extend land under Susac island since it is near the southern boundary
+    where: slice
+    args:
+      min_lon: 16.497
+      max_lon: 16.5391
+      min_lat: 42.7526
+      max_lat: 42.7578
+      value: 0.
+
+  - action: SetDepth
+    description: |
+      Extend land on a small cove of Lastovo island since it is near
+      the southern boundary
+    where: slice
+    args:
+      min_lon: 16.7838
+      max_lon: 16.8047
+      min_lat: 42.7526
+      max_lat: 42.7631
+      value: 0.
+
+  - action: SetDepth
+    description: |
+      Extend land under small Otocici Vrhovnjaci island since it is near
+      the southern boundary
+    where: slice
+    args:
+      min_lon: 17.10676
+      max_lon: 17.10678
+      min_lat: 42.7526
+      max_lat: 42.7580
+      value: 0.
+
+  - action: SetDepth
+    description: |
+      Extend land under small Otocic Gornji Vlasnik island since it is
+      near the southern boundary
+    where: slice
+    args:
+      min_lon: 17.1171
+      max_lon: 17.1172
+      min_lat: 42.7526
+      max_lat: 42.7580
+      value: 0.
+
+  - action: SetDepth
+    description: |
+      Extend land on a small cove of Mljet island since it is near
+      the south
+      ern boundary
+    where: slice
+    args:
+      min_lon: 17.3671
+      max_lon: 17.4
+      min_lat: 42.75241936
+      max_lat: 42.768
+      value: 0.
+
+  - action: SetDepth
+    description: |
+      Extend land between Otocic Kruciva and Cesvinica islands
+      that are near the southern boundary
+    where: slice
+    args:
+      min_lon: 16.97135
+      max_lon: 16.97137
+      min_lat: 42.7526
+      max_lat: 42.7631
+      value: 0.
+
+  - action: DigChannel
+    description: Deleting small island south-east of Cesvinica
+    args:
+      start_point:
+        lat: 42.7630
+        lon: 16.9921
+      end_point:
+        lat: 42.7630
+        lon: 17.0027
+      width: 800
+
+  - action: DigChannel
+    description: Deleting a zonal part of Broce peninsula
+    args:
+      start_point:
+        lat: 42.763
+        lon: 17.7526
+      end_point:
+        lat: 42.763
+        lon: 17.7787
+      width: 800
+
+  - action: DigChannel
+    description: Deleting a meridional part of Broce peninsula
+    args:
+      start_point:
+        lat: 42.7735
+        lon: 17.7786
+      end_point:
+        lat: 42.7526
+        lon: 17.7787
+      width: 800
+
+  - action: DigChannel
+    description: Separating Krk island
+    args:
+      start_point:
+        lat: 45.25265
+        lon: 14.5494
+      end_point:
+        lat: 45.2161
+        lon: 14.60158
+      width: 800
+
+  - action: SetDepth
+    description: |
+      Deleting the Grado-Marano lagoon
+    where: polygon
+    args:
+      wkt_file: ${MAIN_DIR}/polygons/nad_lagoons.csv
+      polygon_name: Laguna_Grado_Marano
+      value: 0.
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
