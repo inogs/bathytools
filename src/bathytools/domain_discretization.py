@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import xarray as xr
 
@@ -5,6 +7,9 @@ from bathytools.bathymetry_config import DomainGeometry
 from bathytools.depth_levels import generate_level_heights
 from bathytools.geoarrays import GeoArrays
 from bathytools.water_fractions import WaterFractions
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class DomainDiscretization:
@@ -62,12 +67,34 @@ class DomainDiscretization:
         first_layer_height = (
             domain_geometry.vertical_levels.first_layer_thickness
         )
-        max_depth = domain_geometry.vertical_levels.maximum_depth
-        depth_levels = generate_level_heights(first_layer_height, max_depth)
-
         bathymetry_values = bathymetry.elevation.transpose(
             "latitude", "longitude"
         ).values
+
+        max_depth = domain_geometry.vertical_levels.maximum_depth
+        depth_levels = generate_level_heights(first_layer_height, max_depth)
+
+        max_depth_bathy = -np.min(bathymetry_values)
+        LOGGER.debug(
+            "Current last level is between %s and %s but the max depth of "
+            "the bathymetry is %s",
+            depth_levels.top_faces[-1],
+            depth_levels.bottom_faces[-1],
+            max_depth_bathy,
+        )
+
+        if depth_levels.top_faces[-1] > max_depth_bathy:
+            LOGGER.debug(
+                "There are empty levels at the bottom; we remove them"
+            )
+            depth_levels = depth_levels.cut_at(max_depth_bathy)
+            LOGGER.debug(
+                "Now the last level is between %s and %s",
+                depth_levels.top_faces[-1],
+                depth_levels.bottom_faces[-1],
+            )
+        else:
+            LOGGER.debug("No need to reduce the number of levels")
 
         water_fractions = WaterFractions.build(
             depth_levels=depth_levels,
