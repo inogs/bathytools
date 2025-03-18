@@ -60,6 +60,21 @@ class DepthLevels:
     def face_positions(self):
         return self._faces
 
+    def cut_at(self, height: float):
+        """
+        Return a new DepthLevels object with levels cut at a given height.
+
+        Args:
+            height: the height at which to cut the levels (in metres). All the
+                cells whose top face is below this height (i.e., every part
+                of the cell is deeper than this height) will be removed.
+
+        Returns:
+            A new DepthLevels object with levels cut at the given height.
+        """
+        cut_level = int(np.searchsorted(self._faces, height))
+        return DepthLevels(self._levels[:cut_level])
+
 
 def generate_level_heights(
     first_layer_height: float = 1.0,
