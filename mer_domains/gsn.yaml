@@ -26,6 +26,9 @@ actions:
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
 
+  - action: RemoveTrappedWater
+    description: Remove the water cells on the boundary that are close to land
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land

@@ -49,6 +49,9 @@ actions:
         lon: 8.501041
       width: 1000
 
+  - action: RemoveTrappedWater
+    description: Remove the water cells on the boundary that are close to land
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land
