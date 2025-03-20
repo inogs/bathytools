@@ -1,16 +1,16 @@
 ---
-name: Small Test Domain
+name: Gulf of Trieste
 
 domain:
-  minimum_latitude: 45.62500124304779
-  maximum_latitude: 45.87500126317812
-  minimum_longitude: 13.479167331499884
-  maximum_longitude: 13.812500673698715
+  minimum_latitude: 45.4166678929391
+  maximum_latitude: 45.8333345931564
+  minimum_longitude: 13.3958339959501
+  maximum_longitude: 13.8125006736987
   resolution: 0.005208333333333333
   minimum_h_factor: 0.2
   vertical_levels:
     minimum_depth: 0.0
-    maximum_depth: 25.0
+    maximum_depth: 50.0
     first_layer_thickness: 1
 
 
