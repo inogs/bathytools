@@ -208,9 +208,12 @@ def write_output_files(
 
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)
-    domain_discretization.bathymetry.astype("float32", copy=False).tofile(
-        bathy_file
+    # Swap sign to have negative values where there is water (this is the
+    # convention used by MitGCM)
+    bathy_content = -domain_discretization.bathymetry.astype(
+        "float32", copy=False
     )
+    bathy_content.tofile(bathy_file)
     LOGGER.info("Done!")
 
     water_fraction_file = output_dir / "hFacC.bin"
