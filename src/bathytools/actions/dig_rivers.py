@@ -594,7 +594,12 @@ class DigRivers(SimpleAction):
             f.write(river_position_content + "\n")
 
         # Create namelist files to configure river-specific open boundary
-        # conditions for the numerical model.
+        # conditions for the numerical model. We start by writing the function
+        # that we will use inside our routine when we have to register a river;
+        # it writes
+        def build_interval(length: int, position: int) -> str:
+            return f"{length}*{position},"
+
         obj_file_content = ""
         for side in Direction:
             # Determine the prefix for each line based on the boundary side.
@@ -629,7 +634,9 @@ class DigRivers(SimpleAction):
             # boundary cells to the default value (either open or closed).
             if len(river_atlas[side]) == 0:
                 obj_file_content += (
-                    f"{line_prefix}{side_length}x{no_river_position},\n"
+                    line_prefix
+                    + build_interval(side_length, no_river_position)
+                    + "\n"
                 )
                 continue
 
@@ -679,20 +686,24 @@ class DigRivers(SimpleAction):
                 # If there is a gap between the current river and the previous
                 # one, add it to the line being written.
                 if river_start != previous_position:
-                    obj_file_content += f"{river_start - previous_position}x{no_river_position},"
+                    obj_file_content += build_interval(
+                        river_start - previous_position, no_river_position
+                    )
 
                 # Update the ending position for the next river.
                 previous_position = river_interval.end
 
                 # Write the cells occupied by the current river. Add "+ 1" to
                 # the translation for Fortran's 1-based indexing.
-                obj_file_content += f"{river_range}x{river_translation + 1},"
+                obj_file_content += build_interval(
+                    river_range, river_translation + 1
+                )
 
             # If the end of the side has not been reached, fill the remaining
             # cells with the "no_river" value.
             if previous_position != side_length:
-                obj_file_content += (
-                    f"{side_length - previous_position}x{no_river_position},"
+                obj_file_content += build_interval(
+                    side_length - previous_position, no_river_position
                 )
 
             # Finalize and close the line for this side.
