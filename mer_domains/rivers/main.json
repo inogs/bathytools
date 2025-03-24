@@ -1494,8 +1494,8 @@
         "latitude_index": 2211
       },
       "geometry": {
-        "mouth_longitude": 12.53661795302,
-        "mouth_latitude": 44.9671338460794,
+        "mouth_longitude": 12.57031,
+        "mouth_latitude": 44.965,
         "width": 1500,
         "depth": 6,
         "side": "W"
