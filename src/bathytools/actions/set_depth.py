@@ -41,7 +41,7 @@ class SetDepth(CellBroadcastAction):
         else:
             deeper_than = None
 
-        if shallower_than is not None and deeper_than is not None:
+        if shallower_than is None and deeper_than is None:
 
             def fix_value(x):
                 x[:] = -value

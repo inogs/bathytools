@@ -167,6 +167,28 @@ actions:
   - action: RemoveTrappedWater
     description: Remove the water cells on the boundary that are close to land
 
+  - action: SetDepth
+    description: |
+      Adding northern Po stem
+    where: slice
+    args:
+      min_lon: 12.411
+      max_lon: 12.417
+      min_lat: 44.96615
+      max_lat: 45.05
+      value: 6.0
+
+  - action: SetDepth
+    description: |
+      Adding southern Po stem
+    where: slice
+    args:
+      min_lon: 12.38
+      max_lon: 12.39
+      min_lat: 44.767
+      max_lat: 44.96615
+      value: 6.0
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land
