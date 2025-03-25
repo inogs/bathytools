@@ -451,7 +451,7 @@ def main() -> int:
     )
 
     with open(output_file, "w") as f:
-        f.write(main_json)
+        f.write(main_json + "\n")
 
     # If we do not have to create the domain files, we can stop now the
     # execution

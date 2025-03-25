@@ -79,7 +79,7 @@ class DepthLevels:
 def generate_level_heights(
     first_layer_height: float = 1.0,
     max_depth: float = 218.0,
-    extra_refined_depth: float = 20.0,
+    extra_refined_depth: float = 0.0,
 ) -> DepthLevels:
     """Generate  the height of the levels for the  z-axis of the model.
 
@@ -123,25 +123,25 @@ def generate_level_heights(
     [1] https://forge.nemo-ocean.eu/nemo/nemo/-/blob/789f105d635d17e0e1fd41a002d44c8fc5b045d6/src/OCE/DOM/domzgr.F90
     """
     logger = logging.getLogger(f"{__name__}:generate_level_heights")
-    if (first_layer_height <= 0.0) or (max_depth <= 0.0):
+    if first_layer_height <= 0.0 or max_depth <= 0.0:
         raise ValueError(
             "`first_layer_height` and `max_depth` must be strictly positive."
         )
     if extra_refined_depth < 0.0:
-        raise ValueError("`extra_refined_depth` must be non-negative.")
+        raise ValueError('"extra_refined_depth" must be non-negative.')
     if extra_refined_depth > max_depth:
         raise ValueError(
-            "`extra_refined_depth` must be smaller than `max_depth`"
+            '"extra_refined_depth" must be smaller than "max_depth"'
         )
 
     # same parameters from the NEMO Fortran functions
     PPKTH = 111.0
-    PPACR = 64.0
+    PPACR = 44.0
     # max depth of the Mediterranean Sea
     MEDSEA_MAX_DEPTH = 5700.0
 
     # number of z-levels in the NEMO model
-    JPK = 141
+    JPK = 110
     JPKM1 = JPK - 1
 
     ZKTH = PPKTH
