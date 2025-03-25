@@ -1765,7 +1765,12 @@
       "geometry": {
         "mouth_longitude": 13.5525677816984,
         "mouth_latitude": 45.7256714098903,
-        "side": "N"
+        "side": "N",
+        "stem": [
+          "+1m",
+          "-9z",
+          "+2m"
+        ]
       },
       "biogeochemical": {
         "profile": "adr_ion"

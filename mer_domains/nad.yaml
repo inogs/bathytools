@@ -29,7 +29,6 @@ actions:
       value: 3.
       shallower_than: 3.
 
-actions:
   - action: SetDepth
     description: |
       Extend land under Susac island since it is near the southern boundary

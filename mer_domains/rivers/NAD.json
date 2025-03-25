@@ -55,16 +55,6 @@
       }
     },
     {
-      "id": 78,
-      "name": "Isonzo",
-      "geometry": {
-        "stem": [
-          "-9z",
-          "+2m"
-        ]
-      }
-    },
-    {
       "id": 85,
       "name": "Cetina",
       "geometry": {
