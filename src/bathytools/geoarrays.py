@@ -181,10 +181,11 @@ class GeoArrays:
         dzg = typed(self._depth_levels.thickness)
 
         zc = self._depth_levels.centers
+        zg = self._depth_levels.bottom_faces
         dzc = np.ones(zc.shape[0] + 1, dtype=dtype)
         dzc[0] = zc[0] * 0.5
         dzc[1:-1] = np.abs(zc[1:] - zc[:-1])
-        dzc[-1] = zc[-1] * 0.5
+        dzc[-1] = np.abs(zg[-1] - zc[-1])
 
         depth = typed(water_fractions.refined_bathymetry)
 
