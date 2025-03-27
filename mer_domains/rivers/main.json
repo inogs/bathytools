@@ -308,7 +308,7 @@
       },
       "geometry": {
         "mouth_longitude": 8.22429947600262,
-        "mouth_latitude": 44.0424576156591,
+        "mouth_latitude": 44.045,
         "side": "N"
       },
       "biogeochemical": {
@@ -535,8 +535,8 @@
         "latitude_index": 2249
       },
       "geometry": {
-        "mouth_longitude": 12.2308346849019,
-        "mouth_latitude": 41.7410983957035,
+        "mouth_longitude": 12.221,
+        "mouth_latitude": 41.743,
         "side": "E"
       },
       "biogeochemical": {
