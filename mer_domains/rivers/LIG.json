@@ -1,6 +1,16 @@
 {
   "rivers": [
     {
+      "id": 1,
+      "name": "Centa",
+      "geometry": {
+        "stem": [
+          "-6z",
+          "+4m"
+        ]
+      }
+    },
+    {
       "id": 112,
       "name": "Le Golo",
       "geometry": {
