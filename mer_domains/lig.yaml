@@ -41,6 +41,17 @@ actions:
       max_lat: 41.587
       value: 0.
 
+  - action: SetDepth
+    description: |
+      Put land on a slice of water cells adjacent to Saint Jean Cap Ferrat which
+      is near the northwestern boundary
+    where: slice
+    args:
+      min_lon: 7.31
+      max_lon: 7.33072
+      min_lat: 43.67448
+      max_lat: 43.70573
+      value: 0.
 
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
