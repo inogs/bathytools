@@ -16,7 +16,6 @@ from bathytools.bathymetry_sources import interpolate_raw_bathymetry_on_domain
 from bathytools.domain_discretization import DomainDiscretization
 from bathytools.filters import Filter
 from bathytools.output_appendix import OutputAppendix
-from bathytools.utilities.generate_tmask import generate_tmask
 from bathytools.utilities.logtools import LoggingNanMax
 from bathytools.utilities.logtools import LoggingNanMin
 
@@ -99,14 +98,12 @@ def argument():
     )
 
     parser.add_argument(
-        "--tmask",
-        "-t",
+        "--mer",
+        "-m",
         action="store_true",
         help="""
-        If this flag is set, this script will also generate the tmask file
-        used inside the MER project; tmask.nc is a netCDF file that stores a
-        subset of the information stored in the meshmask.nc file and that is
-        CF-1.4 compliant
+        If this flag is set, this script will generate the meshmask in the
+        format used by the MER project. This format is CF-1.4 compliant.
         """,
     )
 
@@ -196,7 +193,7 @@ def write_output_files(
     domain_discretization: DomainDiscretization,
     output_dir: PathLike,
     compression_level: int = 9,
-    write_tmask: bool = False,
+    use_mer_format: bool = False,
 ):
     output_dir = Path(output_dir)
 
@@ -225,7 +222,9 @@ def write_output_files(
     LOGGER.info("Done!")
 
     LOGGER.debug("Building meshmask arrays")
-    mesh_mask = domain_discretization.build_mesh_mask()
+    mesh_mask = domain_discretization.build_mesh_mask(
+        use_mer_format=use_mer_format
+    )
 
     mesh_mask_file = output_dir / "meshmask.nc"
     LOGGER.info('Writing meshmask to "%s"', mesh_mask_file)
@@ -245,20 +244,6 @@ def write_output_files(
     )
     LOGGER.info("Done!")
 
-    if write_tmask:
-        LOGGER.debug("Building tmask arrays")
-        tmask = generate_tmask(
-            mesh_mask,
-            zlevels=mitgcm_statics.drF.values.astype("float64", copy=False),
-        )
-        tmask_file = output_dir / "tmask.nc"
-        LOGGER.info('Writing tmask to "%s"', tmask_file)
-        tmask.to_netcdf(
-            tmask_file, encoding={v: compression for v in tmask.data_vars}
-        )
-    else:
-        LOGGER.debug("Skipping tmask generation because flag is not set")
-
 
 def generate_bathymetry(
     bathymetry_config: BathymetryConfig,
@@ -266,7 +251,7 @@ def generate_bathymetry(
     output_dir: PathLike,
     volatile_cache: bool = True,
     compression_level: int = 9,
-    write_tmask: bool = False,
+    use_mer_format: bool = True,
 ) -> int:
     cache_path = Path(cache_path)
     invalid_cache = _check_cache_validity(
@@ -332,7 +317,7 @@ def generate_bathymetry(
         domain_discretization=domain_discretization,
         output_dir=output_dir,
         compression_level=compression_level,
-        write_tmask=write_tmask,
+        use_mer_format=use_mer_format,
     )
     LOGGER.info("Execution completed successfully!")
 
@@ -352,7 +337,7 @@ def main():
             f"{compression_level}."
         )
 
-    write_tmask = args.tmask
+    use_mer_format = args.mer
 
     LOGGER.debug("Reading config file from %s", config_path)
     bathy_config = BathymetryConfig.from_yaml(config_path)
@@ -371,7 +356,7 @@ def main():
                 output_dir,
                 volatile_cache=True,
                 compression_level=compression_level,
-                write_tmask=write_tmask,
+                use_mer_format=use_mer_format,
             )
     else:
         LOGGER.debug("Using temporary directory %s", args.cache)
@@ -382,7 +367,7 @@ def main():
             output_dir,
             volatile_cache=False,
             compression_level=compression_level,
-            write_tmask=write_tmask,
+            use_mer_format=use_mer_format,
         )
 
     sys_exit(output_status)
