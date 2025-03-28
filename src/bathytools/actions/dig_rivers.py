@@ -589,7 +589,9 @@ class DigRivers(SimpleAction):
             cls=RiverSourceJSONEncoder,
         )
 
-        source_file = self._output_appendix.output_dir / "river_positions.json"
+        source_file = (
+            self._output_appendix.output_dir / "rivers_positions.json"
+        )
         with open(source_file, "w") as f:
             f.write(river_position_content + "\n")
 
