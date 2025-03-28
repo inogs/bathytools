@@ -113,9 +113,105 @@ class GeoArrays:
         x, y = self.compute_metric_cell_size()
         return x * y
 
-    def build_mesh_mask(
-        self, water_fractions: WaterFractions, dtype=np.float64, new_e3t=True
+    def _build_mesh_mask_mer(
+        self, water_fractions: WaterFractions, dtype=np.float64
     ) -> xr.Dataset:
+        meridional_size, zonal_size = self.compute_metric_cell_size()
+
+        e1t = meridional_size.astype(dtype, copy=False)
+        e2t = zonal_size.astype(dtype=dtype, copy=False)
+        e3t_1d = self._depth_levels.thickness.astype(dtype, copy=False)
+
+        h_fac_min = self._domain_geometry.minimum_h_factor
+        tmask = np.where(
+            water_fractions.on_cells < h_fac_min / 2.0, 0, 1
+        ).astype(np.int8)
+
+        # We build e3t by computing the real depth of each cell; we use as
+        # initial values the
+        e3t = np.full(
+            shape=water_fractions.on_cells.shape,
+            fill_value=e3t_1d[:, np.newaxis, np.newaxis],
+            dtype=dtype,
+        )
+        # How many cells do we have on each column
+        cells_per_column = tmask.sum(axis=0)
+
+        # Let us fix the columns with just one cell; in this case, the size of
+        # the cell is the depth of the bathymetry
+        only_one_cell = cells_per_column == 1
+        e3t[0, only_one_cell] = water_fractions.refined_bathymetry[
+            only_one_cell
+        ]
+
+        # Now we deal with the more complicated case; when the column has more
+        # than one cell; we define a mask to identify those columns
+        more_than_one_cells = cells_per_column > 1
+        # This gives us the index of the cell of the column that is on the
+        # bottom
+        last_cell_index = cells_per_column[more_than_one_cells] - 1
+
+        # This array of indices is useful so that
+        # `v[:, more_than_one_cells][last_cell_index, column_index]` contains
+        # the values of v that are on the cells of the bottom
+        column_index = np.arange(np.sum(more_than_one_cells))
+
+        # We broadcast the array with the position of the top faces to the
+        # shape of the domain
+        top_faces = np.broadcast_to(
+            self._depth_levels.top_faces[:, np.newaxis, np.newaxis],
+            tmask.shape,
+        )
+
+        def define_indices(axis):
+            """
+            Given a 3D array `v`of the shame shape of tmask, we need to
+            build 3 arrays of indices i, j, k so that `v[i, j, k]` is the
+            values of v on the cells that are on the bottom. Because the
+            routine is the same for all the three axis, we use a closure to
+            avoid repeating the same code.
+            """
+            # This slice ensure that the arrays are always 3d, with the values
+            # on the appropriate axis
+            slice_template = [
+                slice(None) if i == axis else np.newaxis for i in range(3)
+            ]
+            slice_template = tuple(slice_template)
+            all_indices_values = np.arange(tmask.shape[axis])[slice_template]
+            return np.broadcast_to(all_indices_values, tmask.shape)[
+                :, more_than_one_cells
+            ][last_cell_index, column_index]
+
+        depth_indices = define_indices(0)
+        lat_indices = define_indices(1)
+        lon_indices = define_indices(2)
+
+        # We update the values of e3t
+        e3t[depth_indices, lat_indices, lon_indices] = (
+            water_fractions.refined_bathymetry[lat_indices, lon_indices]
+            - top_faces[depth_indices, lat_indices, lon_indices]
+        )
+
+        mesh_mask_dict = {
+            "e1t": (["latitude", "longitude"], e1t),
+            "e2t": (["latitude", "longitude"], e2t),
+            "e3t": (["depth", "latitude", "longitude"], e3t),
+            "tmask": (["depth", "latitude", "longitude"], tmask),
+            "delZ": (["depth"], e3t_1d),
+        }
+
+        return xr.Dataset(mesh_mask_dict)
+
+    def build_mesh_mask(
+        self,
+        water_fractions: WaterFractions,
+        dtype=np.float64,
+        use_mer_format: bool = True,
+        new_e3t=True,
+    ) -> xr.Dataset:
+        if use_mer_format:
+            return self._build_mesh_mask_mer(water_fractions, dtype=dtype)
+
         meridional_size, zonal_size = self.compute_metric_cell_size()
 
         e1t = np.asarray(

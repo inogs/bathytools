@@ -113,8 +113,10 @@ class DomainDiscretization:
     def bathymetry(self) -> np.ndarray:
         return self.water_fractions.refined_bathymetry
 
-    def build_mesh_mask(self) -> xr.Dataset:
-        return self.geo_arrays.build_mesh_mask(self.water_fractions)
+    def build_mesh_mask(self, use_mer_format: bool = False) -> xr.Dataset:
+        return self.geo_arrays.build_mesh_mask(
+            self.water_fractions, use_mer_format=use_mer_format
+        )
 
     def build_mit_static_data(self) -> xr.Dataset:
         return self.geo_arrays.build_mit_static_data(self.water_fractions)
