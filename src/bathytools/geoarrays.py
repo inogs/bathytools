@@ -192,7 +192,38 @@ class GeoArrays:
             - top_faces[depth_indices, lat_indices, lon_indices]
         )
 
-        mesh_mask_dict = {
+        mesh_mask_coords = {
+            "depth": (
+                ("depth",),
+                self._depth_levels.centers.astype(dtype, copy=False),
+                {
+                    "units": "m",
+                    "positive": "down",
+                    "standard_name": "depth",
+                    "axis": "Z",
+                },
+            ),
+            "latitude": (
+                ("latitude",),
+                self._domain_geometry.latitude.astype(dtype, copy=False),
+                {
+                    "units": "degrees_north",
+                    "standard_name": "latitude",
+                    "axis": "Y",
+                },
+            ),
+            "longitude": (
+                ("longitude",),
+                self._domain_geometry.longitude.astype(dtype, copy=False),
+                {
+                    "units": "degrees_east",
+                    "standard_name": "longitude",
+                    "axis": "X",
+                },
+            ),
+        }
+
+        mesh_mask_vars = {
             "e1t": (["latitude", "longitude"], e1t),
             "e2t": (["latitude", "longitude"], e2t),
             "e3t": (["depth", "latitude", "longitude"], e3t),
@@ -200,7 +231,12 @@ class GeoArrays:
             "delZ": (["depth"], e3t_1d),
         }
 
-        return xr.Dataset(mesh_mask_dict)
+        mesh_mask = xr.Dataset(
+            data_vars=mesh_mask_vars, coords=mesh_mask_coords
+        )
+        mesh_mask.attrs.update(mer_mesh_mask_version="1.0")
+
+        return mesh_mask
 
     def build_mesh_mask(
         self,
