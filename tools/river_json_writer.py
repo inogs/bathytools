@@ -102,12 +102,17 @@ class River:
     Attributes:
         id (int): Unique identifier for the river.
         name (str): Name of the river.
+        model (str): A string that identifies how we model this river; usually
+            it is one among "stem_flux" or "rain_like".
         runoff_factor (float): If this number is different from 1, it indicates
             that the values for the runoff discharge of the river read from the
             data source must be multiplied by this factor.
         data_source (EFASDataSource): Source of the river-related data.
         geometry (RiverGeometry): Geometric attributes of the river's
             physical structure.
+        physical (OrderedDict): Physical properties of the river stored in a
+            key-value format. This dictionary usually contains values related
+            to the temperature and salinity of the water at the river's mouth'.
         biogeochemical (OrderedDict): Biogeochemical properties of the
             river stored in a key-value format. This dictionary may contain the
             name of the profile that will be associated to this river or the
@@ -116,21 +121,29 @@ class River:
 
     id: int
     name: str
+    model: Literal["stem_flux", "rain_like"] | None
     runoff_factor: float
     data_source: EFASDataSource
     geometry: RiverGeometry
+    physical: OrderedDict
     biogeochemical: OrderedDict
 
     def to_dict(self) -> OrderedDict:
         data = [
             ("id", self.id),
             ("name", self.name),
+        ]
+        if self.model is not None:
+            data.append(("model", self.model))
+
+        other_data = [
             ("runoff_factor", self.runoff_factor),
             ("data_source", self.data_source),
             ("geometry", self.geometry),
+            ("physical", self.physical),
             ("biogeochemical", self.biogeochemical),
         ]
-        return OrderedDict(data)
+        return OrderedDict(data + other_data)
 
 
 def build_json_serializer(geometry_defaults):
@@ -379,8 +392,9 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
             latitude=row["lat_EFAS"],
         )
 
+        # Read all the sides and models in all the domain-specific files
         river_sides = []
-        # Read all the sides in all the domain-specific files
+        river_models = []
         for domain in domain_sheets:
             if row["ir"] in set(domain["ir"]):
                 domain_row = domain.loc[domain["ir"] == row["ir"]].iloc[0]
@@ -392,10 +406,18 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
                         f"specific file."
                     )
                 side = domain_row["SIDE"]
+                model = (
+                    "stem_flux" if domain_row["is_rain"] == 0 else "rain_like"
+                )
                 river_sides.append(side)
+                river_models.append(model)
+
         side = None
         if len(set(river_sides)) == 1:
             side = river_sides[0]
+        model = None
+        if len(set(river_models)) == 1:
+            model = river_models[0]
 
         geometry = RiverGeometry(
             mouth_latitude=row["lat_mouth"],
@@ -405,12 +427,21 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
             side=side,
         )
         bgc_data = OrderedDict([("profile", row["BGC_area"])])
+        physical_data = OrderedDict(
+            [
+                ("average_temperature", row["temp_mean"]),
+                ("average_salinity", row["sal_mean"]),
+                ("temperature_variation_amplitude", row["temp_amp"]),
+            ]
+        )
         river = River(
             id=row["ir"],
             name=row["rivername"],
+            model=model,
             runoff_factor=row["runoffFactor"],
             data_source=efas_data,
             geometry=geometry,
+            physical=physical_data,
             biogeochemical=bgc_data,
         )
         rivers.append(river)
