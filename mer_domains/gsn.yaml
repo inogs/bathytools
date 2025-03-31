@@ -3,7 +3,7 @@ name: Small Test Domain
 
 domain:
   minimum_latitude: 45.62500124304779
-  maximum_latitude: 45.87500126317812
+  maximum_latitude: 45.791667923134675
   minimum_longitude: 13.479167331499884
   maximum_longitude: 13.812500673698715
   resolution: 0.005208333333333333
@@ -37,6 +37,7 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
+      domain_file: ${MAIN_DIR}/mer_domains/rivers/GSN.json
 
   - action: RemoveTrappedWater
     description: Remove the water cells on the boundary that are close to land
