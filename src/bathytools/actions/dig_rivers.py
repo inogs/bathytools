@@ -86,6 +86,7 @@ class RiverDig:
     Attributes:
         id (int): Unique identifier for the river.
         name (str): Name of the river.
+        model (str): How the river is modelled.
         mouth_latitude (float): Latitude of the river's mouth.
         mouth_longitude (float): Longitude of the river's mouth.
         width (float): Width of the river channel in meters.
@@ -99,6 +100,7 @@ class RiverDig:
 
     id: int
     name: str
+    model: str
     mouth_latitude: float
     mouth_longitude: float
     width: float
@@ -115,10 +117,13 @@ class RiverSource:
     river, together with the x and y coordinates of the cells from which the
     river starts. If the river originate from only one cell, then the `x` and
     `y` attributes are integers, otherwise only one of them is an `Interval`.
+    It also contains the model of the original river, if the source needs to
+    behave differently depending on the model.
     """
 
     id: int
     name: str
+    model: str
     x: int | Interval
     y: int | Interval
 
@@ -132,7 +137,13 @@ class RiverSource:
         y_str = str(self.y) if isinstance(self.y, Interval) else self.y
 
         return OrderedDict(
-            [("id", self.id), ("name", self.name), ("x", x_str), ("y", y_str)]
+            [
+                ("id", self.id),
+                ("name", self.name),
+                ("model", self.model),
+                ("x", x_str),
+                ("y", y_str),
+            ]
         )
 
 
@@ -289,10 +300,11 @@ class DigRivers(SimpleAction):
 
         # Read the main section
         rivers = main_data["rivers"]
-        rivers_dig_data = {}
+        rivers_dig_data: dict[tuple[int, str], tuple[str, dict, dict]] = {}
         for river in rivers:
-            river_id = river["id"]
-            river_name = river["name"]
+            river_id = int(river["id"])
+            river_name = str(river["name"])
+            river_model = str(river["model"])
             LOGGER.debug("Reading river %s (id = %s)", river_name, river_id)
             geometry = default_values.copy()
             current_geo_values = river.get("geometry", {})
@@ -307,7 +319,11 @@ class DigRivers(SimpleAction):
                     f"{self._main_file_path}"
                 ) from e
             geometry.update(current_geo_values)
-            rivers_dig_data[(river_id, river_name)] = (geometry, stem)
+            rivers_dig_data[(river_id, river_name)] = (
+                river_model,
+                geometry,
+                stem,
+            )
 
         if self._domain_file_path is not None:
             LOGGER.debug("Reading also domain file %s", self._domain_file_path)
@@ -323,15 +339,17 @@ class DigRivers(SimpleAction):
         # Incorporate updated geometry and stem values from the domain file
         # into `rivers_dig_data`, ensuring consistency with the main file.
         for river in domain_data["rivers"]:
-            river_id = river["id"]
-            river_name = river["name"]
+            river_id = int(river["id"])
+            river_name = str(river["name"])
             if (river_id, river_name) not in rivers_dig_data:
                 raise ValueError(
                     f"River with id = {river_id} and name = {river_name} "
                     f"defined in file {self._domain_file_path} is not defined "
                     f"in the main file {self._main_file_path}"
                 )
-            main_geometry, main_stem = rivers_dig_data[(river_id, river_name)]
+            river_model, main_geometry, main_stem = rivers_dig_data[
+                (river_id, river_name)
+            ]
             domain_geometry = river.get("geometry", {})
             try:
                 stem = self._update_stem_value(main_stem, domain_geometry)
@@ -341,7 +359,13 @@ class DigRivers(SimpleAction):
                     f"called ({river_name}) in file {self._domain_file_path}"
                 ) from e
             main_geometry.update(domain_geometry)
-            rivers_dig_data[(river_id, river_name)] = (main_geometry, stem)
+            if "model" in river:
+                river_model = str(river["model"])
+            rivers_dig_data[(river_id, river_name)] = (
+                river_model,
+                main_geometry,
+                stem,
+            )
 
         if "enabled_only" in domain_data:
             LOGGER.debug('Reading section "enabled_only" from domain file')
@@ -371,7 +395,7 @@ class DigRivers(SimpleAction):
         # geometry and stem data, then store these in a list.
         river_digs: List[RiverDig] = []
         for river_id, river_name in rivers_dig_data:
-            river_geometry, river_stem = rivers_dig_data[
+            river_model, river_geometry, river_stem = rivers_dig_data[
                 (river_id, river_name)
             ]
 
@@ -420,6 +444,7 @@ class DigRivers(SimpleAction):
             river_dig = RiverDig(
                 id=river_id,
                 name=river_name,
+                model=river_model,
                 **river_geometry,
             )
             river_digs.append(river_dig)
@@ -430,7 +455,7 @@ class DigRivers(SimpleAction):
 
     @staticmethod
     def read_river_atlas(
-        river_sources: dict[tuple[int, str], tuple[Direction, list]],
+        river_sources: dict[tuple[int, str], tuple[str, Direction, list]],
     ):
         """
         Creates a "river atlas" by transforming river source data into a
@@ -442,6 +467,7 @@ class DigRivers(SimpleAction):
             river_sources: A dictionary where the keys are tuples representing
                 river identifiers (a river's ID and its name), and the values
                 are tuples containing:
+                - The river model
                 - The side of the river's origin (as a `Direction` enum).
                 - A list of grid cells where the river originates.
 
@@ -458,7 +484,7 @@ class DigRivers(SimpleAction):
             source_atlas[side] = []
             # Collect all rivers originating from the current side, and sort
             # them by ID.
-            side_rivers = (r for r, k in river_sources.items() if k[0] == side)
+            side_rivers = (r for r, k in river_sources.items() if k[1] == side)
             side_rivers = sorted(side_rivers, key=itemgetter(0))
 
             # Define axes based on the river's side: horizontal alignment for
@@ -467,7 +493,9 @@ class DigRivers(SimpleAction):
             moving_axis = 1 - fixed_axis
 
             for river_id, river_name in side_rivers:
-                _, source_cells = river_sources[(river_id, river_name)]
+                river_model, _, source_cells = river_sources[
+                    (river_id, river_name)
+                ]
                 if len(source_cells) == 0:
                     raise ValueError(
                         f"No source cells found for river {river_name} (id = "
@@ -517,9 +545,9 @@ class DigRivers(SimpleAction):
 
                 # Create a RiverSource object and add it to the list for
                 # this side.
-                current_river = [river_id, river_name, None, None]
-                current_river[fixed_axis + 2] = fixed_coord
-                current_river[moving_axis + 2] = moving_coords
+                current_river = [river_id, river_name, river_model, None, None]
+                current_river[fixed_axis + 3] = fixed_coord
+                current_river[moving_axis + 3] = moving_coords
                 current_river_source = RiverSource(*current_river)
                 source_atlas[side].append(current_river_source)
 
@@ -551,7 +579,7 @@ class DigRivers(SimpleAction):
 
     def save_river_sources(
         self,
-        river_sources: dict[tuple[int, str], tuple[Direction, list]],
+        river_sources: dict[tuple[int, str], tuple[str, Direction, list]],
         lat_lon_shape: tuple[int, int],
         open_side: dict[Direction, bool],
     ):
@@ -599,7 +627,7 @@ class DigRivers(SimpleAction):
         # conditions for the numerical model. We start by writing the function
         # that we will use inside our routine when we have to register a river;
         # it writes
-        def build_interval(length: int, position: int) -> str:
+        def write_obj_interval(length: int, position: int) -> str:
             return f"{length}*{position},"
 
         obj_file_content = ""
@@ -632,16 +660,6 @@ class DigRivers(SimpleAction):
             else:
                 no_river_position = 1 if open_side[side] else 0
 
-            # If the side has no rivers, write a single line to assign all
-            # boundary cells to the default value (either open or closed).
-            if len(river_atlas[side]) == 0:
-                obj_file_content += (
-                    line_prefix
-                    + build_interval(side_length, no_river_position)
-                    + "\n"
-                )
-                continue
-
             # Define helper functions to retrieve the river's position on the
             # side and its offset (translation) with respect to the boundary.
             if side in (Direction.NORTH, Direction.SOUTH):
@@ -659,10 +677,23 @@ class DigRivers(SimpleAction):
                     return side_position.start
                 return side_position
 
+            # Exclude rivers that are modeled as rains
+            side_rivers = [
+                r for r in river_atlas[side] if r.model != "river_like"
+            ]
+
             # Sort the sources based on their starting point.
-            current_side_sources = sorted(
-                river_atlas[side], key=get_start_point
-            )
+            current_side_sources = sorted(side_rivers, key=get_start_point)
+
+            # If the side has no rivers, write a single line to assign all
+            # boundary cells to the default value (either open or closed).
+            if len(current_side_sources) == 0:
+                obj_file_content += (
+                    line_prefix
+                    + write_obj_interval(side_length, no_river_position)
+                    + "\n"
+                )
+                continue
 
             # Begin writing the line for the current domain side.
             obj_file_content += f"{line_prefix}"
@@ -688,7 +719,7 @@ class DigRivers(SimpleAction):
                 # If there is a gap between the current river and the previous
                 # one, add it to the line being written.
                 if river_start != previous_position:
-                    obj_file_content += build_interval(
+                    obj_file_content += write_obj_interval(
                         river_start - previous_position, no_river_position
                     )
 
@@ -697,14 +728,14 @@ class DigRivers(SimpleAction):
 
                 # Write the cells occupied by the current river. Add "+ 1" to
                 # the translation for Fortran's 1-based indexing.
-                obj_file_content += build_interval(
+                obj_file_content += write_obj_interval(
                     river_range, river_translation + 1
                 )
 
             # If the end of the side has not been reached, fill the remaining
             # cells with the "no_river" value.
             if previous_position != side_length:
-                obj_file_content += build_interval(
+                obj_file_content += write_obj_interval(
                     side_length - previous_position, no_river_position
                 )
 
@@ -831,8 +862,9 @@ class DigRivers(SimpleAction):
                     "configuration file"
                 )
 
-            # Approximate the face size using the center of the cell, which provides
-            # a reasonable estimate due to the grid's regular structure.
+            # Approximate the face size using the center of the cell, which
+            # provides a reasonable estimate due to the grid's regular
+            # structure.
             if river.side == "N" or river.side == "S":
                 face_size = mask.e1t[river_cell[::-1]]
             elif river.side == "E" or river.side == "W":
@@ -860,6 +892,7 @@ class DigRivers(SimpleAction):
                 len(digging_cells),
             )
             river_sources[(river.id, river.name)] = (
+                river.model,
                 Direction(river.side),
                 current_river_sources,
             )
