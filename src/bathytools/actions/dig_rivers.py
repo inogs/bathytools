@@ -748,6 +748,19 @@ class DigRivers(SimpleAction):
             allow_broadcast=True,
         )
 
+        # Check if a side is "open", i.e. if it has at least one water cell
+        b_array = bathymetry.elevation.transpose(
+            "latitude", "longitude"
+        ).values
+        water_cells = b_array < 0
+        open_sides = {
+            Direction.SOUTH: bool(np.any(water_cells[0, :])),
+            Direction.NORTH: bool(np.any(water_cells[-1, :])),
+            Direction.WEST: bool(np.any(water_cells[:, 0])),
+            Direction.EAST: bool(np.any(water_cells[:, -1])),
+        }
+        LOGGER.debug("Open sides: %s", open_sides)
+
         # Filter rivers to include only those within the domain, ensuring each
         # has the required side and stem data for successful processing.
         rivers_inside = []
@@ -856,19 +869,6 @@ class DigRivers(SimpleAction):
                 digging_cells,
                 -river.depth,
             )
-
-        # Check if a side is "open", i.e. if it has at least one water cell
-        b_array = bathymetry.elevation.transpose(
-            "latitude", "longitude"
-        ).values
-        water_cells = b_array < 0
-        open_sides = {
-            Direction.SOUTH: bool(np.any(water_cells[0, :])),
-            Direction.NORTH: bool(np.any(water_cells[-1, :])),
-            Direction.WEST: bool(np.any(water_cells[:, 0])),
-            Direction.EAST: bool(np.any(water_cells[:, -1])),
-        }
-        LOGGER.debug("Open sides: %s", open_sides)
 
         self.save_river_sources(river_sources, b_array.shape, open_sides)
 
