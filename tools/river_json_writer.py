@@ -1,7 +1,6 @@
 import argparse
 import dataclasses
 import json
-import re
 import warnings
 from collections import OrderedDict
 from sys import exit as sys_exit
@@ -15,6 +14,7 @@ from bitsea.utilities.argparse_types import path_inside_an_existing_dir
 
 MAIN_SHEET_NAME = "ITA"
 BGC_SHEET_NAME = "BGC_table_ref"
+DOMAINS = ("NAD", "SAD", "ION", "SIC", "TYR", "LIG", "SAR")
 
 
 @dataclasses.dataclass
@@ -373,8 +373,8 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
     rivers = []
     for index, row in main_sheet.iterrows():
         efas_data = EFASDataSource(
-            longitude_index=row["jjr"],
-            latitude_index=row["jir"],
+            longitude_index=row["jir"],
+            latitude_index=row["jjr"],
             longitude=row["lon_EFAS"],
             latitude=row["lat_EFAS"],
         )
@@ -443,7 +443,7 @@ def main() -> int:
 
     domains = OrderedDict()
     for sheet in sheets:
-        if re.match("^D[0-9]+$", sheet):
+        if sheet in DOMAINS:
             domains[sheet] = xl_file.parse(sheet)
 
     main_json, rivers = generate_main_json(
@@ -467,7 +467,7 @@ def main() -> int:
             )
         domain_river = generate_domain_specific_file(domain_sheet, rivers)
         with open(domain_file, "w") as f:
-            f.write(json.dumps(domain_river, indent=2))
+            f.write(json.dumps(domain_river, indent=2) + "\n")
 
     return 0
 
