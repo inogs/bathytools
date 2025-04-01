@@ -679,7 +679,7 @@ class DigRivers(SimpleAction):
 
             # Exclude rivers that are modeled as rains
             side_rivers = [
-                r for r in river_atlas[side] if r.model != "river_like"
+                r for r in river_atlas[side] if r.model != "rain_like"
             ]
 
             # Sort the sources based on their starting point.
