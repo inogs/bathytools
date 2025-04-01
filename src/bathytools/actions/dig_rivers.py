@@ -141,8 +141,8 @@ class RiverSource:
                 ("id", self.id),
                 ("name", self.name),
                 ("model", self.model),
-                ("x", x_str),
-                ("y", y_str),
+                ("latitude", x_str),
+                ("longitude", y_str),
             ]
         )
 
