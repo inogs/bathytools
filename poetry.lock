@@ -658,6 +658,22 @@ python-dateutil = ">=2.7"
 dev = ["meson-python (>=0.13.1,<0.17.0)", "pybind11 (>=2.13.2,!=2.13.3)", "setuptools (>=64)", "setuptools_scm (>=7)"]
 
 [[package]]
+name = "mitgcmutils"
+version = "0.2.1"
+description = "Python utilities for MITgcm"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "MITgcmutils-0.2.1-py3-none-any.whl", hash = "sha256:acc7f9415e8bc7e7b72a5ceaad511904d3be67f15e9d1660305283ebcaf9d41f"},
+    {file = "MITgcmutils-0.2.1.tar.gz", hash = "sha256:615dc0b310fd9ca061de2947096cdf3dc5c6c526dcf0664851eea0ce7946939f"},
+]
+
+[package.dependencies]
+matplotlib = "*"
+numpy = "*"
+
+[[package]]
 name = "netcdf4"
 version = "1.7.2"
 description = "Provides an object-oriented python interface to the netCDF version 4 library"
@@ -1617,4 +1633,4 @@ viz = ["cartopy", "matplotlib", "nc-time-axis", "seaborn"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "56f105d4bb5212ff0117eda7f7aaa90083ae46b5ca72b2ed8457f421fa4ad0fb"
+content-hash = "ef3362abd912eaf16739b8d7176824e2e58898bbd419a44037e16379ef4aaa07"

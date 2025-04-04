@@ -52,6 +52,13 @@ actions:
   - action: RemoveTrappedWater
     description: Remove the water cells on the boundary that are close to land
 
+  - action: WriteBlankTiles
+    description: Write a list of tiles that do not contain water
+    args:
+      file_name: data.exch2_SAR
+      size_tiles_lon: 40
+      size_tiles_lat: 20
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land
