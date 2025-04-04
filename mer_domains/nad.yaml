@@ -188,6 +188,13 @@ actions:
       max_lat: 44.96615
       value: 6.0
 
+  - action: WriteBlankTiles
+    description: Write a list of tiles that do not contain water
+    args:
+      file_name: data.exch2_NAD
+      size_tiles_lon: 20
+      size_tiles_lat: 30
+
 filters:
   - filter: RemoveStagnations
     description: Removes bottom water cells surrounded by land
