@@ -191,11 +191,11 @@ def apply_filters(
 
 def write_output_files(
     domain_discretization: DomainDiscretization,
-    output_dir: PathLike,
+    output_appendix: OutputAppendix,
     compression_level: int = 9,
     use_mer_format: bool = False,
 ):
-    output_dir = Path(output_dir)
+    output_dir = output_appendix.output_dir
 
     # Prepare the compression value for the encoding of the netCDF file
     if compression_level == 0:
@@ -243,6 +243,16 @@ def write_output_files(
         encoding={v: compression for v in mitgcm_statics.data_vars},
     )
     LOGGER.info("Done!")
+
+    if use_mer_format and output_appendix.get_n_additional_variables() > 0:
+        output_file = output_dir / "additional_variables.nc"
+        additional_variables = output_appendix.get_additional_variables()
+        LOGGER.info("Writing additional variables to %s", output_file)
+        additional_variables.to_netcdf(
+            output_file,
+            encoding={v: compression for v in additional_variables.data_vars},
+        )
+        LOGGER.info("Done!")
 
 
 def generate_bathymetry(
@@ -315,7 +325,7 @@ def generate_bathymetry(
 
     write_output_files(
         domain_discretization=domain_discretization,
-        output_dir=output_dir,
+        output_appendix=output_appendix,
         compression_level=compression_level,
         use_mer_format=use_mer_format,
     )
