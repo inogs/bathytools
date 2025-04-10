@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import Any
 from typing import Dict
 
+import xarray as xr
+
 
 class OutputAppendix:
     """
@@ -26,6 +28,7 @@ class OutputAppendix:
         """
         self._output_dir = Path(output_dir)
         self._meshmask_metadata: Dict[str:Any] = {}
+        self._additional_vars: Dict[str : xr.DataArray] = {}
 
     @property
     def output_dir(self) -> Path:
@@ -46,3 +49,28 @@ class OutputAppendix:
             content: The content associated with the metadata key.
         """
         self._meshmask_metadata[name] = content
+
+    def add_additional_variable(self, name: str, content: xr.DataArray):
+        """
+        Adds an xarray DataArray to the meshmask file.
+
+        Args:
+            name: The name of the DataArray to be added to the meshmask file.
+            content: The value of the DataArray to be added to the meshmask.
+        """
+        self._additional_vars[name] = content
+
+    def get_n_additional_variables(self) -> int:
+        """
+        Gets the count of additional variables.
+
+        This method calculates and returns the number of additional variables.
+        """
+        return len(self._additional_vars)
+
+    def get_additional_variables(self) -> xr.Dataset:
+        """
+        Returns all the DataArrays added to the meshmask file in a single
+        Dataset.
+        """
+        return xr.Dataset(self._additional_vars)

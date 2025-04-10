@@ -141,8 +141,8 @@ class RiverSource:
                 ("id", self.id),
                 ("name", self.name),
                 ("model", self.model),
-                ("latitude", x_str),
-                ("longitude", y_str),
+                ("latitude_index", x_str),
+                ("longitude_index", y_str),
             ]
         )
 
@@ -783,6 +783,7 @@ class DigRivers(SimpleAction):
         b_array = bathymetry.elevation.transpose(
             "latitude", "longitude"
         ).values
+
         water_cells = b_array < 0
         open_sides = {
             Direction.SOUTH: bool(np.any(water_cells[0, :])),
@@ -825,6 +826,7 @@ class DigRivers(SimpleAction):
         LOGGER.debug("%s rivers must be dug", len(rivers_inside))
 
         river_sources = {}
+        river_cells = np.zeros(b_array.shape, dtype=int)
         for river in rivers_inside:
             LOGGER.debug("Digging river %s (id = %s)", river.name, river.id)
             river_lat = river.mouth_latitude
@@ -887,6 +889,18 @@ class DigRivers(SimpleAction):
             digging_cells, current_river_sources = sequence_side(
                 n_cells, river_cell[0], river_cell[1], river.stem
             )
+            # Saving the digging cells inside the river_cells array
+            for lon_index, lat_index in digging_cells:
+                if not water_cells[lat_index, lon_index]:
+                    if river_cells[lat_index, lon_index] != 0:
+                        raise ValueError(
+                            f"Configuration error: rivers with id {river.id} "
+                            f"and {river_cells[lat_index, lon_index]} do "
+                            f"intersect at position (lon={lon_index}, "
+                            f"lat={lat_index})"
+                        )
+                    river_cells[lat_index, lon_index] = river.id
+
             LOGGER.debug(
                 "%s cells will be dug",
                 len(digging_cells),
@@ -902,7 +916,17 @@ class DigRivers(SimpleAction):
                 digging_cells,
                 -river.depth,
             )
-
+        self._output_appendix.add_additional_variable(
+            "rivers",
+            xr.DataArray(
+                data=river_cells,
+                dims=["latitude", "longitude"],
+                coords={
+                    "latitude": bathymetry.latitude,
+                    "longitude": bathymetry.longitude,
+                },
+            ),
+        )
         self.save_river_sources(river_sources, b_array.shape, open_sides)
 
         return bathymetry
