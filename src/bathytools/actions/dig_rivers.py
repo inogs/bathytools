@@ -6,6 +6,7 @@ from collections import namedtuple
 from collections import OrderedDict
 from collections.abc import Mapping
 from dataclasses import dataclass
+from itertools import chain
 from logging import getLogger
 from operator import attrgetter
 from operator import itemgetter
@@ -124,8 +125,9 @@ class RiverSource:
     id: int
     name: str
     model: str
-    x: int | Interval
-    y: int | Interval
+    side: Direction
+    lat_indices: int | Interval
+    lon_indices: int | Interval
 
     def to_json(self) -> OrderedDict[str, int | str]:
         """
@@ -133,16 +135,25 @@ class RiverSource:
         original object but that can be easily serialized into a JSON file
         (because the intervals are converted to strings).
         """
-        x_str = str(self.x) if isinstance(self.x, Interval) else self.x
-        y_str = str(self.y) if isinstance(self.y, Interval) else self.y
+        lat_indices_str = (
+            str(self.lat_indices)
+            if isinstance(self.lat_indices, Interval)
+            else self.lat_indices
+        )
+        lon_indices_str = (
+            str(self.lon_indices)
+            if isinstance(self.lon_indices, Interval)
+            else self.lon_indices
+        )
 
         return OrderedDict(
             [
                 ("id", self.id),
                 ("name", self.name),
                 ("model", self.model),
-                ("latitude_index", x_str),
-                ("longitude_index", y_str),
+                ("side", self.side.value),
+                ("latitude_index", lat_indices_str),
+                ("longitude_index", lon_indices_str),
             ]
         )
 
@@ -456,7 +467,7 @@ class DigRivers(SimpleAction):
     @staticmethod
     def read_river_atlas(
         river_sources: dict[tuple[int, str], tuple[str, Direction, list]],
-    ):
+    ) -> dict[Direction, list[RiverSource]]:
         """
         Creates a "river atlas" by transforming river source data into a
         structured dictionary, categorized by each side of the domain.
@@ -479,9 +490,9 @@ class DigRivers(SimpleAction):
         Raises:
             ValueError: If source cells are missing, misaligned, or overlapping.
         """
-        source_atlas = {}
+        source_atlas: dict[Direction, list[RiverSource]] = {}
         for side in Direction:
-            source_atlas[side] = []
+            source_atlas[side]: list[RiverSource] = []
             # Collect all rivers originating from the current side, and sort
             # them by ID.
             side_rivers = (r for r, k in river_sources.items() if k[1] == side)
@@ -489,13 +500,18 @@ class DigRivers(SimpleAction):
 
             # Define axes based on the river's side: horizontal alignment for
             # north/south and vertical alignment for east/west.
-            fixed_axis = 1 if side in (Direction.NORTH, Direction.SOUTH) else 0
+            fixed_axis = 0 if side in (Direction.NORTH, Direction.SOUTH) else 1
             moving_axis = 1 - fixed_axis
 
             for river_id, river_name in side_rivers:
-                river_model, _, source_cells = river_sources[
+                river_model, _, source_cells_lon_lat = river_sources[
                     (river_id, river_name)
                 ]
+
+                # Invert the order of the source_cells; now they are lat first,
+                # lon after
+                source_cells = [(a, b) for b, a in source_cells_lon_lat]
+
                 if len(source_cells) == 0:
                     raise ValueError(
                         f"No source cells found for river {river_name} (id = "
@@ -545,10 +561,20 @@ class DigRivers(SimpleAction):
 
                 # Create a RiverSource object and add it to the list for
                 # this side.
-                current_river = [river_id, river_name, river_model, None, None]
-                current_river[fixed_axis + 3] = fixed_coord
-                current_river[moving_axis + 3] = moving_coords
-                current_river_source = RiverSource(*current_river)
+                current_river = {
+                    "id": river_id,
+                    "name": river_name,
+                    "model": river_model,
+                    "side": side,
+                }
+                if fixed_axis == 0:
+                    current_river["lat_indices"] = fixed_coord
+                    current_river["lon_indices"] = moving_coords
+                else:
+                    current_river["lon_indices"] = fixed_coord
+                    current_river["lat_indices"] = moving_coords
+
+                current_river_source = RiverSource(**current_river)
                 source_atlas[side].append(current_river_source)
 
             # Ensure no RiverSource objects on this side have overlapping
@@ -556,9 +582,9 @@ class DigRivers(SimpleAction):
             intervals = []
             for r_source in source_atlas[side]:
                 if fixed_axis == 0:
-                    intervals.append((r_source.y, r_source.name))
+                    intervals.append((r_source.lon_indices, r_source.name))
                 else:
-                    intervals.append((r_source.x, r_source.name))
+                    intervals.append((r_source.lat_indices, r_source.name))
             intervals = sorted(
                 intervals,
                 key=lambda x: x[0].start
@@ -612,7 +638,7 @@ class DigRivers(SimpleAction):
         # converted to their corresponding string labels (via the `.value`
         # attribute).
         river_position_content = json.dumps(
-            {a.value: b for a, b in river_atlas.items()},
+            tuple(chain(*river_atlas.values())),
             indent=2,
             cls=RiverSourceJSONEncoder,
         )
@@ -663,11 +689,11 @@ class DigRivers(SimpleAction):
             # Define helper functions to retrieve the river's position on the
             # side and its offset (translation) with respect to the boundary.
             if side in (Direction.NORTH, Direction.SOUTH):
-                get_side_coord = attrgetter("x")
-                get_translation = attrgetter("y")
+                get_side_coord = attrgetter("lon_indices")
+                get_translation = attrgetter("lat_indices")
             else:
-                get_side_coord = attrgetter("y")
-                get_translation = attrgetter("x")
+                get_side_coord = attrgetter("lat_indices")
+                get_translation = attrgetter("lon_indices")
 
             # Determine the starting position of a river source along the
             # domain side.
