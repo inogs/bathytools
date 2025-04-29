@@ -1,3 +1,12 @@
+# fmt: off
+"""
+This script was used to transform the OLD xlsx file with the information
+on the rivers into the new JSON files.
+
+Right now this script is DEPRECATED. We changed the style of the JSON files
+and this script does not produce the correct JSON file anymore.
+"""
+# fmt: on
 import argparse
 import dataclasses
 import json
