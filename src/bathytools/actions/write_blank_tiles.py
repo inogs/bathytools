@@ -87,7 +87,7 @@ class WriteBlankTiles(SimpleAction):
             f.write(tmplt.substitute(blank_dict))
 
         blanks_file = self._output_appendix.output_dir / "blanks.txt"
-        LOGGER.info("Writing blank tiles list into %s", self._output_file)
+        LOGGER.info("Writing blank tiles list into %s", blanks_file)
 
         np.savetxt(blanks_file, np.asarray(list_tiles, dtype=int), fmt="%d")
 
