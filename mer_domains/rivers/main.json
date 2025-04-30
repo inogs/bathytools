@@ -1,7 +1,13 @@
 {
   "variables": {
-    "O2o": {
-      "unit": "mmolO2/m^3"
+    "B1c": {
+      "unit": "mgC/m^3"
+    },
+    "B1n": {
+      "unit": "mmolN/m^3"
+    },
+    "B1p": {
+      "unit": "mmolP/m^3"
     },
     "N1p": {
       "unit": "gP/m^3",
@@ -15,26 +21,34 @@
       "unit": "mmolN/m^3",
       "BFM_conversion_factor": 71.39440411
     },
-    "O4n": {
-      "unit": "mmolN/m^3"
-    },
     "N5s": {
       "unit": "mmolSi/m^3"
     },
     "N6r": {
       "unit": "mmolS/m^3"
     },
-    "B1c": {
-      "unit": "mgC/m^3"
+    "O2o": {
+      "unit": "mmolO2/m^3"
     },
-    "B1n": {
+    "O3c": {
+      "unit": "gC/m^3",
+      "BFM_conversion_factor": 1000
+    },
+    "O3h": {
+      "unit": "mol/m^3",
+      "BFM_conversion_factor": 1000
+    },
+    "O4n": {
       "unit": "mmolN/m^3"
     },
-    "B1p": {
-      "unit": "mmolP/m^3"
+    "O5c": {
+      "unit": "mmol/m^3"
     },
     "P1c": {
       "unit": "mgC/m^3"
+    },
+    "P1l": {
+      "unit": "mgChl/m^3"
     },
     "P1n": {
       "unit": "mmolN/m^3"
@@ -42,14 +56,14 @@
     "P1p": {
       "unit": "mmolP/m^3"
     },
-    "P1l": {
-      "unit": "mgChl/m^3"
-    },
     "P1s": {
       "unit": "mmolSi/m^3"
     },
     "P2c": {
       "unit": "mgC/m^3"
+    },
+    "P2l": {
+      "unit": "mgChl/m^3"
     },
     "P2n": {
       "unit": "mmolN/m^3"
@@ -57,11 +71,11 @@
     "P2p": {
       "unit": "mmolP/m^3"
     },
-    "P2l": {
-      "unit": "mgChl/m^3"
-    },
     "P3c": {
       "unit": "mgC/m^3"
+    },
+    "P3l": {
+      "unit": "mgChl/m^3"
     },
     "P3n": {
       "unit": "mmolN/m^3 "
@@ -69,11 +83,11 @@
     "P3p": {
       "unit": "mmolP/m^3"
     },
-    "P3l": {
-      "unit": "mgChl/m^3"
-    },
     "P4c": {
       "unit": "mgC/m^3"
+    },
+    "P4l": {
+      "unit": "mgChl/m^3"
     },
     "P4n": {
       "unit": "mmolN/m^3"
@@ -81,8 +95,34 @@
     "P4p": {
       "unit": "mmolP/m^3"
     },
-    "P4l": {
-      "unit": "mgChl/m^3"
+    "R1c": {
+      "unit": "mgC/m^3"
+    },
+    "R1n": {
+      "unit": "mmolN/m^3"
+    },
+    "R1p": {
+      "unit": "mmolP/m^3"
+    },
+    "R2c": {
+      "unit": "mgC/m^3"
+    },
+    "R3c": {
+      "unit": "gC/m^3",
+      "BFM_conversion_factor": 1000
+    },
+    "R6c": {
+      "unit": "gC/m^3",
+      "BFM_conversion_factor": 1000
+    },
+    "R6n": {
+      "unit": "mmolN/m^3"
+    },
+    "R6p": {
+      "unit": "mmolP/m^3"
+    },
+    "R6s": {
+      "unit": "mmolSi/m^3"
     },
     "Z3c": {
       "unit": "mgC/m^3"
@@ -119,168 +159,136 @@
     },
     "Z6p": {
       "unit": "mmolP/m^3"
-    },
-    "R1c": {
-      "unit": "mgC/m^3"
-    },
-    "R1n": {
-      "unit": "mmolN/m^3"
-    },
-    "R1p": {
-      "unit": "mmolP/m^3"
-    },
-    "R2c": {
-      "unit": "mgC/m^3"
-    },
-    "R3c": {
-      "unit": "gC/m^3",
-      "BFM_conversion_factor": 1000
-    },
-    "R6c": {
-      "unit": "gC/m^3",
-      "BFM_conversion_factor": 1000
-    },
-    "R6n": {
-      "unit": "mmolN/m^3"
-    },
-    "R6p": {
-      "unit": "mmolP/m^3"
-    },
-    "R6s": {
-      "unit": "mmolSi/m^3"
-    },
-    "O3c": {
-      "unit": "gC/m^3",
-      "BFM_conversion_factor": 1000
-    },
-    "O3h": {
-      "unit": "mol/m^3",
-      "BFM_conversion_factor": 1000
-    },
-    "O5c": {
-      "unit": "mmol/m^3"
     }
   },
-  "defaults": {
-    "geometry": {
-      "width": 500,
-      "depth": 3,
-      "stem_length": 10
+  "bgc_profiles": {
+    "tyr": {
+      "B1c": 1.0,
+      "B1n": 0.017,
+      "B1p": 0.0019,
+      "N1p": 0.28,
+      "N3n": 2.23,
+      "N4n": 0.446,
+      "N5s": 159.2095212,
+      "N6r": 0.0,
+      "O2o": 240.0,
+      "O3c": 52.96,
+      "O3h": 5.16,
+      "O4n": 0.0,
+      "O5c": 0.0,
+      "P1c": 10.0,
+      "P1l": 0.2,
+      "P1n": 0.125786163522013,
+      "P1p": 0.00786163522012579,
+      "P1s": 0.125786163522013,
+      "P2c": 5.0,
+      "P2l": 0.1,
+      "P2n": 0.0628930817610063,
+      "P2p": 0.00393081761006289,
+      "P3c": 5.0,
+      "P3l": 0.1,
+      "P3n": 0.0628930817610063,
+      "P3p": 0.00393081761006289,
+      "P4c": 5.0,
+      "P4l": 0.1,
+      "P4n": 0.0628930817610063,
+      "P4p": 0.00393081761006289,
+      "R1c": 0.0,
+      "R1n": 0.0,
+      "R1p": 0.0,
+      "R2c": 0.0,
+      "R3c": 3.24,
+      "R6c": 1.68,
+      "R6n": 0.0,
+      "R6p": 0.0,
+      "R6s": 0.0,
+      "Z3c": 0.1,
+      "Z3n": 0.0015,
+      "Z3p": 0.00016700000000000002,
+      "Z4c": 0.1,
+      "Z4n": 0.0015,
+      "Z4p": 0.00016700000000000002,
+      "Z5c": 0.1,
+      "Z5n": 0.00167,
+      "Z5p": 0.00018500000000000002,
+      "Z6c": 0.1,
+      "Z6n": 0.00167,
+      "Z6p": 0.00018500000000000002
     },
-    "profiles": {
-      "tyr": {
-        "O2o": 240,
-        "N1p": 0.28,
-        "N3n": 2.23,
-        "N4n": 0.446,
-        "O4n": 0,
-        "N5s": 159.2095212,
-        "N6r": 0,
-        "B1c": 1,
-        "B1n": 0.017,
-        "B1p": 0.0019,
-        "P1c": 10,
-        "P1n": 0.125786163522013,
-        "P1p": 0.00786163522012579,
-        "P1l": 0.2,
-        "P1s": 0.125786163522013,
-        "P2c": 5,
-        "P2n": 0.0628930817610063,
-        "P2p": 0.00393081761006289,
-        "P2l": 0.1,
-        "P3c": 5,
-        "P3n": 0.0628930817610063,
-        "P3p": 0.00393081761006289,
-        "P3l": 0.1,
-        "P4c": 5,
-        "P4n": 0.0628930817610063,
-        "P4p": 0.00393081761006289,
-        "P4l": 0.1,
-        "Z3c": 0.1,
-        "Z3n": 0.0015,
-        "Z3p": 0.00016700000000000002,
-        "Z4c": 0.1,
-        "Z4n": 0.0015,
-        "Z4p": 0.00016700000000000002,
-        "Z5c": 0.1,
-        "Z5n": 0.00167,
-        "Z5p": 0.00018500000000000002,
-        "Z6c": 0.1,
-        "Z6n": 0.00167,
-        "Z6p": 0.00018500000000000002,
-        "R1c": 0,
-        "R1n": 0,
-        "R1p": 0,
-        "R2c": 0,
-        "R3c": 3.24,
-        "R6c": 1.68,
-        "R6n": 0,
-        "R6p": 0,
-        "R6s": 0,
-        "O3c": 52.96,
-        "O3h": 5.16,
-        "O5c": 0
-      },
-      "adr_ion": {
-        "O2o": 240,
-        "N1p": 0.059,
-        "N3n": 1.74,
-        "N4n": 0.348,
-        "O4n": 0,
-        "N5s": 124.2262631,
-        "N6r": 0,
-        "B1c": 1,
-        "B1n": 0.017,
-        "B1p": 0.0019,
-        "P1c": 10,
-        "P1n": 0.125786163522013,
-        "P1p": 0.00786163522012579,
-        "P1l": 0.2,
-        "P1s": 0.125786163522013,
-        "P2c": 5,
-        "P2n": 0.0628930817610063,
-        "P2p": 0.00393081761006289,
-        "P2l": 0.1,
-        "P3c": 5,
-        "P3n": 0.0628930817610063,
-        "P3p": 0.00393081761006289,
-        "P3l": 0.1,
-        "P4c": 5,
-        "P4n": 0.0628930817610063,
-        "P4p": 0.00393081761006289,
-        "P4l": 0.1,
-        "Z3c": 0.1,
-        "Z3n": 0.0015,
-        "Z3p": 0.00016700000000000002,
-        "Z4c": 0.1,
-        "Z4n": 0.0015,
-        "Z4p": 0.00016700000000000002,
-        "Z5c": 0.1,
-        "Z5n": 0.00167,
-        "Z5p": 0.00018500000000000002,
-        "Z6c": 0.1,
-        "Z6n": 0.00167,
-        "Z6p": 0.00018500000000000002,
-        "R1c": 0,
-        "R1n": 0,
-        "R1p": 0,
-        "R2c": 0,
-        "R3c": 2.29,
-        "R6c": 1.52,
-        "R6n": 0,
-        "R6p": 0,
-        "R6s": 0,
-        "O3c": 36.08,
-        "O3h": 3.01,
-        "O5c": 0
-      }
+    "adr_ion": {
+      "B1c": 1.0,
+      "B1n": 0.017,
+      "B1p": 0.0019,
+      "N1p": 0.059,
+      "N3n": 1.74,
+      "N4n": 0.348,
+      "N5s": 124.2262631,
+      "N6r": 0.0,
+      "O2o": 240.0,
+      "O3c": 36.08,
+      "O3h": 3.01,
+      "O4n": 0.0,
+      "O5c": 0.0,
+      "P1c": 10.0,
+      "P1l": 0.2,
+      "P1n": 0.125786163522013,
+      "P1p": 0.00786163522012579,
+      "P1s": 0.125786163522013,
+      "P2c": 5.0,
+      "P2l": 0.1,
+      "P2n": 0.0628930817610063,
+      "P2p": 0.00393081761006289,
+      "P3c": 5.0,
+      "P3l": 0.1,
+      "P3n": 0.0628930817610063,
+      "P3p": 0.00393081761006289,
+      "P4c": 5.0,
+      "P4l": 0.1,
+      "P4n": 0.0628930817610063,
+      "P4p": 0.00393081761006289,
+      "R1c": 0.0,
+      "R1n": 0.0,
+      "R1p": 0.0,
+      "R2c": 0.0,
+      "R3c": 2.29,
+      "R6c": 1.52,
+      "R6n": 0.0,
+      "R6p": 0.0,
+      "R6s": 0.0,
+      "Z3c": 0.1,
+      "Z3n": 0.0015,
+      "Z3p": 0.00016700000000000002,
+      "Z4c": 0.1,
+      "Z4n": 0.0015,
+      "Z4p": 0.00016700000000000002,
+      "Z5c": 0.1,
+      "Z5n": 0.00167,
+      "Z5p": 0.00018500000000000002,
+      "Z6c": 0.1,
+      "Z6n": 0.00167,
+      "Z6p": 0.00018500000000000002
     }
   },
+  "geometry_defaults": {
+    "width": 500,
+    "depth": 3,
+    "stem_length": 10
+  },
+  "physical_defaults": {
+    "average_temperature": 10,
+    "temperature_variation": 5,
+    "average_salinity": 5
+  },
+  "default_model": "stem_flux",
   "rivers": [
     {
       "id": 0,
       "name": "Roia",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 7.60607812492043,
+        "mouth_latitude": 43.7889609932052,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 7.60833333,
@@ -288,24 +296,20 @@
         "longitude_index": 1971,
         "latitude_index": 1707
       },
-      "geometry": {
-        "mouth_longitude": 7.60607812492043,
-        "mouth_latitude": 43.7889609932052,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 1,
       "name": "Centa",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 8.22429947600262,
+        "mouth_latitude": 44.045,
+        "side": "N",
+        "stem": [
+          "-6z",
+          "+4m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.225,
@@ -313,24 +317,16 @@
         "longitude_index": 2008,
         "latitude_index": 1692
       },
-      "geometry": {
-        "mouth_longitude": 8.22429947600262,
-        "mouth_latitude": 44.045,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 2,
       "name": "Entella",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 9.33052903402932,
+        "mouth_latitude": 44.3100179047012,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.325,
@@ -338,24 +334,16 @@
         "longitude_index": 2074,
         "latitude_index": 1676
       },
-      "geometry": {
-        "mouth_longitude": 9.33052903402932,
-        "mouth_latitude": 44.3100179047012,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 3,
       "name": "Magra Ligure",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 9.98676752631333,
+        "mouth_latitude": 44.0482528898037,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.99166667,
@@ -363,24 +351,16 @@
         "longitude_index": 2114,
         "latitude_index": 1692
       },
-      "geometry": {
-        "mouth_longitude": 9.98676752631333,
-        "mouth_latitude": 44.0482528898037,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 4,
       "name": "Serchio",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 10.2689845511678,
+        "mouth_latitude": 43.7812689069969,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 10.275,
@@ -388,24 +368,16 @@
         "longitude_index": 2131,
         "latitude_index": 1708
       },
-      "geometry": {
-        "mouth_longitude": 10.2689845511678,
-        "mouth_latitude": 43.7812689069969,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 5,
       "name": "Arno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 10.2736526600165,
+        "mouth_latitude": 43.6807026831873,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 10.29166667,
@@ -413,24 +385,16 @@
         "longitude_index": 2132,
         "latitude_index": 1714
       },
-      "geometry": {
-        "mouth_longitude": 10.2736526600165,
-        "mouth_latitude": 43.6807026831873,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 6,
       "name": "Scolmatore dell'Arno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 10.2975548999999,
+        "mouth_latitude": 43.5807231,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 10.30833333,
@@ -438,24 +402,16 @@
         "longitude_index": 2133,
         "latitude_index": 1719
       },
-      "geometry": {
-        "mouth_longitude": 10.2975548999999,
-        "mouth_latitude": 43.5807231,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 7,
       "name": "Cecina",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 10.4860225983941,
+        "mouth_latitude": 43.3028006388885,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 10.49166667,
@@ -463,24 +419,16 @@
         "longitude_index": 2144,
         "latitude_index": 1736
       },
-      "geometry": {
-        "mouth_longitude": 10.4860225983941,
-        "mouth_latitude": 43.3028006388885,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 8,
       "name": "Bruna",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 10.8815838265871,
+        "mouth_latitude": 42.7623660350128,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 10.875,
@@ -488,24 +436,16 @@
         "longitude_index": 2167,
         "latitude_index": 1769
       },
-      "geometry": {
-        "mouth_longitude": 10.8815838265871,
-        "mouth_latitude": 42.7623660350128,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 9,
       "name": "Ombrone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 11.0084945499413,
+        "mouth_latitude": 42.6569087357954,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 11.025,
@@ -513,24 +453,16 @@
         "longitude_index": 2176,
         "latitude_index": 1775
       },
-      "geometry": {
-        "mouth_longitude": 11.0084945499413,
-        "mouth_latitude": 42.6569087357954,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 10,
       "name": "Albegna",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 11.1912202061139,
+        "mouth_latitude": 42.5027146416298,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 11.19166667,
@@ -538,24 +470,16 @@
         "longitude_index": 2186,
         "latitude_index": 1784
       },
-      "geometry": {
-        "mouth_longitude": 11.1912202061139,
-        "mouth_latitude": 42.5027146416298,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 11,
       "name": "Fiora",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 11.5720224528536,
+        "mouth_latitude": 42.3310492758698,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 11.575,
@@ -563,24 +487,16 @@
         "longitude_index": 2209,
         "latitude_index": 1795
       },
-      "geometry": {
-        "mouth_longitude": 11.5720224528536,
-        "mouth_latitude": 42.3310492758698,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 12,
       "name": "Mignone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 11.7340403346412,
+        "mouth_latitude": 42.1774566198616,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 11.74166667,
@@ -588,24 +504,16 @@
         "longitude_index": 2219,
         "latitude_index": 1804
       },
-      "geometry": {
-        "mouth_longitude": 11.7340403346412,
-        "mouth_latitude": 42.1774566198616,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 13,
       "name": "Tevere",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.221,
+        "mouth_latitude": 41.743,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.24166667,
@@ -613,24 +521,16 @@
         "longitude_index": 2249,
         "latitude_index": 1830
       },
-      "geometry": {
-        "mouth_longitude": 12.221,
-        "mouth_latitude": 41.743,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 14,
       "name": "Portatore",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.2016736694307,
+        "mouth_latitude": 41.2808602827565,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.20833333,
@@ -638,24 +538,16 @@
         "longitude_index": 2307,
         "latitude_index": 1858
       },
-      "geometry": {
-        "mouth_longitude": 13.2016736694307,
-        "mouth_latitude": 41.2808602827565,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 15,
       "name": "Garigliano",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.7591382549923,
+        "mouth_latitude": 41.2217251485985,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.75833333,
@@ -663,24 +555,16 @@
         "longitude_index": 2340,
         "latitude_index": 1861
       },
-      "geometry": {
-        "mouth_longitude": 13.7591382549923,
-        "mouth_latitude": 41.2217251485985,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 16,
       "name": "Volturno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.9173672549139,
+        "mouth_latitude": 41.0219098621163,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.925,
@@ -688,24 +572,16 @@
         "longitude_index": 2350,
         "latitude_index": 1873
       },
-      "geometry": {
-        "mouth_longitude": 13.9173672549139,
-        "mouth_latitude": 41.0219098621163,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 17,
       "name": "Regi Lagni",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.9704785461879,
+        "mouth_latitude": 40.9834842182625,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.975,
@@ -713,24 +589,16 @@
         "longitude_index": 2353,
         "latitude_index": 1876
       },
-      "geometry": {
-        "mouth_longitude": 13.9704785461879,
-        "mouth_latitude": 40.9834842182625,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 18,
       "name": "Sarno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.4700086788155,
+        "mouth_latitude": 40.7269570577879,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.475,
@@ -738,24 +606,16 @@
         "longitude_index": 2383,
         "latitude_index": 1891
       },
-      "geometry": {
-        "mouth_longitude": 14.4700086788155,
-        "mouth_latitude": 40.7269570577879,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 19,
       "name": "Sele",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.9367726895897,
+        "mouth_latitude": 40.4846616522368,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.95833333,
@@ -763,24 +623,16 @@
         "longitude_index": 2412,
         "latitude_index": 1905
       },
-      "geometry": {
-        "mouth_longitude": 14.9367726895897,
-        "mouth_latitude": 40.4846616522368,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 20,
       "name": "Alento",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.1414211508578,
+        "mouth_latitude": 40.1618297721364,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.14166667,
@@ -788,24 +640,16 @@
         "longitude_index": 2423,
         "latitude_index": 1924
       },
-      "geometry": {
-        "mouth_longitude": 15.1414211508578,
-        "mouth_latitude": 40.1618297721364,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 21,
       "name": "Bussento",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.509789519306,
+        "mouth_latitude": 40.0653167539276,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.50833333,
@@ -813,24 +657,15 @@
         "longitude_index": 2445,
         "latitude_index": 1930
       },
-      "geometry": {
-        "mouth_longitude": 15.509789519306,
-        "mouth_latitude": 40.0653167539276,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 22,
       "name": "Noce",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.7558955444483,
+        "mouth_latitude": 39.9223093500889
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.75833333,
@@ -838,23 +673,15 @@
         "longitude_index": 2460,
         "latitude_index": 1939
       },
-      "geometry": {
-        "mouth_longitude": 15.7558955444483,
-        "mouth_latitude": 39.9223093500889
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 23,
       "name": "Lao",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.7933656538629,
+        "mouth_latitude": 39.7779950887579
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.80833333,
@@ -862,23 +689,15 @@
         "longitude_index": 2463,
         "latitude_index": 1948
       },
-      "geometry": {
-        "mouth_longitude": 15.7933656538629,
-        "mouth_latitude": 39.7779950887579
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 24,
       "name": "Savuto",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.0950268819255,
+        "mouth_latitude": 39.031720649705
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.09166667,
@@ -886,23 +705,15 @@
         "longitude_index": 2480,
         "latitude_index": 1993
       },
-      "geometry": {
-        "mouth_longitude": 16.0950268819255,
-        "mouth_latitude": 39.031720649705
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 25,
       "name": "Amato",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.2197602165918,
+        "mouth_latitude": 38.886534263078
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.225,
@@ -910,23 +721,15 @@
         "longitude_index": 2488,
         "latitude_index": 2001
       },
-      "geometry": {
-        "mouth_longitude": 16.2197602165918,
-        "mouth_latitude": 38.886534263078
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 26,
       "name": "Mesima",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.9158987278358,
+        "mouth_latitude": 38.5052577300135
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.925,
@@ -934,23 +737,15 @@
         "longitude_index": 2470,
         "latitude_index": 2024
       },
-      "geometry": {
-        "mouth_longitude": 15.9158987278358,
-        "mouth_latitude": 38.5052577300135
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 27,
       "name": "Petrace",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.8738790090366,
+        "mouth_latitude": 38.4211673496889
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.875,
@@ -958,23 +753,16 @@
         "longitude_index": 2467,
         "latitude_index": 2029
       },
-      "geometry": {
-        "mouth_longitude": 15.8738790090366,
-        "mouth_latitude": 38.4211673496889
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 28,
       "name": "Corace",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.6077389648975,
+        "mouth_latitude": 38.8153170500654,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.60833333,
@@ -982,24 +770,16 @@
         "longitude_index": 2511,
         "latitude_index": 2006
       },
-      "geometry": {
-        "mouth_longitude": 16.6077389648975,
-        "mouth_latitude": 38.8153170500654,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 29,
       "name": "Tacina",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.8904872273599,
+        "mouth_latitude": 38.9277954632059,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.90833333,
@@ -1007,24 +787,20 @@
         "longitude_index": 2529,
         "latitude_index": 1998
       },
-      "geometry": {
-        "mouth_longitude": 16.8904872273599,
-        "mouth_latitude": 38.9277954632059,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 30,
       "name": "Neto",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 17.1485585515752,
+        "mouth_latitude": 39.2105184672694,
+        "side": "N",
+        "stem": [
+          "-16z",
+          "+2m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 17.14166667,
@@ -1032,24 +808,15 @@
         "longitude_index": 2543,
         "latitude_index": 1982
       },
-      "geometry": {
-        "mouth_longitude": 17.1485585515752,
-        "mouth_latitude": 39.2105184672694,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 31,
       "name": "Trionto",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.7571148179624,
+        "mouth_latitude": 39.6239132216246
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.75833333,
@@ -1057,23 +824,15 @@
         "longitude_index": 2520,
         "latitude_index": 1957
       },
-      "geometry": {
-        "mouth_longitude": 16.7571148179624,
-        "mouth_latitude": 39.6239132216246
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 32,
       "name": "Crati",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.5276328223302,
+        "mouth_latitude": 39.7238465069808
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.525,
@@ -1081,23 +840,16 @@
         "longitude_index": 2506,
         "latitude_index": 1951
       },
-      "geometry": {
-        "mouth_longitude": 16.5276328223302,
-        "mouth_latitude": 39.7238465069808
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 33,
       "name": "Sinni",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.6858455555586,
+        "mouth_latitude": 40.1438059919818,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.69166667,
@@ -1105,24 +857,16 @@
         "longitude_index": 2516,
         "latitude_index": 1925
       },
-      "geometry": {
-        "mouth_longitude": 16.6858455555586,
-        "mouth_latitude": 40.1438059919818,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 34,
       "name": "Agri",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.7363425373535,
+        "mouth_latitude": 40.2116849442688,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.74166667,
@@ -1130,24 +874,16 @@
         "longitude_index": 2519,
         "latitude_index": 1921
       },
-      "geometry": {
-        "mouth_longitude": 16.7363425373535,
-        "mouth_latitude": 40.2116849442688,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 35,
       "name": "Cavone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.7751702553856,
+        "mouth_latitude": 40.282966658832,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.775,
@@ -1155,24 +891,16 @@
         "longitude_index": 2521,
         "latitude_index": 1917
       },
-      "geometry": {
-        "mouth_longitude": 16.7751702553856,
-        "mouth_latitude": 40.282966658832,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 36,
       "name": "Basento",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.8182024213241,
+        "mouth_latitude": 40.3360829427746,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.825,
@@ -1180,24 +908,16 @@
         "longitude_index": 2524,
         "latitude_index": 1914
       },
-      "geometry": {
-        "mouth_longitude": 16.8182024213241,
-        "mouth_latitude": 40.3360829427746,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 37,
       "name": "Bradano",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.859182995952,
+        "mouth_latitude": 40.384687302774,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.85833333,
@@ -1205,24 +925,16 @@
         "longitude_index": 2526,
         "latitude_index": 1911
       },
-      "geometry": {
-        "mouth_longitude": 16.859182995952,
-        "mouth_latitude": 40.384687302774,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 38,
       "name": "Lato",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.9912767182212,
+        "mouth_latitude": 40.4933235157244,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.99166667,
@@ -1230,24 +942,15 @@
         "longitude_index": 2534,
         "latitude_index": 1905
       },
-      "geometry": {
-        "mouth_longitude": 16.9912767182212,
-        "mouth_latitude": 40.4933235157244,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 39,
       "name": "Canale d'Aiedda",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 17.3187069999999,
+        "mouth_latitude": 40.4766493999999
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 17.325,
@@ -1255,23 +958,15 @@
         "longitude_index": 2554,
         "latitude_index": 1906
       },
-      "geometry": {
-        "mouth_longitude": 17.3187069999999,
-        "mouth_latitude": 40.4766493999999
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 40,
       "name": "Scolmatore dell'Asso",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 17.9228862999999,
+        "mouth_latitude": 40.2076084999999
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 17.925,
@@ -1279,23 +974,20 @@
         "longitude_index": 2590,
         "latitude_index": 1922
       },
-      "geometry": {
-        "mouth_longitude": 17.9228862999999,
-        "mouth_latitude": 40.2076084999999
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 41,
       "name": "Canale Reale",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 17.8071333,
+        "mouth_latitude": 40.7048312,
+        "side": "W",
+        "stem": [
+          "-2m",
+          "-8z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 17.80833333,
@@ -1303,24 +995,16 @@
         "longitude_index": 2583,
         "latitude_index": 1892
       },
-      "geometry": {
-        "mouth_longitude": 17.8071333,
-        "mouth_latitude": 40.7048312,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 42,
       "name": "Lama San Giorgio",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.9616354238128,
+        "mouth_latitude": 41.0981630408438,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.95833333,
@@ -1328,24 +1012,16 @@
         "longitude_index": 2532,
         "latitude_index": 1869
       },
-      "geometry": {
-        "mouth_longitude": 16.9616354238128,
-        "mouth_latitude": 41.0981630408438,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 43,
       "name": "Ofanto",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.2010562251779,
+        "mouth_latitude": 41.3648744002497,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.19166667,
@@ -1353,24 +1029,16 @@
         "longitude_index": 2486,
         "latitude_index": 1853
       },
-      "geometry": {
-        "mouth_longitude": 16.2010562251779,
-        "mouth_latitude": 41.3648744002497,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 44,
       "name": "Carapelle",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.9262738999999,
+        "mouth_latitude": 41.4928445999999,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.925,
@@ -1378,24 +1046,16 @@
         "longitude_index": 2470,
         "latitude_index": 1845
       },
-      "geometry": {
-        "mouth_longitude": 15.9262738999999,
-        "mouth_latitude": 41.4928445999999,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 45,
       "name": "Candelaro",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.893536349224,
+        "mouth_latitude": 41.5893442546115,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.89166667,
@@ -1403,24 +1063,20 @@
         "longitude_index": 2468,
         "latitude_index": 1839
       },
-      "geometry": {
-        "mouth_longitude": 15.893536349224,
-        "mouth_latitude": 41.5893442546115,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 46,
       "name": "Fortore",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.2860718457653,
+        "mouth_latitude": 41.9220309259533,
+        "side": "W",
+        "stem": [
+          "-6m",
+          "-4z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.275,
@@ -1428,24 +1084,16 @@
         "longitude_index": 2431,
         "latitude_index": 1820
       },
-      "geometry": {
-        "mouth_longitude": 15.2860718457653,
-        "mouth_latitude": 41.9220309259533,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 47,
       "name": "Biferno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.0283831508604,
+        "mouth_latitude": 41.9825735717329,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.025,
@@ -1453,24 +1101,16 @@
         "longitude_index": 2416,
         "latitude_index": 1816
       },
-      "geometry": {
-        "mouth_longitude": 15.0283831508604,
-        "mouth_latitude": 41.9825735717329,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 48,
       "name": "Trigno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.7994047238271,
+        "mouth_latitude": 42.0651330032621,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.79166667,
@@ -1478,24 +1118,16 @@
         "longitude_index": 2402,
         "latitude_index": 1811
       },
-      "geometry": {
-        "mouth_longitude": 14.7994047238271,
-        "mouth_latitude": 42.0651330032621,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 49,
       "name": "Sangro",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.5439691887076,
+        "mouth_latitude": 42.2383028447781,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.54166667,
@@ -1503,24 +1135,16 @@
         "longitude_index": 2387,
         "latitude_index": 1800
       },
-      "geometry": {
-        "mouth_longitude": 14.5439691887076,
-        "mouth_latitude": 42.2383028447781,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 50,
       "name": "Pescara",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.22867694788,
+        "mouth_latitude": 42.4686720319187,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.225,
@@ -1528,24 +1152,16 @@
         "longitude_index": 2368,
         "latitude_index": 1786
       },
-      "geometry": {
-        "mouth_longitude": 14.22867694788,
-        "mouth_latitude": 42.4686720319187,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 51,
       "name": "Vomano",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.0383836717516,
+        "mouth_latitude": 42.6584166728097,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.04166667,
@@ -1553,24 +1169,16 @@
         "longitude_index": 2357,
         "latitude_index": 1775
       },
-      "geometry": {
-        "mouth_longitude": 14.0383836717516,
-        "mouth_latitude": 42.6584166728097,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 52,
       "name": "Tronto",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.9166817469273,
+        "mouth_latitude": 42.8941149119937,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.90833333,
@@ -1578,24 +1186,16 @@
         "longitude_index": 2349,
         "latitude_index": 1761
       },
-      "geometry": {
-        "mouth_longitude": 13.9166817469273,
-        "mouth_latitude": 42.8941149119937,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 53,
       "name": "Chienti",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.7433745267584,
+        "mouth_latitude": 43.2950175021369,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.74166667,
@@ -1603,24 +1203,16 @@
         "longitude_index": 2339,
         "latitude_index": 1737
       },
-      "geometry": {
-        "mouth_longitude": 13.7433745267584,
-        "mouth_latitude": 43.2950175021369,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 54,
       "name": "Potenza",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.6714490450396,
+        "mouth_latitude": 43.4247436562292,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.65833333,
@@ -1628,24 +1220,16 @@
         "longitude_index": 2334,
         "latitude_index": 1729
       },
-      "geometry": {
-        "mouth_longitude": 13.6714490450396,
-        "mouth_latitude": 43.4247436562292,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 55,
       "name": "Musone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.6419072659983,
+        "mouth_latitude": 43.4746776817094,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.625,
@@ -1653,24 +1237,16 @@
         "longitude_index": 2332,
         "latitude_index": 1726
       },
-      "geometry": {
-        "mouth_longitude": 13.6419072659983,
-        "mouth_latitude": 43.4746776817094,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 56,
       "name": "Esino",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.3739419241931,
+        "mouth_latitude": 43.6431038777344,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.375,
@@ -1678,24 +1254,16 @@
         "longitude_index": 2317,
         "latitude_index": 1716
       },
-      "geometry": {
-        "mouth_longitude": 13.3739419241931,
-        "mouth_latitude": 43.6431038777344,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 57,
       "name": "Metauro",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.057085959001,
+        "mouth_latitude": 43.8302556219327,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.04166667,
@@ -1703,24 +1271,16 @@
         "longitude_index": 2297,
         "latitude_index": 1705
       },
-      "geometry": {
-        "mouth_longitude": 13.057085959001,
-        "mouth_latitude": 43.8302556219327,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 58,
       "name": "Foglia",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.9029673884098,
+        "mouth_latitude": 43.9252874969674,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.90833333,
@@ -1728,24 +1288,16 @@
         "longitude_index": 2289,
         "latitude_index": 1699
       },
-      "geometry": {
-        "mouth_longitude": 12.9029673884098,
-        "mouth_latitude": 43.9252874969674,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 59,
       "name": "Marecchia",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.5639616982914,
+        "mouth_latitude": 44.0774183497039,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.55833333,
@@ -1753,24 +1305,16 @@
         "longitude_index": 2268,
         "latitude_index": 1690
       },
-      "geometry": {
-        "mouth_longitude": 12.5639616982914,
-        "mouth_latitude": 44.0774183497039,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 60,
       "name": "Savio",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.3448442263539,
+        "mouth_latitude": 44.3207867386867,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.34166667,
@@ -1778,24 +1322,16 @@
         "longitude_index": 2255,
         "latitude_index": 1675
       },
-      "geometry": {
-        "mouth_longitude": 12.3448442263539,
-        "mouth_latitude": 44.3207867386867,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 61,
       "name": "Fiumi uniti",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.3232103598778,
+        "mouth_latitude": 44.4001113990369,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.30833333,
@@ -1803,24 +1339,16 @@
         "longitude_index": 2253,
         "latitude_index": 1671
       },
-      "geometry": {
-        "mouth_longitude": 12.3232103598778,
-        "mouth_latitude": 44.4001113990369,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 62,
       "name": "Lamone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.2824986573026,
+        "mouth_latitude": 44.5270744427494,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.275,
@@ -1828,24 +1356,16 @@
         "longitude_index": 2251,
         "latitude_index": 1665
       },
-      "geometry": {
-        "mouth_longitude": 12.2824986573026,
-        "mouth_latitude": 44.5270744427494,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 63,
       "name": "Reno",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.281320543757,
+        "mouth_latitude": 44.6258201728968,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.275,
@@ -1853,24 +1373,21 @@
         "longitude_index": 2251,
         "latitude_index": 1659
       },
-      "geometry": {
-        "mouth_longitude": 12.281320543757,
-        "mouth_latitude": 44.6258201728968,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 64,
       "name": "Po",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.57031,
+        "mouth_latitude": 44.965,
+        "side": "W",
+        "width": 1500,
+        "depth": 6,
+        "stem": [
+          "-89z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 11.60833333,
@@ -1878,26 +1395,16 @@
         "longitude_index": 2211,
         "latitude_index": 1641
       },
-      "geometry": {
-        "mouth_longitude": 12.57031,
-        "mouth_latitude": 44.965,
-        "width": 1500,
-        "depth": 6,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 65,
       "name": "Adige",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.3316390231183,
+        "mouth_latitude": 45.1623382041137,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.325,
@@ -1905,24 +1412,21 @@
         "longitude_index": 2254,
         "latitude_index": 1625
       },
-      "geometry": {
-        "mouth_longitude": 12.3316390231183,
-        "mouth_latitude": 45.1623382041137,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 66,
       "name": "Brenta",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.308672390934,
+        "mouth_latitude": 45.1820119630854,
+        "side": "W",
+        "stem": [
+          "-2z",
+          "-2m",
+          "-6z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.225,
@@ -1930,24 +1434,21 @@
         "longitude_index": 2248,
         "latitude_index": 1623
       },
-      "geometry": {
-        "mouth_longitude": 12.308672390934,
-        "mouth_latitude": 45.1820119630854,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 67,
       "name": "Naviglio del Brenta",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.2566,
+        "mouth_latitude": 45.4169,
+        "side": "W",
+        "stem": [
+          "-2z",
+          "+2m",
+          "-6z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.20833333,
@@ -1955,24 +1456,16 @@
         "longitude_index": 2247,
         "latitude_index": 1608
       },
-      "geometry": {
-        "mouth_longitude": 12.2566,
-        "mouth_latitude": 45.4169,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 68,
       "name": "Dese",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.3859344232942,
+        "mouth_latitude": 45.5193871026731,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.375,
@@ -1980,24 +1473,23 @@
         "longitude_index": 2257,
         "latitude_index": 1602
       },
-      "geometry": {
-        "mouth_longitude": 12.3859344232942,
-        "mouth_latitude": 45.5193871026731,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 69,
       "name": "Sile",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.5837236437003,
+        "mouth_latitude": 45.479959420229,
+        "side": "N",
+        "stem": [
+          "+4m",
+          "+4z",
+          "+2m",
+          "+6z",
+          "+1m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.40833333,
@@ -2005,24 +1497,16 @@
         "longitude_index": 2259,
         "latitude_index": 1601
       },
-      "geometry": {
-        "mouth_longitude": 12.5837236437003,
-        "mouth_latitude": 45.479959420229,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 70,
       "name": "Piave",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.731027685276,
+        "mouth_latitude": 45.5327090880551,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.725,
@@ -2030,24 +1514,16 @@
         "longitude_index": 2278,
         "latitude_index": 1603
       },
-      "geometry": {
-        "mouth_longitude": 12.731027685276,
-        "mouth_latitude": 45.5327090880551,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 71,
       "name": "Livenza",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.863688867022,
+        "mouth_latitude": 45.5903296188331,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.85833333,
@@ -2055,24 +1531,16 @@
         "longitude_index": 2286,
         "latitude_index": 1599
       },
-      "geometry": {
-        "mouth_longitude": 12.863688867022,
-        "mouth_latitude": 45.5903296188331,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 72,
       "name": "Lemene",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 12.9138,
+        "mouth_latitude": 45.6156,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.89166667,
@@ -2080,24 +1548,20 @@
         "longitude_index": 2288,
         "latitude_index": 1597
       },
-      "geometry": {
-        "mouth_longitude": 12.9138,
-        "mouth_latitude": 45.6156,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 73,
       "name": "Tagliamento",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.1003318997226,
+        "mouth_latitude": 45.6440875130656,
+        "side": "N",
+        "stem": [
+          "-8z",
+          "+2m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.10833333,
@@ -2105,24 +1569,16 @@
         "longitude_index": 2301,
         "latitude_index": 1596
       },
-      "geometry": {
-        "mouth_longitude": 13.1003318997226,
-        "mouth_latitude": 45.6440875130656,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 74,
       "name": "Stella",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.0933053063163,
+        "mouth_latitude": 45.7354159002234,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.09166667,
@@ -2130,24 +1586,16 @@
         "longitude_index": 2300,
         "latitude_index": 1591
       },
-      "geometry": {
-        "mouth_longitude": 13.0933053063163,
-        "mouth_latitude": 45.7354159002234,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 75,
       "name": "Cormor",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.1295072613493,
+        "mouth_latitude": 45.7613,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.125,
@@ -2155,24 +1603,16 @@
         "longitude_index": 2302,
         "latitude_index": 1589
       },
-      "geometry": {
-        "mouth_longitude": 13.1295072613493,
-        "mouth_latitude": 45.7613,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 76,
       "name": "Aussa",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.2371361492882,
+        "mouth_latitude": 45.7541716176959,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.24166667,
@@ -2180,25 +1620,17 @@
         "longitude_index": 2309,
         "latitude_index": 1589
       },
-      "geometry": {
-        "mouth_longitude": 13.2371361492882,
-        "mouth_latitude": 45.7541716176959,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 77,
       "name": "Timavo",
-      "model": "stem_flux",
       "runoff_factor": 6.6,
+      "geometry": {
+        "mouth_longitude": 13.58104,
+        "mouth_latitude": 45.78084,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.575,
@@ -2206,31 +1638,11 @@
         "longitude_index": 2329,
         "latitude_index": 1588
       },
-      "geometry": {
-        "mouth_longitude": 13.58104,
-        "mouth_latitude": 45.78084,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 78,
       "name": "Isonzo",
-      "model": "stem_flux",
-      "data_source": {
-        "type": "EFAS",
-        "longitude": 13.54166667,
-        "latitude": 45.725,
-        "longitude_index": 2327,
-        "latitude_index": 1591
-      },
       "geometry": {
         "mouth_longitude": 13.5525677816984,
         "mouth_latitude": 45.7256714098903,
@@ -2241,19 +1653,23 @@
           "+2m"
         ]
       },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
+      "data_source": {
+        "type": "EFAS",
+        "longitude": 13.54166667,
+        "latitude": 45.725,
+        "longitude_index": 2327,
+        "latitude_index": 1591
       },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 79,
       "name": "Mirna",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 13.5947870999999,
+        "mouth_latitude": 45.3162396999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.59166667,
@@ -2261,24 +1677,16 @@
         "longitude_index": 2330,
         "latitude_index": 1616
       },
-      "geometry": {
-        "mouth_longitude": 13.5947870999999,
-        "mouth_latitude": 45.3162396999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 80,
       "name": "Rasa",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.04653,
+        "mouth_latitude": 45.0353759999999,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.04166667,
@@ -2286,24 +1694,16 @@
         "longitude_index": 2357,
         "latitude_index": 1632
       },
-      "geometry": {
-        "mouth_longitude": 14.04653,
-        "mouth_latitude": 45.0353759999999,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 81,
       "name": "Rjecina",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 14.4497669999999,
+        "mouth_latitude": 45.3227229,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 14.44166667,
@@ -2311,24 +1711,16 @@
         "longitude_index": 2381,
         "latitude_index": 1615
       },
-      "geometry": {
-        "mouth_longitude": 14.4497669999999,
-        "mouth_latitude": 45.3227229,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 82,
       "name": "Zrmanja ",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.5257,
+        "mouth_latitude": 44.2422,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.59166667,
@@ -2336,24 +1728,16 @@
         "longitude_index": 2450,
         "latitude_index": 1682
       },
-      "geometry": {
-        "mouth_longitude": 15.5257,
-        "mouth_latitude": 44.2422,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 83,
       "name": "Krka",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.8515885,
+        "mouth_latitude": 43.7210231999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.85833333,
@@ -2361,24 +1745,16 @@
         "longitude_index": 2466,
         "latitude_index": 1711
       },
-      "geometry": {
-        "mouth_longitude": 15.8515885,
-        "mouth_latitude": 43.7210231999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 84,
       "name": "Dabar (Morinje)",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 15.9576799,
+        "mouth_latitude": 43.6812491,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.925,
@@ -2386,24 +1762,20 @@
         "longitude_index": 2470,
         "latitude_index": 1714
       },
-      "geometry": {
-        "mouth_longitude": 15.9576799,
-        "mouth_latitude": 43.6812491,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 85,
       "name": "Cetina",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 16.6868,
+        "mouth_latitude": 43.439,
+        "side": "E",
+        "stem": [
+          "+3m",
+          "+7z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 16.69166667,
@@ -2411,24 +1783,16 @@
         "longitude_index": 2516,
         "latitude_index": 1728
       },
-      "geometry": {
-        "mouth_longitude": 16.6868,
-        "mouth_latitude": 43.439,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 86,
       "name": "Neretva",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 17.4601,
+        "mouth_latitude": 43.0266,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 17.45833333,
@@ -2436,25 +1800,17 @@
         "longitude_index": 2562,
         "latitude_index": 1753
       },
-      "geometry": {
-        "mouth_longitude": 17.4601,
-        "mouth_latitude": 43.0266,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 87,
       "name": "Ombla",
-      "model": "stem_flux",
       "runoff_factor": 21.4,
+      "geometry": {
+        "mouth_longitude": 18.1366708999999,
+        "mouth_latitude": 42.6755017999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 18.00833333,
@@ -2462,24 +1818,16 @@
         "longitude_index": 2595,
         "latitude_index": 1773
       },
-      "geometry": {
-        "mouth_longitude": 18.1366708999999,
-        "mouth_latitude": 42.6755017999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 88,
       "name": "Buna/Bojana",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.3744,
+        "mouth_latitude": 41.8514,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.375,
@@ -2487,24 +1835,16 @@
         "longitude_index": 2677,
         "latitude_index": 1823
       },
-      "geometry": {
-        "mouth_longitude": 19.3744,
-        "mouth_latitude": 41.8514,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 89,
       "name": "Drin",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.5764,
+        "mouth_latitude": 41.7511,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.625,
@@ -2512,24 +1852,20 @@
         "longitude_index": 2692,
         "latitude_index": 1829
       },
-      "geometry": {
-        "mouth_longitude": 19.5764,
-        "mouth_latitude": 41.7511,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 90,
       "name": "Mat",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.570018,
+        "mouth_latitude": 41.6352827999999,
+        "side": "E",
+        "stem": [
+          "+5m",
+          "+5z"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.59166667,
@@ -2537,24 +1873,16 @@
         "longitude_index": 2690,
         "latitude_index": 1836
       },
-      "geometry": {
-        "mouth_longitude": 19.570018,
-        "mouth_latitude": 41.6352827999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 91,
       "name": "Ishem",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.5569187999999,
+        "mouth_latitude": 41.5775971999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.575,
@@ -2562,24 +1890,16 @@
         "longitude_index": 2689,
         "latitude_index": 1840
       },
-      "geometry": {
-        "mouth_longitude": 19.5569187999999,
-        "mouth_latitude": 41.5775971999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 92,
       "name": "Erzeni",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.4603189999999,
+        "mouth_latitude": 41.4363888999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.475,
@@ -2587,24 +1907,16 @@
         "longitude_index": 2683,
         "latitude_index": 1848
       },
-      "geometry": {
-        "mouth_longitude": 19.4603189999999,
-        "mouth_latitude": 41.4363888999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 93,
       "name": "Shkumbini",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.4427064999999,
+        "mouth_latitude": 41.0400923999999,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.475,
@@ -2612,24 +1924,16 @@
         "longitude_index": 2683,
         "latitude_index": 1872
       },
-      "geometry": {
-        "mouth_longitude": 19.4427064999999,
-        "mouth_latitude": 41.0400923999999,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 94,
       "name": "Seman",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.366,
+        "mouth_latitude": 40.8227,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.375,
@@ -2637,24 +1941,16 @@
         "longitude_index": 2677,
         "latitude_index": 1885
       },
-      "geometry": {
-        "mouth_longitude": 19.366,
-        "mouth_latitude": 40.8227,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 95,
       "name": "Aoos Vjose",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.3182320999999,
+        "mouth_latitude": 40.6437541,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.325,
@@ -2662,24 +1958,16 @@
         "longitude_index": 2674,
         "latitude_index": 1896
       },
-      "geometry": {
-        "mouth_longitude": 19.3182320999999,
-        "mouth_latitude": 40.6437541,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 96,
       "name": "Pavlla",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 19.9943172,
+        "mouth_latitude": 39.7266975,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 19.99166667,
@@ -2687,24 +1975,16 @@
         "longitude_index": 2714,
         "latitude_index": 1951
       },
-      "geometry": {
-        "mouth_longitude": 19.9943172,
-        "mouth_latitude": 39.7266975,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 97,
       "name": "Kalamas Thyamis Glykys",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 20.1424,
+        "mouth_latitude": 39.5862,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 20.175,
@@ -2712,24 +1992,17 @@
         "longitude_index": 2725,
         "latitude_index": 1959
       },
-      "geometry": {
-        "mouth_longitude": 20.1424,
-        "mouth_latitude": 39.5862,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 98,
       "name": "S. Leonardo",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 13.6893968562069,
+        "mouth_latitude": 37.9930219676794,
+        "side": "S"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.675,
@@ -2737,24 +2010,17 @@
         "longitude_index": 2335,
         "latitude_index": 2055
       },
-      "geometry": {
-        "mouth_longitude": 13.6893968562069,
-        "mouth_latitude": 37.9930219676794,
-        "side": "S"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 99,
       "name": "Alcantara",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 15.2573831931562,
+        "mouth_latitude": 37.8077367180036,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.24166667,
@@ -2762,24 +2028,17 @@
         "longitude_index": 2429,
         "latitude_index": 2066
       },
-      "geometry": {
-        "mouth_longitude": 15.2573831931562,
-        "mouth_latitude": 37.8077367180036,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 100,
       "name": "Simeto",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 15.0893940848092,
+        "mouth_latitude": 37.3977915296802,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 15.09166667,
@@ -2787,24 +2046,17 @@
         "longitude_index": 2420,
         "latitude_index": 2090
       },
-      "geometry": {
-        "mouth_longitude": 15.0893940848092,
-        "mouth_latitude": 37.3977915296802,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 101,
       "name": "Salso",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 13.9482847669818,
+        "mouth_latitude": 37.0993223839934,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.94166667,
@@ -2812,24 +2064,17 @@
         "longitude_index": 2351,
         "latitude_index": 2108
       },
-      "geometry": {
-        "mouth_longitude": 13.9482847669818,
-        "mouth_latitude": 37.0993223839934,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 102,
       "name": "Platani",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 13.2667395186219,
+        "mouth_latitude": 37.39601174298,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.275,
@@ -2837,24 +2082,17 @@
         "longitude_index": 2311,
         "latitude_index": 2091
       },
-      "geometry": {
-        "mouth_longitude": 13.2667395186219,
-        "mouth_latitude": 37.39601174298,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 103,
       "name": "Verdura",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 13.2011823718187,
+        "mouth_latitude": 37.4638778978456,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 13.20833333,
@@ -2862,24 +2100,17 @@
         "longitude_index": 2307,
         "latitude_index": 2087
       },
-      "geometry": {
-        "mouth_longitude": 13.2011823718187,
-        "mouth_latitude": 37.4638778978456,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 104,
       "name": "Belice",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 12.8627076066945,
+        "mouth_latitude": 37.5816308030276,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 12.875,
@@ -2887,24 +2118,17 @@
         "longitude_index": 2287,
         "latitude_index": 2080
       },
-      "geometry": {
-        "mouth_longitude": 12.8627076066945,
-        "mouth_latitude": 37.5816308030276,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "adr_ion"
-      }
+      "biogeochemical_profile": "adr_ion"
     },
     {
       "id": 105,
       "name": "Coghinas",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 8.8095291427551,
+        "mouth_latitude": 40.9334348139316,
+        "side": "S"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.80833333,
@@ -2912,24 +2136,17 @@
         "longitude_index": 2043,
         "latitude_index": 1878
       },
-      "geometry": {
-        "mouth_longitude": 8.8095291427551,
-        "mouth_latitude": 40.9334348139316,
-        "side": "S"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 106,
       "name": "Posada",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 9.7369202,
+        "mouth_latitude": 40.6497637,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.74166667,
@@ -2937,24 +2154,17 @@
         "longitude_index": 2099,
         "latitude_index": 1895
       },
-      "geometry": {
-        "mouth_longitude": 9.7369202,
-        "mouth_latitude": 40.6497637,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 107,
       "name": "Cedrino",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 9.73544525470903,
+        "mouth_latitude": 40.3775011609462,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.725,
@@ -2962,24 +2172,17 @@
         "longitude_index": 2098,
         "latitude_index": 1912
       },
-      "geometry": {
-        "mouth_longitude": 9.73544525470903,
-        "mouth_latitude": 40.3775011609462,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 108,
       "name": "Flumendosa",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 9.62867502862101,
+        "mouth_latitude": 39.4276090299266,
+        "side": "W"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.625,
@@ -2987,24 +2190,17 @@
         "longitude_index": 2092,
         "latitude_index": 1969
       },
-      "geometry": {
-        "mouth_longitude": 9.62867502862101,
-        "mouth_latitude": 39.4276090299266,
-        "side": "W"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 109,
       "name": "Mannu",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 9.01055431759671,
+        "mouth_latitude": 39.2648482448786,
+        "side": "N"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.09166667,
@@ -3012,24 +2208,17 @@
         "longitude_index": 2060,
         "latitude_index": 1981
       },
-      "geometry": {
-        "mouth_longitude": 9.01055431759671,
-        "mouth_latitude": 39.2648482448786,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 110,
       "name": "Tirso",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 8.54511393307127,
+        "mouth_latitude": 39.8844163607121,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.54166667,
@@ -3037,24 +2226,17 @@
         "longitude_index": 2027,
         "latitude_index": 1942
       },
-      "geometry": {
-        "mouth_longitude": 8.54511393307127,
-        "mouth_latitude": 39.8844163607121,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 111,
       "name": "Temo",
       "model": "rain_like",
+      "geometry": {
+        "mouth_longitude": 8.47294845205123,
+        "mouth_latitude": 40.2910150548303,
+        "side": "E"
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.475,
@@ -3062,24 +2244,20 @@
         "longitude_index": 2023,
         "latitude_index": 1917
       },
-      "geometry": {
-        "mouth_longitude": 8.47294845205123,
-        "mouth_latitude": 40.2910150548303,
-        "side": "E"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 112,
       "name": "Le Golo",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 9.5331554,
+        "mouth_latitude": 42.5236918,
+        "side": "N",
+        "stem": [
+          "-5z",
+          "+5m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.525,
@@ -3087,24 +2265,20 @@
         "longitude_index": 2086,
         "latitude_index": 1783
       },
-      "geometry": {
-        "mouth_longitude": 9.5331554,
-        "mouth_latitude": 42.5236918,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 113,
       "name": "Le Tavignano",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 9.54910079999999,
+        "mouth_latitude": 42.1040242999999,
+        "side": "N",
+        "stem": [
+          "-10z",
+          "+2m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 9.54166667,
@@ -3112,24 +2286,15 @@
         "longitude_index": 2087,
         "latitude_index": 1808
       },
-      "geometry": {
-        "mouth_longitude": 9.54910079999999,
-        "mouth_latitude": 42.1040242999999,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 114,
       "name": "Le Rizzanese",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 8.87883549999999,
+        "mouth_latitude": 41.6612585999999
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.89166667,
@@ -3137,23 +2302,20 @@
         "longitude_index": 2048,
         "latitude_index": 1835
       },
-      "geometry": {
-        "mouth_longitude": 8.87883549999999,
-        "mouth_latitude": 41.6612585999999
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 115,
       "name": "La Gravona",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 8.7981197,
+        "mouth_latitude": 41.9047555,
+        "side": "N",
+        "stem": [
+          "+2z",
+          "+8m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.79166667,
@@ -3161,24 +2323,20 @@
         "longitude_index": 2042,
         "latitude_index": 1820
       },
-      "geometry": {
-        "mouth_longitude": 8.7981197,
-        "mouth_latitude": 41.9047555,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     },
     {
       "id": 116,
       "name": "Liamone",
-      "model": "stem_flux",
+      "geometry": {
+        "mouth_longitude": 8.71744559999999,
+        "mouth_latitude": 42.0775172,
+        "side": "N",
+        "stem": [
+          "+2z",
+          "+8m"
+        ]
+      },
       "data_source": {
         "type": "EFAS",
         "longitude": 8.725,
@@ -3186,19 +2344,7 @@
         "longitude_index": 2038,
         "latitude_index": 1810
       },
-      "geometry": {
-        "mouth_longitude": 8.71744559999999,
-        "mouth_latitude": 42.0775172,
-        "side": "N"
-      },
-      "physical": {
-        "average_temperature": 10,
-        "average_salinity": 10,
-        "temperature_variation_amplitude": 5
-      },
-      "biogeochemical": {
-        "profile": "tyr"
-      }
+      "biogeochemical_profile": "tyr"
     }
   ]
 }

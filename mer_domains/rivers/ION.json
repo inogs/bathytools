@@ -67,16 +67,6 @@
       }
     },
     {
-      "id": 30,
-      "name": "Neto",
-      "geometry": {
-        "stem": [
-          "-16z",
-          "+2m"
-        ]
-      }
-    },
-    {
       "id": 31,
       "name": "Trionto",
       "geometry": {
@@ -102,6 +92,7 @@
     {
       "id": 39,
       "name": "Canale d'Aiedda",
+      "enabled": false,
       "geometry": {
         "side": "N",
         "stem": [
@@ -120,84 +111,6 @@
           "+2m"
         ]
       }
-    }
-  ],
-  "enabled_only": [
-    {
-      "id": 21,
-      "name": "Bussento"
-    },
-    {
-      "id": 22,
-      "name": "Noce"
-    },
-    {
-      "id": 23,
-      "name": "Lao"
-    },
-    {
-      "id": 24,
-      "name": "Savuto"
-    },
-    {
-      "id": 25,
-      "name": "Amato"
-    },
-    {
-      "id": 26,
-      "name": "Mesima"
-    },
-    {
-      "id": 27,
-      "name": "Petrace"
-    },
-    {
-      "id": 28,
-      "name": "Corace"
-    },
-    {
-      "id": 29,
-      "name": "Tacina"
-    },
-    {
-      "id": 30,
-      "name": "Neto"
-    },
-    {
-      "id": 31,
-      "name": "Trionto"
-    },
-    {
-      "id": 32,
-      "name": "Crati"
-    },
-    {
-      "id": 33,
-      "name": "Sinni"
-    },
-    {
-      "id": 34,
-      "name": "Agri"
-    },
-    {
-      "id": 35,
-      "name": "Cavone"
-    },
-    {
-      "id": 36,
-      "name": "Basento"
-    },
-    {
-      "id": 37,
-      "name": "Bradano"
-    },
-    {
-      "id": 38,
-      "name": "Lato"
-    },
-    {
-      "id": 40,
-      "name": "Scolmatore dell'Asso"
     }
   ]
 }

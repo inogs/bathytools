@@ -102,6 +102,7 @@ class RiverDig:
     id: int
     name: str
     model: str
+    enabled: bool
     mouth_latitude: float
     mouth_longitude: float
     width: float
@@ -172,7 +173,7 @@ class RiverSourceJSONEncoder(json.JSONEncoder):
 
 class DigRivers(SimpleAction):
     """
-    Dig the rivers on the domain
+    Digs the rivers on the domain
     """
 
     @staticmethod
@@ -287,8 +288,8 @@ class DigRivers(SimpleAction):
 
         # Load default geometry values for rivers, keeping stem data separate
         # because it requires custom handling for proper updates.
-        if "defaults" in main_data and "geometry" in main_data["defaults"]:
-            default_values = dict(main_data["defaults"]["geometry"])
+        if "geometry_defaults" in main_data:
+            default_values = dict(main_data["geometry_defaults"])
 
             # Check for inconsistent definitions of stem attributes
             if "stem_length" in default_values and "stem" in default_values:
@@ -301,21 +302,40 @@ class DigRivers(SimpleAction):
             default_values = {}
             default_stem = {}
         LOGGER.debug(
-            "Reading rivers with the following defaults: %s; stem: %s",
+            "Reading rivers with the following geometry defaults: %s; "
+            "stem: %s",
             default_values,
             default_stem,
         )
+
+        default_model = main_data.get("default_model", None)
+        if default_model is None:
+            LOGGER.debug('No "default_model" has been specified')
+        else:
+            LOGGER.debug(
+                'Using the following default model: "%s"', default_model
+            )
 
         if "rivers" not in main_data:
             raise ValueError("No rivers found in main file")
 
         # Read the main section
         rivers = main_data["rivers"]
-        rivers_dig_data: dict[tuple[int, str], tuple[str, dict, dict]] = {}
+        rivers_dig_data: dict[
+            tuple[int, str], tuple[str, bool, dict, dict]
+        ] = {}
         for river in rivers:
             river_id = int(river["id"])
             river_name = str(river["name"])
-            river_model = str(river["model"])
+            river_model = river.get("model", default_model)
+            river_enabled = river.get("enabled", True)
+            if river_model is None:
+                raise ValueError(
+                    f"River {river_name} (id {river_id}) does not specify a "
+                    "model and a default physical model is not set"
+                )
+            else:
+                river_model = str(river_model)
             LOGGER.debug("Reading river %s (id = %s)", river_name, river_id)
             geometry = default_values.copy()
             current_geo_values = river.get("geometry", {})
@@ -332,6 +352,7 @@ class DigRivers(SimpleAction):
             geometry.update(current_geo_values)
             rivers_dig_data[(river_id, river_name)] = (
                 river_model,
+                river_enabled,
                 geometry,
                 stem,
             )
@@ -358,7 +379,7 @@ class DigRivers(SimpleAction):
                     f"defined in file {self._domain_file_path} is not defined "
                     f"in the main file {self._main_file_path}"
                 )
-            river_model, main_geometry, main_stem = rivers_dig_data[
+            river_model, r_enabled, main_geometry, main_stem = rivers_dig_data[
                 (river_id, river_name)
             ]
             domain_geometry = river.get("geometry", {})
@@ -372,43 +393,21 @@ class DigRivers(SimpleAction):
             main_geometry.update(domain_geometry)
             if "model" in river:
                 river_model = str(river["model"])
+            river_enabled = bool(river.get("enabled", r_enabled))
             rivers_dig_data[(river_id, river_name)] = (
                 river_model,
+                river_enabled,
                 main_geometry,
                 stem,
             )
-
-        if "enabled_only" in domain_data:
-            LOGGER.debug('Reading section "enabled_only" from domain file')
-            previous_rivers = rivers_dig_data
-            rivers_dig_data = {}
-            enabled_only = domain_data["enabled_only"]
-            for river in enabled_only:
-                river_id = river["id"]
-                river_name = river["name"]
-                if (river_id, river_name) not in previous_rivers:
-                    raise ValueError(
-                        f"River with id = {river_id} and name = {river_name} "
-                        'defined in the "enabled_only" section of the file '
-                        f"{self._domain_file_path} is not defined "
-                        f"in the main file {self._main_file_path}"
-                    )
-                LOGGER.debug(
-                    "Enabling river %s (id = %s)", river_name, river_id
-                )
-                rivers_dig_data[(river_id, river_name)] = previous_rivers[
-                    (river_id, river_name)
-                ]
-        else:
-            LOGGER.debug('No "enabled_only" section found in domain file')
 
         # Generate a `RiverDig` instance for each river using the consolidated
         # geometry and stem data, then store these in a list.
         river_digs: List[RiverDig] = []
         for river_id, river_name in rivers_dig_data:
-            river_model, river_geometry, river_stem = rivers_dig_data[
-                (river_id, river_name)
-            ]
+            river_model, river_enabled, river_geometry, river_stem = (
+                rivers_dig_data[(river_id, river_name)]
+            )
 
             # If _update_stem_value did correctly its job, this should never
             # happen
@@ -456,6 +455,7 @@ class DigRivers(SimpleAction):
                 id=river_id,
                 name=river_name,
                 model=river_model,
+                enabled=river_enabled,
                 **river_geometry,
             )
             river_digs.append(river_dig)
@@ -823,6 +823,14 @@ class DigRivers(SimpleAction):
         # has the required side and stem data for successful processing.
         rivers_inside = []
         for river in self.river_digs:
+            if not river.enabled:
+                LOGGER.debug(
+                    "Skipping river %s (id %s) because is disabled from the "
+                    "config file",
+                    river.name,
+                    river.id,
+                )
+                continue
             river_lat = river.mouth_latitude
             river_lon = river.mouth_longitude
             is_inside = mask.is_inside_domain(lon=river_lon, lat=river_lat)

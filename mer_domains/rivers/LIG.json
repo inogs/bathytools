@@ -1,34 +1,14 @@
 {
   "rivers": [
     {
-      "id": 1,
-      "name": "Centa",
-      "geometry": {
-        "stem": [
-          "-6z",
-          "+4m"
-        ]
-      }
+      "id": 60,
+      "name": "Savio",
+      "enabled": false
     },
     {
-      "id": 112,
-      "name": "Le Golo",
-      "geometry": {
-        "stem": [
-          "-5z",
-          "+5m"
-        ]
-      }
-    },
-    {
-      "id": 113,
-      "name": "Le Tavignano",
-      "geometry": {
-        "stem": [
-          "-10z",
-          "+2m"
-        ]
-      }
+      "id": 61,
+      "name": "Fiumi uniti",
+      "enabled": false
     },
     {
       "id": 114,
@@ -40,104 +20,6 @@
           "-8m"
         ]
       }
-    },
-    {
-      "id": 115,
-      "name": "La Gravona",
-      "geometry": {
-        "stem": [
-          "+2z",
-          "+8m"
-        ]
-      }
-    },
-    {
-      "id": 116,
-      "name": "Liamone",
-      "geometry": {
-        "stem": [
-          "+2z",
-          "+8m"
-        ]
-      }
-    }
-  ],
-  "enabled_only": [
-    {
-      "id": 0,
-      "name": "Roia"
-    },
-    {
-      "id": 1,
-      "name": "Centa"
-    },
-    {
-      "id": 2,
-      "name": "Entella"
-    },
-    {
-      "id": 3,
-      "name": "Magra Ligure"
-    },
-    {
-      "id": 4,
-      "name": "Serchio"
-    },
-    {
-      "id": 5,
-      "name": "Arno"
-    },
-    {
-      "id": 6,
-      "name": "Scolmatore dell'Arno"
-    },
-    {
-      "id": 7,
-      "name": "Cecina"
-    },
-    {
-      "id": 8,
-      "name": "Bruna"
-    },
-    {
-      "id": 9,
-      "name": "Ombrone"
-    },
-    {
-      "id": 10,
-      "name": "Albegna"
-    },
-    {
-      "id": 11,
-      "name": "Fiora"
-    },
-    {
-      "id": 12,
-      "name": "Mignone"
-    },
-    {
-      "id": 13,
-      "name": "Tevere"
-    },
-    {
-      "id": 112,
-      "name": "Le Golo"
-    },
-    {
-      "id": 113,
-      "name": "Le Tavignano"
-    },
-    {
-      "id": 114,
-      "name": "Le Rizzanese"
-    },
-    {
-      "id": 115,
-      "name": "La Gravona"
-    },
-    {
-      "id": 116,
-      "name": "Liamone"
     }
   ]
 }
