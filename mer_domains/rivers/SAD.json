@@ -1,6 +1,46 @@
 {
   "rivers": [
     {
+      "id": 16,
+      "name": "Volturno",
+      "enabled": false
+    },
+    {
+      "id": 17,
+      "name": "Regi Lagni",
+      "enabled": false
+    },
+    {
+      "id": 18,
+      "name": "Sarno",
+      "enabled": false
+    },
+    {
+      "id": 19,
+      "name": "Sele",
+      "enabled": false
+    },
+    {
+      "id": 20,
+      "name": "Alento",
+      "enabled": false
+    },
+    {
+      "id": 21,
+      "name": "Bussento",
+      "enabled": false
+    },
+    {
+      "id": 22,
+      "name": "Noce",
+      "enabled": false
+    },
+    {
+      "id": 23,
+      "name": "Lao",
+      "enabled": false
+    },
+    {
       "id": 31,
       "name": "Trionto",
       "geometry": {
@@ -17,6 +57,7 @@
     {
       "id": 39,
       "name": "Canale d'Aiedda",
+      "enabled": false,
       "geometry": {
         "side": "E"
       }
@@ -29,164 +70,9 @@
       }
     },
     {
-      "id": 41,
-      "name": "Canale Reale",
-      "geometry": {
-        "stem": [
-          "-2m",
-          "-8z"
-        ]
-      }
-    },
-    {
-      "id": 46,
-      "name": "Fortore",
-      "geometry": {
-        "stem": [
-          "-6m",
-          "-4z"
-        ]
-      }
-    },
-    {
-      "id": 90,
-      "name": "Mat",
-      "geometry": {
-        "stem": [
-          "+5m",
-          "+5z"
-        ]
-      }
-    }
-  ],
-  "enabled_only": [
-    {
-      "id": 31,
-      "name": "Trionto"
-    },
-    {
-      "id": 32,
-      "name": "Crati"
-    },
-    {
-      "id": 33,
-      "name": "Sinni"
-    },
-    {
-      "id": 34,
-      "name": "Agri"
-    },
-    {
-      "id": 35,
-      "name": "Cavone"
-    },
-    {
-      "id": 36,
-      "name": "Basento"
-    },
-    {
-      "id": 37,
-      "name": "Bradano"
-    },
-    {
-      "id": 38,
-      "name": "Lato"
-    },
-    {
-      "id": 40,
-      "name": "Scolmatore dell'Asso"
-    },
-    {
-      "id": 41,
-      "name": "Canale Reale"
-    },
-    {
-      "id": 42,
-      "name": "Lama San Giorgio"
-    },
-    {
-      "id": 43,
-      "name": "Ofanto"
-    },
-    {
-      "id": 44,
-      "name": "Carapelle"
-    },
-    {
-      "id": 45,
-      "name": "Candelaro"
-    },
-    {
-      "id": 46,
-      "name": "Fortore"
-    },
-    {
-      "id": 47,
-      "name": "Biferno"
-    },
-    {
-      "id": 48,
-      "name": "Trigno"
-    },
-    {
-      "id": 49,
-      "name": "Sangro"
-    },
-    {
-      "id": 50,
-      "name": "Pescara"
-    },
-    {
-      "id": 51,
-      "name": "Vomano"
-    },
-    {
-      "id": 52,
-      "name": "Tronto"
-    },
-    {
-      "id": 87,
-      "name": "Ombla"
-    },
-    {
-      "id": 88,
-      "name": "Buna/Bojana"
-    },
-    {
-      "id": 89,
-      "name": "Drin"
-    },
-    {
-      "id": 90,
-      "name": "Mat"
-    },
-    {
-      "id": 91,
-      "name": "Ishem"
-    },
-    {
-      "id": 92,
-      "name": "Erzeni"
-    },
-    {
-      "id": 93,
-      "name": "Shkumbini"
-    },
-    {
-      "id": 94,
-      "name": "Seman"
-    },
-    {
-      "id": 95,
-      "name": "Aoos Vjose"
-    },
-    {
-      "id": 96,
-      "name": "Pavlla"
-    },
-    {
-      "id": 97,
-      "name": "Kalamas Thyamis Glykys"
+      "id": 86,
+      "name": "Neretva",
+      "enabled": false
     }
   ]
 }

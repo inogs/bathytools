@@ -24,47 +24,5 @@
         "side": "E"
       }
     }
-  ],
-  "enabled_only": [
-    {
-      "id": 25,
-      "name": "Amato"
-    },
-    {
-      "id": 26,
-      "name": "Mesima"
-    },
-    {
-      "id": 27,
-      "name": "Petrace"
-    },
-    {
-      "id": 98,
-      "name": "S. Leonardo"
-    },
-    {
-      "id": 99,
-      "name": "Alcantara"
-    },
-    {
-      "id": 100,
-      "name": "Simeto"
-    },
-    {
-      "id": 101,
-      "name": "Salso"
-    },
-    {
-      "id": 102,
-      "name": "Platani"
-    },
-    {
-      "id": 103,
-      "name": "Verdura"
-    },
-    {
-      "id": 104,
-      "name": "Belice"
-    }
   ]
 }

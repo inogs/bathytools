@@ -11,39 +11,5 @@
         ]
       }
     }
-  ],
-  "enabled_only": [
-    {
-      "id": 105,
-      "name": "Coghinas"
-    },
-    {
-      "id": 106,
-      "name": "Posada"
-    },
-    {
-      "id": 107,
-      "name": "Cedrino"
-    },
-    {
-      "id": 108,
-      "name": "Flumendosa"
-    },
-    {
-      "id": 109,
-      "name": "Mannu"
-    },
-    {
-      "id": 110,
-      "name": "Tirso"
-    },
-    {
-      "id": 111,
-      "name": "Temo"
-    },
-    {
-      "id": 114,
-      "name": "Le Rizzanese"
-    }
   ]
 }

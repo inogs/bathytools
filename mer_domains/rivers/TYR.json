@@ -20,64 +20,41 @@
       "geometry": {
         "side": "E"
       }
-    }
-  ],
-  "enabled_only": [
-    {
-      "id": 11,
-      "name": "Fiora"
     },
     {
-      "id": 12,
-      "name": "Mignone"
+      "id": 43,
+      "name": "Ofanto",
+      "enabled": false
     },
     {
-      "id": 13,
-      "name": "Tevere"
+      "id": 44,
+      "name": "Carapelle",
+      "enabled": false
     },
     {
-      "id": 14,
-      "name": "Portatore"
+      "id": 45,
+      "name": "Candelaro",
+      "enabled": false
     },
     {
-      "id": 15,
-      "name": "Garigliano"
+      "id": 46,
+      "name": "Fortore",
+      "enabled": false
     },
     {
-      "id": 16,
-      "name": "Volturno"
+      "id": 47,
+      "name": "Biferno",
+      "enabled": false
     },
     {
-      "id": 17,
-      "name": "Regi Lagni"
+      "id": 48,
+      "name": "Trigno",
+      "enabled": false
     },
     {
-      "id": 18,
-      "name": "Sarno"
-    },
-    {
-      "id": 19,
-      "name": "Sele"
-    },
-    {
-      "id": 20,
-      "name": "Alento"
-    },
-    {
-      "id": 21,
-      "name": "Bussento"
-    },
-    {
-      "id": 22,
-      "name": "Noce"
-    },
-    {
-      "id": 23,
-      "name": "Lao"
-    },
-    {
-      "id": 24,
-      "name": "Savuto"
+      "id": 49,
+      "name": "Sangro",
+      "enabled": false
     }
   ]
 }
