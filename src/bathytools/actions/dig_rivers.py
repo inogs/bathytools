@@ -78,6 +78,9 @@ class Interval(namedtuple("Interval", ["start", "end"])):
         # interval contains at least one boundary of `other`
         return other.start in self or other.end in self
 
+    def as_list(self):
+        return list(range(self.start, self.end))
+
 
 @dataclass
 class RiverDig:
@@ -117,9 +120,9 @@ class RiverSource:
     Represent the source of a river, i.e., the cells from which the water
     originates. This object contains the id of the river and the name of the
     river, together with the x and y coordinates of the cells from which the
-    river starts. If the river originate from only one cell, then the `x` and
+    river starts. If the river originates from only one cell, then the `x` and
     `y` attributes are integers, otherwise only one of them is an `Interval`.
-    It also contains the model of the original river, if the source needs to
+    It also contains the model of the original river if the source needs to
     behave differently depending on the model.
     """
 
@@ -136,15 +139,15 @@ class RiverSource:
         original object but that can be easily serialized into a JSON file
         (because the intervals are converted to strings).
         """
-        lat_indices_str = (
-            str(self.lat_indices)
+        lat_indices_json = (
+            self.lat_indices.as_list()
             if isinstance(self.lat_indices, Interval)
-            else self.lat_indices
+            else [self.lat_indices]
         )
-        lon_indices_str = (
-            str(self.lon_indices)
+        lon_indices_json = (
+            self.lon_indices.as_list()
             if isinstance(self.lon_indices, Interval)
-            else self.lon_indices
+            else [self.lon_indices]
         )
 
         return OrderedDict(
@@ -153,8 +156,8 @@ class RiverSource:
                 ("name", self.name),
                 ("model", self.model),
                 ("side", self.side.value),
-                ("latitude_index", lat_indices_str),
-                ("longitude_index", lon_indices_str),
+                ("latitude_indices", lat_indices_json),
+                ("longitude_indices", lon_indices_json),
             ]
         )
 
@@ -409,7 +412,7 @@ class DigRivers(SimpleAction):
                 rivers_dig_data[(river_id, river_name)]
             )
 
-            # If _update_stem_value did correctly its job, this should never
+            # If _update_stem_value correctly did its job, this should never
             # happen
             assert "stem_length" not in river_stem or "stem" not in river_stem
             assert "stem_length" not in river_geometry
@@ -424,7 +427,7 @@ class DigRivers(SimpleAction):
             # missing, we simply omit those values in the dictionary. As a
             # result, the RiverDig object for such rivers will have `None`
             # values for those fields. This is acceptable, as these rivers
-            # are likely outside our current domain, and thus do not have
+            # are likely outside our current domain and thus do not have
             # data in the domain file. Consequently, these rivers are not
             # intended to be dug.
             if "stem_length" in river_stem:
@@ -493,7 +496,7 @@ class DigRivers(SimpleAction):
         source_atlas: dict[Direction, list[RiverSource]] = {}
         for side in Direction:
             source_atlas[side]: list[RiverSource] = []
-            # Collect all rivers originating from the current side, and sort
+            # Collect all rivers originating from the current side and sort
             # them by ID.
             side_rivers = (r for r, k in river_sources.items() if k[1] == side)
             side_rivers = sorted(side_rivers, key=itemgetter(0))
