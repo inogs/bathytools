@@ -35,7 +35,7 @@ TEMPLATE = """
  W2_mapIO   = 1,
   preDefTopol=1,
 #-- 5 facets llc_120 topology (drop facet 6 and its connection):
-  dimsFacets = 1120, 600,
+  dimsFacets = $nx, $ny,
   blankList = $blanks
 #-- full 6 facets llc_120 topology (equivalent to default preDefTopol=3):
 # dimsFacets = 120, 360, 120, 360, 120, 120, 360, 120, 360, 120, 120, 120,
@@ -76,11 +76,12 @@ class WriteBlankTiles(SimpleAction):
         list_tiles = [
             int(k) for k in mit.utils.gen_blanklist(depth, lat_size, lon_size)
         ]
+        ny, nx = depth.shape
         nnewline = round(len(list_tiles) / 10)
         lnl = [list_tiles[10 * i : 10 * (i + 1)] for i in range(nnewline)]
         snl = [str(lnli)[1:-1] + "," for lnli in lnl]
 
-        blank_dict = {"blanks": "\n\t".join(snl)}
+        blank_dict = {"blanks": "\n\t".join(snl), "nx": str(nx), "ny": str(ny)}
 
         LOGGER.info("Writing MIT tile template to %s", self._output_file)
         with self._output_file.open("w") as f:
