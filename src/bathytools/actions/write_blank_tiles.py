@@ -76,15 +76,15 @@ class WriteBlankTiles(SimpleAction):
         lat_size = self._size_tiles_lat
         lon_size = self._size_tiles_lon
 
-        depth = -bathymetry.elevation.values
+        depth = -bathymetry.elevation.transpose("latitude", "longitude").values
         list_tiles = [
             int(k) for k in mit.utils.gen_blanklist(depth, lon_size, lat_size)
         ]
-        ny, nx = bathymetry.elevation.transpose("latitude", "longitude").shape
+        ny, nx = depth.shape
         nland = len(list_tiles)
         n_proc_y_untiled, n_proc_x_untiled = ny//lat_size, nx//lon_size
         nwater = n_proc_y_untiled * n_proc_x_untiled - nland
-        nnewline = round(len(list_tiles) / 10)
+        nnewline = int(np.ceil(len(list_tiles) / 10))
         lnl = [list_tiles[10 * i : 10 * (i + 1)] for i in range(nnewline)]
         snl = [str(lnli)[1:-1] + "," for lnli in lnl]
 
