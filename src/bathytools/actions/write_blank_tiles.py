@@ -37,6 +37,10 @@ TEMPLATE = """
 #-- 5 facets llc_120 topology (drop facet 6 and its connection):
   dimsFacets = $nx, $ny,
   blankList = $blanks
+### number of water tiles ###
+### N_water_tiles = $nwater
+### numbre of land tiles ###
+### N_land_tiles = $nland
 #-- full 6 facets llc_120 topology (equivalent to default preDefTopol=3):
 # dimsFacets = 120, 360, 120, 360, 120, 120, 360, 120, 360, 120, 120, 120,
 # facetEdgeLink(1:4,1)= 3.4, 6.1, 2.4, 5.1,
@@ -77,11 +81,14 @@ class WriteBlankTiles(SimpleAction):
             int(k) for k in mit.utils.gen_blanklist(depth, lat_size, lon_size)
         ]
         ny, nx = bathymetry.transpose("latitude", "longitude").shape
+        nland = len(list_tiles)
+        n_proc_y_untiled, n_proc_x_untiled = ny//lat_size, nx//lon_size
+        nwater = n_proc_y_untiled * n_proc_x_untiled - nland
         nnewline = round(len(list_tiles) / 10)
         lnl = [list_tiles[10 * i : 10 * (i + 1)] for i in range(nnewline)]
         snl = [str(lnli)[1:-1] + "," for lnli in lnl]
 
-        blank_dict = {"blanks": "\n\t".join(snl), "nx": str(nx), "ny": str(ny)}
+        blank_dict = {"blanks": "\n\t".join(snl), "nx": str(nx), "ny": str(ny), "nland": str(nland), "nwater": str(nwater)}
 
         LOGGER.info("Writing MIT tile template to %s", self._output_file)
         with self._output_file.open("w") as f:
