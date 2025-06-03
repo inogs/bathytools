@@ -39,3 +39,4 @@ exclude = ["tests/", "examples/"]
 
 [tool.deptry.package_module_name_map]
 netcdf4 = "netCDF4"
+mitgcmutils = "MITgcmutils"
