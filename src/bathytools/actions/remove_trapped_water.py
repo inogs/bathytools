@@ -13,8 +13,8 @@ class RemoveTrappedWater(SimpleAction):
     Removes all water cells located on the boundary that come into contact
     with a land cell in the direction perpendicular to the boundary
     (e.g., north-south or east-west). Inside these cells, the fluxes imposed by
-    the boundary conditions have no space to dissipate and removing these cells
-    prevents trapped water from destabilizing numerical simulations.
+    the boundary conditions have no space to dissipate, and removing these
+    cells prevents trapped water from destabilizing numerical simulations.
     """
 
     def __call__(self, bathymetry):
