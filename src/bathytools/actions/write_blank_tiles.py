@@ -82,13 +82,19 @@ class WriteBlankTiles(SimpleAction):
         ]
         ny, nx = depth.shape
         nland = len(list_tiles)
-        n_proc_y_untiled, n_proc_x_untiled = ny//lat_size, nx//lon_size
+        n_proc_y_untiled, n_proc_x_untiled = ny // lat_size, nx // lon_size
         nwater = n_proc_y_untiled * n_proc_x_untiled - nland
         nnewline = int(np.ceil(len(list_tiles) / 10))
         lnl = [list_tiles[10 * i : 10 * (i + 1)] for i in range(nnewline)]
         snl = [str(lnli)[1:-1] + "," for lnli in lnl]
 
-        blank_dict = {"blanks": "\n\t".join(snl), "nx": str(nx), "ny": str(ny), "nland": str(nland), "nwater": str(nwater)}
+        blank_dict = {
+            "blanks": "\n\t".join(snl),
+            "nx": str(nx),
+            "ny": str(ny),
+            "nland": str(nland),
+            "nwater": str(nwater),
+        }
 
         LOGGER.info("Writing MIT tile template to %s", self._output_file)
         with self._output_file.open("w") as f:
