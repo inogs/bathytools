@@ -23,6 +23,11 @@
       "geometry": {
         "side": "E"
       }
+    },
+    {
+      "id": 100,
+      "name": "Simeto",
+      "concentrations": ["ecoli"]
     }
   ]
 }
