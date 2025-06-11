@@ -1,29 +1,39 @@
 {
   "rivers": [
     {
-      "id": 67,
-      "name": "Naviglio del Brenta",
-      "enabled": false
+      "id": 64,
+      "name": "Po",
+      "concentrations": ["ecoli"]
     },
     {
-      "id": 68,
-      "name": "Dese",
-      "enabled": false
+      "id": 65,
+      "name": "Adige",
+      "concentrations": ["ecoli"]
     },
     {
-      "id": 74,
-      "name": "Stella",
-      "enabled": false
+      "id": 66,
+      "name": "Brenta",
+      "concentrations": ["ecoli"]
     },
     {
-      "id": 75,
-      "name": "Cormor",
-      "enabled": false
+      "id": 70,
+      "name": "Piave",
+      "concentrations": ["ecoli"]
     },
     {
-      "id": 76,
-      "name": "Aussa",
-      "enabled": false
+      "id": 71,
+      "name": "Livenza",
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 73,
+      "name": "Tagliamento",
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 78,
+      "name": "Isonzo",
+      "concentrations": ["ecoli"]
     }
   ]
 }

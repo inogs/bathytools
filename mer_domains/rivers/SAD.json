@@ -70,6 +70,21 @@
       }
     },
     {
+      "id": 45,
+      "name": "Candelaro",
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 49,
+      "name": "Sangro",
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 50,
+      "name": "Pescara",
+      "concentrations": ["ecoli"]
+    },
+    {
       "id": 86,
       "name": "Neretva",
       "enabled": false

@@ -79,6 +79,11 @@
       }
     },
     {
+      "id": 30,
+      "name": "Neto",
+      "concentrations": ["ecoli"]
+    },
+    {
       "id": 32,
       "name": "Crati",
       "geometry": {
@@ -87,7 +92,13 @@
           "-14z",
           "+2m"
         ]
-      }
+      },
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 34,
+      "name": "Agri",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 39,
