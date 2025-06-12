@@ -154,6 +154,30 @@ actions:
       polygon_name: Laguna_Grado_Marano
       value: 0.
 
+  - action: SetDepth
+    description: |
+      Fix some cells near the western part of the G-M lagoon
+    where: slice
+    args:
+      min_lon: 13.29
+      max_lon: 13.32
+      min_lat: 45.69
+      max_lat: 45.762
+      value: 3.
+      deeper_than: 3.
+
+  - action: SetDepth
+    description: |
+      Fix some cells near the eastern part of the G-M lagoon
+    where: slice
+    args:
+      min_lon: 13.51
+      max_lon: 13.54
+      min_lat: 45.73
+      max_lat: 45.75
+      value: 3.
+      deeper_than: 3.
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
@@ -163,10 +187,21 @@ actions:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/NAD.json
 
+  - action: SetDepth
+    description: |
+      Reduce land in promontory near right corner before RemoveDeepTrappedWater
+    where: slice
+    args:
+      min_lon: 17.74
+      max_lon: 17.775
+      min_lat: 42.763
+      max_lat: 42.769
+      value: 14.
+
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
-      n_cells: 2
+      n_cells: 3
 
   - action: SetDepth
     description: |
