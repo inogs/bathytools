@@ -1,0 +1,14 @@
+{
+  "rivers": [
+    {
+      "id": 77,
+      "name": "Timavo",
+      "concentrations": ["ecoli"]
+    },
+    {
+      "id": 78,
+      "name": "Isonzo",
+      "concentrations": ["ecoli"]
+    }
+  ]
+}
