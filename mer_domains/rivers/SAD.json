@@ -88,6 +88,16 @@
       "id": 86,
       "name": "Neretva",
       "enabled": false
+    },
+    {
+      "id": 96,
+      "name": "Pavlla",
+      "enabled": false
+    },
+    {
+      "id": 97,
+      "name": "Kalamas Thyamis Glykys",
+      "enabled": false
     }
   ]
 }
