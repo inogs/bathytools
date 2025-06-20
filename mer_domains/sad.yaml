@@ -50,6 +50,15 @@ actions:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
       domain_file: ${MAIN_DIR}/mer_domains/rivers/SAD.json
 
+  - action: SetDepth
+    description: |
+      Deleting the area east of Corfu
+    where: polygon
+    args:
+      wkt_file: ${MAIN_DIR}/polygons/sad_eastCorfu.csv
+      polygon_name: Area_Est_Corfu
+      value: 0.
+
   - action: RemoveTrappedWater
     description: Remove the water cells on the boundary that are close to land
 
