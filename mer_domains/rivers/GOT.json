@@ -3,9 +3,6 @@
     {
       "id": 77,
       "name": "Timavo",
-      "geometry": {
-        "stem_length": 3
-      },
       "concentrations": ["ecoli"]
     },
     {
