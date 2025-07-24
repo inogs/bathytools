@@ -3,6 +3,7 @@ import xarray as xr
 
 from bathytools.bathymetry_config import DomainGeometry
 from bathytools.depth_levels import DepthLevels
+from bathytools.output_appendix import OutputAppendix
 from bathytools.water_fractions import WaterFractions
 
 
@@ -241,6 +242,7 @@ class GeoArrays:
     def build_mesh_mask(
         self,
         water_fractions: WaterFractions,
+        output_appendix: OutputAppendix,
         dtype=np.float64,
         use_mer_format: bool = True,
         new_e3t=True,
@@ -295,6 +297,14 @@ class GeoArrays:
             mesh_mask_dict["e3t"] = (["time", "z", "y", "x"], e3t)
         else:
             mesh_mask_dict["e3t"] = (["time", "z", "y_a", "x_a"], e3t)
+
+        additional_variables = output_appendix.get_additional_variables()
+        dim_substitution = {"latitude": "y", "longitude": "x", "depth": "z"}
+        for var_name, var_data in additional_variables.items():
+            dims = [
+                dim_substitution.get(str(d), str(d)) for d in var_data.dims
+            ]
+            mesh_mask_dict[var_name] = (dims, var_data.values)
 
         return xr.Dataset(mesh_mask_dict)
 
