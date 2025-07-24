@@ -1,5 +1,6 @@
 from os import PathLike
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 from typing import Dict
 
@@ -60,6 +61,28 @@ class OutputAppendix:
         """
         self._additional_vars[name] = content
 
+    def get_additional_variable(self, name: str) -> xr.DataArray:
+        """
+        Retrieves an additional variable by its name.
+
+        This method searches for a specific variable within the collection of
+        additional variables. If the variable is found, it returns it;
+        otherwise, an IndexError is raised.
+
+        Args:
+            name: The name of the variable to retrieve.
+
+        Returns:
+           The requested variable with the specified name.
+
+        Raises:
+            IndexError: If the variable with the specified name is not found.
+        """
+        if "name" in self._additional_vars:
+            return self._additional_vars[name]
+        else:
+            raise IndexError(f"No variable named {name} found.")
+
     def get_n_additional_variables(self) -> int:
         """
         Gets the count of additional variables.
@@ -68,9 +91,8 @@ class OutputAppendix:
         """
         return len(self._additional_vars)
 
-    def get_additional_variables(self) -> xr.Dataset:
+    def get_additional_variables(self) -> MappingProxyType[str, xr.DataArray]:
         """
-        Returns all the DataArrays added to the meshmask file in a single
-        Dataset.
+        Returns all the DataArrays added to the meshmask file
         """
-        return xr.Dataset(self._additional_vars)
+        return MappingProxyType(self._additional_vars)

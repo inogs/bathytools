@@ -1,4 +1,5 @@
 from logging import getLogger
+from pathlib import Path
 
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -35,7 +36,9 @@ class RemoveStagnations(Filter):
     ) -> DomainDiscretization:
         LOGGER.debug('Starting "RemoveStagnation" filter')
 
-        mesh_mask = domain_discretization.build_mesh_mask()
+        mesh_mask = domain_discretization.build_mesh_mask(
+            output_appendix=OutputAppendix(Path(".")),
+        )
         cell_mask = mesh_mask.tmask.values[0, :, :, :]
 
         LOGGER.debug("Computing the number of cells per column")

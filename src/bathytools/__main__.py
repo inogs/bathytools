@@ -205,7 +205,7 @@ def write_output_files(
 
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)
-    # Swap sign to have negative values where there is water (this is the
+    # Swap signs to have negative values where there is water (this is the
     # convention used by MitGCM)
     bathy_content = -domain_discretization.bathymetry.astype(
         "float32", copy=False
@@ -223,7 +223,7 @@ def write_output_files(
 
     LOGGER.debug("Building meshmask arrays")
     mesh_mask = domain_discretization.build_mesh_mask(
-        use_mer_format=use_mer_format
+        output_appendix=output_appendix, use_mer_format=use_mer_format
     )
 
     mesh_mask_file = output_dir / "meshmask.nc"

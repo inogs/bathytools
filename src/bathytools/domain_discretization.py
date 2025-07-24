@@ -6,6 +6,7 @@ import xarray as xr
 from bathytools.bathymetry_config import DomainGeometry
 from bathytools.depth_levels import generate_level_heights
 from bathytools.geoarrays import GeoArrays
+from bathytools.output_appendix import OutputAppendix
 from bathytools.water_fractions import WaterFractions
 
 
@@ -113,9 +114,13 @@ class DomainDiscretization:
     def bathymetry(self) -> np.ndarray:
         return self.water_fractions.refined_bathymetry
 
-    def build_mesh_mask(self, use_mer_format: bool = False) -> xr.Dataset:
+    def build_mesh_mask(
+        self, output_appendix: OutputAppendix, use_mer_format: bool = False
+    ) -> xr.Dataset:
         return self.geo_arrays.build_mesh_mask(
-            self.water_fractions, use_mer_format=use_mer_format
+            self.water_fractions,
+            output_appendix=output_appendix,
+            use_mer_format=use_mer_format,
         )
 
     def build_mit_static_data(self) -> xr.Dataset:
