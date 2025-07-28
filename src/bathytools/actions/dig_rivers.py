@@ -808,7 +808,7 @@ class DigRivers(SimpleAction):
             allow_broadcast=True,
         )
 
-        # Check if a side is "open", i.e. if it has at least one water cell
+        # Check if a side is "open", i.e., if it has at least one water cell
         b_array = bathymetry.elevation.transpose(
             "latitude", "longitude"
         ).values
@@ -863,7 +863,13 @@ class DigRivers(SimpleAction):
         LOGGER.debug("%s rivers must be dug", len(rivers_inside))
 
         river_sources = {}
-        river_cells = np.zeros(b_array.shape, dtype=int)
+
+        additional_variables = self._output_appendix.get_additional_variables()
+        if "rivers" in additional_variables:
+            river_cells = additional_variables["rivers"].values
+        else:
+            river_cells = np.zeros(b_array.shape, dtype=int)
+
         for river in rivers_inside:
             LOGGER.debug("Digging river %s (id = %s)", river.name, river.id)
             river_lat = river.mouth_latitude
@@ -929,7 +935,10 @@ class DigRivers(SimpleAction):
             # Saving the digging cells inside the river_cells array
             for lon_index, lat_index in digging_cells:
                 if not water_cells[lat_index, lon_index]:
-                    if river_cells[lat_index, lon_index] != 0:
+                    current_river_status = int(
+                        river_cells[lat_index, lon_index]
+                    )
+                    if current_river_status not in (0, river.id):
                         raise ValueError(
                             f"Configuration error: rivers with id {river.id} "
                             f"and {river_cells[lat_index, lon_index]} do "

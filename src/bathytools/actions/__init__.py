@@ -3,7 +3,9 @@ from __future__ import annotations
 import logging
 from abc import ABC
 from abc import abstractmethod
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 from typing import Callable
 from warnings import warn
 
@@ -224,15 +226,15 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
     A common use case for a MultipleChoiceAction is applying the same operation
     to a subset of bathymetry data, cell by cell.
 
-    In this scenario, each selected cell in the subset is processed independently.
-    This class provides a convenient way to implement such algorithms, ensuring
-    that the same function can be applied to each cell of the domain, a slice,
-    or a polygon.
+    In this scenario, each selected cell in the subset is processed
+    independently. This class provides a convenient way to implement such
+    algorithms, ensuring that the same function can be applied to each cell of
+    the domain, a slice, or a polygon.
 
     To create a class that inherits from this one, the `build_callable` method
     must be implemented. This method returns a callable to be applied to each
-    cell (i.e., the callable operates on a NumPy array and is expected to return
-    a NumPy array with the same shape).
+    cell (i.e., the callable operates on a NumPy array and is expected to
+    return a NumPy array with the same shape).
 
     The `build_callable` method is invoked with the arguments passed to the
     `__init__` method, excluding those in the `STANDARD_KEYS` tuple. These
@@ -240,19 +242,19 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
     is applied. Thus, they should not be used as argument names in your
     implementation of `build_callable`.
 
-    The `build_callable` method can utilize all initialization values to create
+    The `build_callable` method can use all initialization values to create
     a callable that accepts a single argument: the bathymetry data values to
     be processed.
 
     The resulting action will apply the callable to all cells in the domain if
-    the `where` field is set to "everywhere" or is not specified. If the `where`
-    field is set to "slice", the `args` field must include the following keys:
-    `min_lat`, `max_lat`, `min_lon`, `max_lon`, which define the slice's position.
-    Any additional values in `args` are passed to the `build_callable` method.
-    Similarly, if the `where` field is set to "polygon", the `args` field must
-    contain the following keys: `polygon_name` and `wkt_file`. These specify
-    the polygon to be used. Any other values in `args` are passed to
-    the `build_callable` method.
+    the `where` field is set to "everywhere" or is not specified.
+    If the `where` field is set to "slice", the `args` field must include the
+    following keys: `min_lat`, `max_lat`, `min_lon`, `max_lon`, which define
+    the slice's position. Any additional values in `args` are passed to the
+    `build_callable` method. Similarly, if the `where` field is set to
+    "polygon", the `args` field must contain the following keys:
+    `polygon_name` and `wkt_file`. These specify the polygon to be used. Any
+    other values in `args` are passed to the `build_callable` method.
     """
 
     STANDARD_KEYS = (
@@ -262,6 +264,7 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         "max_lon",
         "polygon_name",
         "wkt_file",
+        "report_involved_cells",
     )
 
     def __init__(
@@ -283,6 +286,45 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         }
         if "wkt_file" in kwargs_domain:
             kwargs_domain["wkt_file"] = read_path(kwargs_domain["wkt_file"])
+
+        if "report_involved_cells" in kwargs_domain:
+            involved_cells = kwargs_domain["report_involved_cells"]
+            if not isinstance(involved_cells, Mapping):
+                raise ValueError(
+                    'The "report_involved_cells" field must be a mapping, but '
+                    f"is {type(involved_cells)}."
+                )
+            for key in involved_cells:
+                if key not in ("table", "value", "dtype"):
+                    raise ValueError(
+                        'The "report_involved_cells" field must contain only '
+                        f'"table" and "value" keys, but "{key}" was found.'
+                    )
+            if "dtype" in involved_cells:
+                dtype_from_str = {
+                    "int32": np.int32,
+                    "int64": np.int64,
+                    "bool": bool,
+                    "float32": np.float32,
+                    "float64": np.float64,
+                    "int": np.int64,
+                    "float": np.float64,
+                    "double": np.float64,
+                }
+                if involved_cells["dtype"] not in dtype_from_str:
+                    allowed = ", ".join(
+                        ['"' + f + '"' for f in dtype_from_str.keys()]
+                    )
+                    raise ValueError(
+                        'The "dtype" field of the "report_involved_cells" '
+                        f"field must be one among {allowed}, but received "
+                        f'"{involved_cells["dtype"]}".'
+                    )
+                kwargs_domain["report_involved_cells"]["dtype"] = (
+                    dtype_from_str[involved_cells["dtype"]]
+                )
+        else:
+            kwargs_domain["report_involved_cells"] = None
 
         super().__init__(
             name,
@@ -314,10 +356,50 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
     def default_choice(cls) -> str | None:
         return "everywhere"
 
-    def apply_everywhere(self, bathymetry: xr.DataArray) -> xr.DataArray:
+    def _allocate_involved_cells_table(self, bathymetry: xr.DataArray) -> None:
+        involved_table = self._kwargs["report_involved_cells"]["table"]
+        available_tables = self._output_appendix.get_additional_variables()
+        if involved_table in available_tables:
+            return
+        if "dtype" in self._kwargs["report_involved_cells"]:
+            table_dtype = self._kwargs["report_involved_cells"]["dtype"]
+        elif "value" in self._kwargs["report_involved_cells"]:
+            # Try to guess the dtype from the value
+            table_dtype = np.result_type(
+                self._kwargs["report_involved_cells"]["value"]
+            )
+        else:
+            table_dtype = bool
+        table_shape = (
+            bathymetry.sizes["latitude"],
+            bathymetry.sizes["longitude"],
+        )
+        table_data = np.zeros(table_shape, dtype=table_dtype)
+        table = xr.DataArray(
+            table_data,
+            dims=("latitude", "longitude"),
+            coords={
+                "latitude": bathymetry.latitude,
+                "longitude": bathymetry.longitude,
+            },
+            name=involved_table,
+        )
+        self._output_appendix.add_additional_variable(involved_table, table)
+
+    def apply_everywhere(
+        self,
+        bathymetry: xr.DataArray,
+        report_involved_cells: dict[str, Any] | None = None,
+    ) -> xr.DataArray:
         bathymetry["elevation"].values = self._callable(
             bathymetry.elevation.values.copy()
         )
+        if report_involved_cells is not None:
+            self._allocate_involved_cells_table(bathymetry)
+            table = self._output_appendix.get_additional_variable(
+                report_involved_cells["table"]
+            )
+            table.values[:] = report_involved_cells.get("value", True)
         return bathymetry
 
     def apply_on_slice(
@@ -328,6 +410,7 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         max_lat: float,
         min_lon: float,
         max_lon: float,
+        report_involved_cells: dict[str, Any] | None = None,
     ) -> xr.DataArray:
         data = (
             bathymetry["elevation"]
@@ -340,10 +423,27 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         bathymetry["elevation"].sel(
             latitude=slice(min_lat, max_lat), longitude=slice(min_lon, max_lon)
         )[:] = self._callable(data)
+
+        if report_involved_cells is not None:
+            self._allocate_involved_cells_table(bathymetry)
+            table = self._output_appendix.get_additional_variable(
+                report_involved_cells["table"]
+            )
+            table_value = report_involved_cells.get("value", True)
+            table.sel(
+                latitude=slice(min_lat, max_lat),
+                longitude=slice(min_lon, max_lon),
+            )[:] = table_value
+
         return bathymetry
 
     def apply_on_polygon(
-        self, bathymetry: xr.DataArray, *, polygon_name: str, wkt_file: Path
+        self,
+        bathymetry: xr.DataArray,
+        *,
+        polygon_name: str,
+        wkt_file: Path,
+        report_involved_cells: dict[str, Any] | None = None,
     ):
         with open(wkt_file, "r") as f:
             available_polys = Polygon.read_WKT_file(f)
@@ -371,4 +471,19 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
         bathymetry["elevation"].transpose("latitude", "longitude").values[
             is_inside
         ] = self._callable(data)
+
+        if report_involved_cells is not None:
+            self._allocate_involved_cells_table(bathymetry)
+            try:
+                table = self._output_appendix.get_additional_variable(
+                    report_involved_cells["table"]
+                )
+            except:
+                print(self._output_appendix.get_additional_variables())
+                raise
+            table_value = report_involved_cells.get("value", True)
+            table_data = table.values
+            table_data[is_inside] = table_value
+            table.data = table_data
+
         return bathymetry

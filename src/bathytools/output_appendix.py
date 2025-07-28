@@ -78,7 +78,7 @@ class OutputAppendix:
         Raises:
             IndexError: If the variable with the specified name is not found.
         """
-        if "name" in self._additional_vars:
+        if name in self._additional_vars:
             return self._additional_vars[name]
         else:
             raise IndexError(f"No variable named {name} found.")
