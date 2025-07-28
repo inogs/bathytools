@@ -213,6 +213,9 @@ actions:
       min_lat: 44.96615
       max_lat: 45.05
       value: 6.0
+      report_involved_cells:
+        table: "rivers"
+        value: 64
 
   - action: SetDepth
     description: |
