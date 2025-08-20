@@ -270,7 +270,7 @@
     }
   },
   "geometry_defaults": {
-    "width": 500,
+    "width": 100,
     "depth": 3,
     "stem_length": 10
   },
@@ -1656,7 +1656,8 @@
           "+1m",
           "-9z",
           "+2m"
-        ]
+        ],
+	"width": 500
       },
       "data_source": {
         "type": "EFAS",

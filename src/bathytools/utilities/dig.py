@@ -233,10 +233,10 @@ def sequence_side(
      - draw the main path
      - then a path on the right
      - then a path of the left
-     and so on up to 5.
+     and so on up to 8.
 
     Arguments:
-    nHorCells: width in cells of the river, max=5
+    nHorCells: width in cells of the river, max=8
     i_start,j_start: start point
     Segmentlist:  list of movements
 
@@ -245,8 +245,8 @@ def sequence_side(
     - L_out with the points (i,j) of the river bed
     - riversources with the points (i,j) of the sources
     """
-    if nHorCells not in range(1, 6):
-        raise ValueError(f"nHorCells must be in range 1..5, got {nHorCells}")
+    if nHorCells not in range(1, 9):
+        raise ValueError(f"nHorCells must be in range 1..8, got {nHorCells}")
 
     L_out = []
     riversources = []
@@ -271,6 +271,22 @@ def sequence_side(
             L4 = cells_side(L2, segno=-1)
             L_out.extend(L4)
             riversources.append(L4[-1])
+        if k == 5:
+            L5 = cells_side(L3, segno=1)
+            L_out.extend(L5)
+            riversources.append(L5[-1])
+        if k == 6:
+            L6 = cells_side(L4, segno=-1)
+            L_out.extend(L6)
+            riversources.append(L6[-1])
+        if k == 7:
+            L7 = cells_side(L5, segno=1)
+            L_out.extend(L7)
+            riversources.append(L7[-1])
+        if k == 8:
+            L8 = cells_side(L6, segno=-1)
+            L_out.extend(L8)
+            riversources.append(L8[-1])
     return L_out, riversources
 
 
