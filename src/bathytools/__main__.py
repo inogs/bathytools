@@ -246,7 +246,9 @@ def write_output_files(
 
     if use_mer_format and output_appendix.get_n_additional_variables() > 0:
         output_file = output_dir / "additional_variables.nc"
-        additional_variables = output_appendix.get_additional_variables()
+        additional_variables = xr.Dataset(
+            output_appendix.get_additional_variables()
+        )
         LOGGER.info("Writing additional variables to %s", output_file)
         additional_variables.to_netcdf(
             output_file,
