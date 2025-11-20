@@ -383,7 +383,7 @@ class BathymetryConfig:
             if "name" in action:
                 raise InvalidActionDescription(
                     f'Actions can not have a field named "name"; invalid '
-                    f'action number {i + 1}: {action["action"]}'
+                    f"action number {i + 1}: {action['action']}"
                 )
 
             action["name"] = action["action"]
@@ -411,7 +411,7 @@ class BathymetryConfig:
             if "name" in current_filter:
                 raise InvalidFilterDescription(
                     f'Filters can not have a field named "name"; invalid '
-                    f'filter number {i + 1}: {current_filter["filter"]}'
+                    f"filter number {i + 1}: {current_filter['filter']}"
                 )
 
             current_filter["name"] = current_filter["filter"]

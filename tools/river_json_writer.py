@@ -332,8 +332,8 @@ def generate_domain_specific_file(
                 if river.name != river_name:
                     raise ValueError(
                         f"River with id = {river_id} is named "
-                        f"\"{river_name}\" into the domain specific file, "
-                        f"while is called \"{row['rivername']}\" into the main "
+                        f'"{river_name}" into the domain specific file, '
+                        f'while is called "{row["rivername"]}" into the main '
                         f"file."
                     )
                 main_river = river
@@ -410,8 +410,8 @@ def generate_main_json(main_sheet, domain_sheets, variables, profiles):
                 if domain_row["rivername"] != row["rivername"]:
                     raise ValueError(
                         f"River with id = {row['ir']} is named "
-                        f"\"{row['rivername']}\"into the main file, while is "
-                        f"called \"{domain_row['rivername']}\" into the domain "
+                        f'"{row["rivername"]}"into the main file, while is '
+                        f'called "{domain_row["rivername"]}" into the domain '
                         f"specific file."
                     )
                 side = domain_row["SIDE"]
