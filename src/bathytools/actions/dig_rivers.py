@@ -20,6 +20,7 @@ import xarray as xr
 from bitsea.commons.geodistances import compute_geodesic_distance
 from bitsea.commons.grid import RegularGrid
 from bitsea.commons.mask import Mask
+from bitsea.components.component_mask_2d import ComponentMask2D
 
 from bathytools.actions import SimpleAction
 from bathytools.output_appendix import OutputAppendix
@@ -797,7 +798,7 @@ class DigRivers(SimpleAction):
             ValueError: If crucial river details (e.g., side or stem) are
                 missing in the configuration.
         """
-        # Create a fake mask with only 1 level ad depth 0.5 meter. We will use
+        # Create a fake mask with only 1 level at depth 0.5 meter. We will use
         # it to locate the closest wet cell near the river mouth
         grid = RegularGrid(lon=bathymetry.longitude, lat=bathymetry.latitude)
         mask_v = bathymetry.elevation.transpose("latitude", "longitude") < -0.5
@@ -805,6 +806,22 @@ class DigRivers(SimpleAction):
             grid=grid,
             zlevels=[0.5],
             mask_array=mask_v,
+            allow_broadcast=True,
+        )
+
+        # Here a little trick: we create a new mask that contains only the
+        # shores, i.e., the water cells that are close to a land cell
+        component_mask = ComponentMask2D(mask[0, :])
+        n_components = component_mask.n_components
+        shore_mask_data = np.zeros_like(mask[0, :], dtype=bool)
+        for c in range(n_components):
+            current_boundary = component_mask.get_component_boundary(c)
+            shore_mask_data = np.logical_or(shore_mask_data, current_boundary)
+
+        shore_mask = Mask(
+            grid=mask.grid,
+            zlevels=[0.5],
+            mask_array=shore_mask_data,
             allow_broadcast=True,
         )
 
@@ -876,11 +893,11 @@ class DigRivers(SimpleAction):
             river_lon = river.mouth_longitude
 
             # Find the closest water cell for the river
-            river_cell = mask.convert_lon_lat_wetpoint_indices(
+            river_cell = shore_mask.convert_lon_lat_wetpoint_indices(
                 lon=river_lon, lat=river_lat, max_radius=None
             )
-            new_lon = mask.xlevels[river_cell[::-1]]
-            new_lat = mask.ylevels[river_cell[::-1]]
+            new_lon = shore_mask.xlevels[river_cell[::-1]]
+            new_lat = shore_mask.ylevels[river_cell[::-1]]
 
             # We log how much we have to move from the original point
             LOGGER.debug(
