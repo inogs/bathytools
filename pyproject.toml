@@ -8,7 +8,7 @@ packages = [{include = "bathytools", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-bitsea = { git = "https://github.com/inogs/bit.sea.git", branch = "master" }
+bitsea = {git = "https://github.com/inogs/bit.sea.git", rev = "master"}
 pyyaml = "^6.0.2"
 numpy = "^2.1.1"
 matplotlib = "^3.10.0"
@@ -16,6 +16,9 @@ xarray = "^2025.1.1"
 scipy = "^1.15.2"
 mitgcmutils = "^0.2.1"
 pydap = "^3.5.8"
+jinja2 = "^3.1.6"
+geographiclib = "^2.1"
+numba = "^0.62.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"
@@ -44,4 +47,4 @@ mitgcmutils = "MITgcmutils"
 openpyxl = "openpyxl"
 
 [tool.deptry.per_rule_ignores]
-"DEP002" = ["pydap"]
+"DEP002" = ["pydap", "jinja2", "numba", "geographiclib"]
