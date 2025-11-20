@@ -29,7 +29,7 @@ class EMODnetBathymetryDownloader:
     """
 
     URL: str = (
-        "https://erddap.emodnet.eu/erddap/griddap/dtm_2020_v2_e0bf_e7e4_5b8f"
+        "dap2://erddap.emodnet.eu/erddap/griddap/dtm_2020_v2_e0bf_e7e4_5b8f"
     )
 
     def __init__(

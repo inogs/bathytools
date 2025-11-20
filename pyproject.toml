@@ -15,6 +15,7 @@ matplotlib = "^3.10.0"
 xarray = "^2025.1.1"
 scipy = "^1.15.2"
 mitgcmutils = "^0.2.1"
+pydap = "^3.5.8"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8.0"
@@ -40,3 +41,7 @@ exclude = ["tests/", "examples/"]
 [tool.deptry.package_module_name_map]
 netcdf4 = "netCDF4"
 mitgcmutils = "MITgcmutils"
+openpyxl = "openpyxl"
+
+[tool.deptry.per_rule_ignores]
+"DEP002" = ["pydap"]
