@@ -1,17 +1,17 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
     - id: end-of-file-fixer
     - id: trailing-whitespace
 -   repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.14.0
+    rev: v3.16.0
     hooks:
     - id: reorder-python-imports
       args: [--application-directories=.:src]
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
-  rev: v0.8.6
+  rev: v0.14.5
   hooks:
     # Run the linter.
     - id: ruff
@@ -20,13 +20,13 @@ repos:
     - id: ruff-format
       args: [--line-length=79]
 - repo: https://github.com/PyCQA/bandit
-  rev: '1.8.0'
+  rev: '1.9.1'
   hooks:
     - id: bandit
       args: ["-c", "bandit.toml"]
       additional_dependencies: [".[toml]"]
 - repo: https://github.com/PyCQA/docformatter
-  rev: eb1df347edd128b30cd3368dddc3aa65edcfac38
+  rev: v1.7.7
   hooks:
     - id: docformatter
       additional_dependencies: [tomli]
@@ -34,7 +34,7 @@ repos:
       # only apply to the package dir, not the tests
       files: ^bathytools/src/.*$
 - repo: https://github.com/fpgmaas/deptry.git
-  rev: 0.21.2
+  rev: 0.24.0
   hooks:
     - id: deptry
       entry: deptry
