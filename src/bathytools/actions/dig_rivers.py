@@ -24,10 +24,10 @@ from bitsea.components.component_mask_2d import ComponentMask2D
 
 from bathytools.actions import SimpleAction
 from bathytools.output_appendix import OutputAppendix
-from bathytools.utilities.dig import apply_dig
+from bathytools.utilities.dig import Dig
 from bathytools.utilities.dig import Direction
 from bathytools.utilities.dig import Movement
-from bathytools.utilities.dig import sequence_side
+from bathytools.utilities.dig import StartIndexStrategy
 from bathytools.utilities.relative_paths import read_path
 
 
@@ -893,11 +893,13 @@ class DigRivers(SimpleAction):
             river_lon = river.mouth_longitude
 
             # Find the closest water cell for the river
-            river_cell = shore_mask.convert_lon_lat_wetpoint_indices(
-                lon=river_lon, lat=river_lat, max_radius=None
+            river_lon_index, river_lat_index = (
+                shore_mask.convert_lon_lat_wetpoint_indices(
+                    lon=river_lon, lat=river_lat, max_radius=None
+                )
             )
-            new_lon = shore_mask.xlevels[river_cell[::-1]]
-            new_lat = shore_mask.ylevels[river_cell[::-1]]
+            new_lon = shore_mask.xlevels[river_lat_index, river_lon_index]
+            new_lat = shore_mask.ylevels[river_lat_index, river_lon_index]
 
             # We log how much we have to move from the original point
             LOGGER.debug(
@@ -905,7 +907,7 @@ class DigRivers(SimpleAction):
                 "in configuration file it was (LAT %.4f, LON %.4f)",
                 river.name,
                 river.id,
-                river_cell,
+                (river_lat_index, river_lon_index),
                 new_lat,
                 new_lon,
                 river_lat,
@@ -928,9 +930,9 @@ class DigRivers(SimpleAction):
             # provides a reasonable estimate due to the grid's regular
             # structure.
             if river.side == "N" or river.side == "S":
-                face_size = mask.e1t[river_cell[::-1]]
+                face_size = mask.e1t[river_lat_index, river_lon_index]
             elif river.side == "E" or river.side == "W":
-                face_size = mask.e2t[river_cell[::-1]]
+                face_size = mask.e2t[river_lat_index, river_lon_index]
             else:
                 raise ValueError(f"Invalid side: {river.side}")
             LOGGER.debug("The length of one face is %s m", face_size)
@@ -942,15 +944,26 @@ class DigRivers(SimpleAction):
             LOGGER.debug(
                 "Starting digging a river from (%s, %s) using the "
                 "following movements: %s",
-                river_cell[0],
-                river_cell[1],
+                river_lat_index,
+                river_lon_index,
                 river.stem,
             )
-            digging_cells, current_river_sources = sequence_side(
-                n_cells, river_cell[0], river_cell[1], river.stem
+            river_dig = Dig(
+                movements=river.stem,
+                thick=n_cells,
+                start_index_strategy=StartIndexStrategy.CENTERED,
             )
+            digging_cells = river_dig.get_dig_cells(
+                (river_lat_index, river_lon_index),
+                bathymetry.elevation.transpose("latitude", "longitude").shape,
+            )
+            current_river_sources = river_dig.get_dig_source(
+                (river_lat_index, river_lon_index),
+                bathymetry.elevation.transpose("latitude", "longitude").shape,
+            )
+
             # Saving the digging cells inside the river_cells array
-            for lon_index, lat_index in digging_cells:
+            for lat_index, lon_index in digging_cells:
                 if not water_cells[lat_index, lon_index]:
                     current_river_status = int(
                         river_cells[lat_index, lon_index]
@@ -974,10 +987,10 @@ class DigRivers(SimpleAction):
                 current_river_sources,
             )
 
-            apply_dig(
-                bathymetry.elevation.transpose("latitude", "longitude"),
-                digging_cells,
-                -river.depth,
+            river_dig.fill_dig_mask(
+                start_indices=(river_lat_index, river_lon_index),
+                out=bathymetry.elevation.transpose("latitude", "longitude"),
+                value=-river.depth,
             )
         self._output_appendix.add_additional_variable(
             "rivers",

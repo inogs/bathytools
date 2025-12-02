@@ -1,37 +1,70 @@
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
+from itertools import product as cart_prod
 from logging import getLogger
-from typing import List
-from typing import Tuple
 
 import numpy as np
 
 
-DIG = List[Tuple[int, int]]
 LOGGER = getLogger(__name__)
 
 
+class DigOutsideShape(ValueError):
+    pass
+
+
 class Direction(Enum):
+    """Represents cardinal directions for movement in a 2D grid.
+
+    The Direction enum provides four cardinal directions (EAST, WEST,
+    NORTH, SOUTH) and methods for manipulating grid indices based on these
+    directions.
+
+    Attributes:
+        EAST: East direction, represented as "E"
+        WEST: West direction, represented as "W"
+        NORTH: North direction, represented as "N"
+        SOUTH: South direction, represented as "S"
+    """
+
     EAST = "E"
     WEST = "W"
     NORTH = "N"
     SOUTH = "S"
 
-    def move_indices(self, i, j):
+    def move_indices(self, i: int, j: int, amount: int = 1) -> tuple[int, int]:
+        """Calculates new grid indices after moving in the direction by a
+        specified amount.
+
+        Args:
+            i: Current x-coordinate/column index (represent latitude)
+            j: Current y-coordinate/row index (represent longitude)
+            amount (optional): Distance to move. Defaults to 1.
+
+        Returns:
+            tuple[int, int]: New (i, j) coordinates after movement
+        """
         if self == Direction.EAST:
-            i = i + 1
+            j = j + amount
         elif self == Direction.WEST:
-            i = i - 1
+            j = j - amount
         elif self == Direction.NORTH:
-            j = j + 1
+            i = i + amount
         elif self == Direction.SOUTH:
-            j = j - 1
+            i = i - amount
         else:
             raise ValueError(f"Invalid direction: {self}")
         return i, j
 
     def __neg__(self):
+        """Returns the opposite cardinal direction.
+
+        Returns:
+            The opposite direction (EAST->WEST, WEST->EAST, NORTH->SOUTH,
+            SOUTH->NORTH)
+        """
         if self == Direction.EAST:
             return Direction.WEST
         elif self == Direction.WEST:
@@ -46,18 +79,69 @@ class Direction(Enum):
 
 @dataclass
 class Movement:
+    """Represents a single movement in a 2D grid with length and direction.
+
+    This class defines a movement by combining a distance (length) and a
+    cardinal direction. It provides methods to calculate new grid indices
+    after movement and parse movement descriptions from different string
+    formats.
+
+    Attributes:
+        length: The distance to move in grid units
+        direction: The cardinal direction of movement (EAST, WEST, NORTH,
+            SOUTH)
+    """
+
     length: int
     direction: Direction
 
+    def move_indices(self, i, j) -> tuple[int, int]:
+        """Calculate new grid indices after applying the movement.
+
+        Args:
+            i: Current x-coordinate/column index
+            j: Current y-coordinate/row index
+
+        Returns:
+            New (i, j) coordinates after movement
+        """
+        return self.direction.move_indices(i, j, self.length)
+
     @staticmethod
     def from_str(s: str):
+        """Create a Movement from a string in format '<length><direction>'.
+
+        Args:
+            s: String in format like "30E", "20N", where the number is the
+                length and the letter is the direction (E, W, N, S)
+
+        Returns:
+            A new `Movement` instance
+
+        Raises:
+            ValueError: If the string format is invalid
+        """
         string_mask = re.compile(r"^(\d+)([EWNS])$")
         match = string_mask.match(s)
         if match is None:
             raise ValueError(f"Invalid movement string: {s}")
         return Movement(int(match.group(1)), Direction(match.group(2)))
 
+    @staticmethod
     def from_zonal_meridional_description(s: str):
+        """Create a Movement from a zonal/meridional description string.
+
+        Args:
+            s: String in format like "30z", "-20m", where the number is the
+                length and 'z'/'Z' indicates zonal (East/West) movement,
+                'm'/'M' indicates meridional (North/South) movement
+
+        Returns:
+            A new `Movement` instance
+
+        Raises:
+            ValueError: If the string format is invalid
+        """
         string_mask = re.compile(r"^([+-]?\d+)([mMzZ])$")
         match = string_mask.match(s)
         if match is None:
@@ -77,246 +161,358 @@ class Movement:
         return Movement(value, direction)
 
 
-def main_river_cell_list(
-    i_start: int, j_start: int, movement_list: List[Movement]
-) -> DIG:
+class StartIndexStrategy(Enum):
+    """Defines different strategies for choosing starting indices for digs.
+
+    When we define a dig, we need to specify where to start digging. If the dig
+    thickness is greater than 1, we face the problem that the starting point
+    is a square made of many cells, but the starting point is only defined by
+    a single cell. This enum defines the different strategies for choosing the
+    starting point of the dig with respect to a single cell.
+
+    LEFT_TOP: the cell (i, j) is the bottom-left cell of the starting square,
+        i.e., the starting point is a pair with the smaller indices in both
+        the direction of the cells that define the starting square.
+    CENTERED: the cell (i, j) is the center of the starting square.
+    SIDE_CENTERED: Start digs from the center of the side of the square that
+        is opposite to the direction of the first movement of the dig.
     """
-    Draws the path of a river whose width is exactly one cell.
+
+    BOTTOM_LEFT = 0
+    CENTERED = 1
+    SIDE_CENTERED = 2
+
+
+class Dig:
+    """Represents a path-based mask generator for 2D grids.
+
+    The Dig class creates masks in 2D arrays by following a sequence of
+    movements and filling the path with a specified value. Each dig can have
+    its own thickness and can handle movements within or outside the domain
+    boundaries.
 
     Args:
-        i_start: start point first coordinate
-        j_start: start point second coordinate
-        movement_list: list of movements
+        movements: Sequence of Movement objects defining the path to dig
+        thick: Width of the path in grid units (default: 1)
+        start_index_strategy: Strategy for choosing starting indices
+            (default: BOTTOM_LEFT)
 
-    Returns:
-        a list of tuples(i,j) with the ordered positions of the river
+    Attributes:
+        movements: A sequence of Movement objects defining the path
+        thick: Width of the path in grid units (default: 1)
     """
-    output_indices = [(i_start, j_start)]
-    i = i_start
-    j = j_start
-    for segment in movement_list:
-        length = segment.length
-        direction = segment.direction
-        for k in range(length):
-            i, j = direction.move_indices(i, j)
-            output_indices.append((i, j))
-    return output_indices
 
+    def __init__(
+        self,
+        movements: Sequence[Movement],
+        thick: int = 1,
+        start_index_strategy: StartIndexStrategy = StartIndexStrategy.BOTTOM_LEFT,
+    ):
+        self.movements: tuple[Movement, ...] = tuple(movements)
+        self.thick: int = thick
+        self._start_index_strategy = start_index_strategy
 
-def lateral_point(L, segno: int = 1) -> Tuple:
-    """
-    For a first point of a given segment, finds the nearest lateral point
-    - on the right, if segno=1, on the left otherwise
-    Arguments:
-    L: list of tuples(i,j) of positions
-    segno: 1 or -1
-    Returns: (i,j)
-    """
-    assert segno in [-1, 1]
-    i0, j0 = L[0]
-    i1, j1 = L[1]
-    versor1 = (i1 - i0, j1 - j0, 0)
-    vers_to_apply = segno * np.cross(versor1, (0, 0, 1))
-    i_side = i0 + vers_to_apply[0]
-    j_side = j0 + vers_to_apply[1]
-    return i_side, j_side
+    def _transform_starting_indices(
+        self, start_indices: tuple[int, int]
+    ) -> tuple[int, int]:
+        """Transform starting indices according to the chosen strategy.
 
+        The method "_get_dig_slices" (which actually computes where this
+        object must dig) implements an algorithm that assumes that the starting
+        indices are the bottom-left corner of the initial square (i.e., the
+        smaller indices inside the starting square).
+        If the starting indices aren't in the bottom-left corner, we need to
+        convert them to. This method solves this problem, moving the starting
+        indices from the position specified by the user to the bottom-left.
+        """
+        initial_strategy = self._start_index_strategy
+        if initial_strategy == StartIndexStrategy.BOTTOM_LEFT:
+            return start_indices
 
-def insert(i: int, j: int, L_orig: DIG, L: DIG) -> Tuple[int, int, DIG]:
-    """
-    Inserts a new point (i,j) a list of positions of a new river
-    by taking in account the segment we come up beside, in order to
-    - never overlap it. Returns i = 0, as an exception for the caller.
-    - don't proceed if we are already at the end of original river
-    """
-    LOGGER.debug("--- %s %s", i, j)
+        if initial_strategy == StartIndexStrategy.CENTERED:
+            shift = self.thick // 2
+            return start_indices[0] - shift, start_indices[1] - shift
 
-    # Ensure i and j are integers and not numpy int
-    i = int(i)
-    j = int(j)
-
-    if (i, j) in L_orig:
-        LOGGER.warning("hai sbattuto sull'originale")
-        return 0, 0, L
-
-    hypothesis = [L[-1], (i, j)]
-    I1, J1 = lateral_point(hypothesis, 1)
-    I2, J2 = lateral_point(hypothesis, -1)
-    if not ((L_orig[-1] == (I1, J1)) | (L_orig[-1] == (I2, J2))):
-        L.append((i, j))
-
-    LOGGER.debug("Final output: %s", L)
-    return i, j, L
-
-
-def cells_side(L: DIG, segno: int = 1) -> DIG:
-    """
-    Draws a new path placed side by side with the original
-
-    Arguments:
-        L: list of tuples(i,j) of positions
-        segno: if 1, the new path is on the right of the original
-               if -1, on the left
-
-    Returns:
-        l_side: list of tuples(i,j)
-    """
-    assert segno in [-1, 1]
-    n = len(L)
-    l_side = []
-
-    i_side, j_side = lateral_point(L, segno)
-    l_side.append((i_side, j_side))
-    skip_list = []
-    for k in range(1, n - 2):
-        i0, j0 = L[k]
-        i1, j1 = L[k + 1]
-        i2, j2 = L[k + 2]
-        # v1 and v2 are the two unit vectors of the two curves
-        v1 = (i1 - i0, j1 - j0, 0)
-        v2 = (i2 - i1, j2 - j1, 0)
-        CURVA_davanti = np.cross(v1, v2)
-        if k in skip_list:
-            continue
-        if CURVA_davanti[2] == 0:
-            i_side, j_side, l_side = insert(
-                i_side + v1[0], j_side + v1[1], L, l_side
-            )
-            if i_side == 0:
-                return l_side
-        if CURVA_davanti[2] == segno:
-            # print("curva a sfavore (esterna)",i0,j0)
-            for _ in range(3 * abs(segno)):
-                i_side, j_side, l_side = insert(
-                    i_side + v1[0], j_side + v1[1], L, l_side
+        if initial_strategy == StartIndexStrategy.SIDE_CENTERED:
+            if len(self.movements) == 0:
+                raise ValueError(
+                    "Cannot choose side-centered starting indices for empty dig"
                 )
-                if i_side == 0:
-                    return l_side
-        if CURVA_davanti[2] == -segno:
-            # print("curva a favore (interna)")
-            i_side, j_side, l_side = insert(
-                i_side + v1[0], j_side + v1[1], L, l_side
-            )
-            assert i_side != 0
-            skip_list = [k + 1, k + 2]
+            if self.movements[0].direction == Direction.EAST:
+                return start_indices[0] - self.thick // 2, start_indices[1]
+            elif self.movements[0].direction == Direction.WEST:
+                return start_indices[0] - self.thick // 2, start_indices[
+                    1
+                ] - self.thick + 1
+            elif self.movements[0].direction == Direction.NORTH:
+                return start_indices[0], start_indices[1] - self.thick // 2
+            else:
+                return start_indices[0] - self.thick + 1, start_indices[
+                    1
+                ] - self.thick // 2
 
-    # last two points, straight ahead
-    for k in range(2):
-        i_side, j_side, l_side = insert(
-            i_side + v1[0], j_side + v1[1], L, l_side
+        raise ValueError(f"Invalid initial strategy: {initial_strategy}")
+
+    def _check_index_inside(
+        self, i: int, j: int, shape: tuple[int, int]
+    ) -> None:
+        """Validate if the given indices are within the domain boundaries.
+
+        This function expects i and j to be the position of the bottom-left
+        corner of the square that defines a specific position (and that
+        the side of the square has length `self.thick`).
+
+        Args:
+            i: x-coordinate/column index to check
+            j: y-coordinate/row index to check
+            shape: Tuple of (height, width) defining the domain size
+
+        Raises:
+            DigOutsideShape: If the indices are outside the domain
+        """
+        if i < 0:
+            raise DigOutsideShape(
+                f"First index {i} of position {(i, j)} is outside the domain"
+            )
+        if i + self.thick - 1 >= shape[0]:
+            raise DigOutsideShape(
+                f"The first index of position {(i, j)} draws a rectangle that "
+                f"is too large for the domain (shape: {shape}, side: "
+                f"{self.thick})"
+            )
+        if j < 0:
+            raise DigOutsideShape(
+                f"Second index {j} of position {(i, j)} is outside the domain"
+            )
+        if j < 0 or j + self.thick - 1 >= shape[1]:
+            raise DigOutsideShape(
+                f"The second index of position {(i, j)} draws a rectangle "
+                f"that is too large for the domain (shape: {shape}, side: "
+                f"{self.thick})"
+            )
+
+    def _get_dig_slices(
+        self,
+        start_indices: tuple[int, int],
+        domain_shape: tuple[int, int],
+        allow_outside: bool = False,
+    ) -> tuple[tuple[slice, slice], ...]:
+        """Get slices for filling the mask with the path defined by this dig.
+
+        Produces a sequence of slices that define the area to fill when the dig
+        is executed. Each element of the output sequence corresponds to a 2D
+        slice (a tuple with two slices) that defines a rectangle in the dig.
+        """
+        i, j = self._transform_starting_indices(start_indices)
+
+        # Check if the starting indices are inside the domain
+        if not allow_outside:
+            try:
+                self._check_index_inside(i, j, domain_shape)
+            except DigOutsideShape as e:
+                raise DigOutsideShape(
+                    "Start indices are outside the domain"
+                ) from e
+
+        # This is the final output. Each slice here corresponds to a rectangle
+        slices = []
+
+        # If there are no movements, the dig is a square of side length thick
+        if len(self.movements) == 0:
+            slices.append((slice(i, i + self.thick), slice(j, j + self.thick)))
+            return tuple(slices)
+
+        for movement_index, movement in enumerate(self.movements):
+            # (i, j) is the current position (top-left corner). (new_i, new_j)
+            # is the new one after the current movement
+            new_i, new_j = movement.move_indices(i, j)
+
+            # Check if the new position is inside the domain
+            if not allow_outside:
+                try:
+                    self._check_index_inside(new_i, new_j, domain_shape)
+                except DigOutsideShape as e:
+                    raise DigOutsideShape(
+                        f"Movement {movement_index} ({movement}) moves the "
+                        f"dig outside the domain"
+                    ) from e
+
+            min_i, max_i = min(new_i, i), max(new_i, i)
+            min_j, max_j = min(new_j, j), max(new_j, j)
+
+            i, j = new_i, new_j
+
+            # If this slice is completely out of the domain, we ignore it, and
+            # we continue with the next movement
+            if max_i + self.thick <= 0:
+                continue
+            if min_i >= domain_shape[0]:
+                continue
+            if max_j + self.thick <= 0:
+                continue
+            if min_j >= domain_shape[1]:
+                continue
+
+            # We create the corresponding slices. We cut the slices so to be
+            # always inside the domain
+            slices.append(
+                (
+                    slice(
+                        max(0, min_i), min(max_i + self.thick, domain_shape[0])
+                    ),
+                    slice(
+                        max(0, min_j), min(max_j + self.thick, domain_shape[1])
+                    ),
+                )
+            )
+        return tuple(slices)
+
+    def fill_dig_mask(
+        self,
+        start_indices: tuple[int, int],
+        out: np.ndarray,
+        value=True,
+        allow_outside: bool = False,
+    ):
+        """Fill a mask array with a path following the specified movements.
+
+        Creates a path in the output array starting from start_indices and
+        following the sequence of movements. The path is filled with the
+        specified value and can have variable thickness.
+        If the thickness of this path is larger than 1, the starting point
+        (i.e., the points that would be filled if the sequence of movements
+        was empty) is a square of side length thick. In this case, the meaning
+        of the coordinates (i, j) depends on the start_index_strategy chosen
+        when this object has been defined.
+
+        Args:
+            start_indices: Starting position (i, j) for the path
+            out: Output numpy array to fill with the mask
+            value: Value to set in the mask along the path (default: True)
+            allow_outside: If True, allow path to extend outside domain
+                         (default: False)
+
+        Raises:
+            DigOutsideShape: If allow_outside is False and the path extends
+                            outside domain
+        """
+        slices = self._get_dig_slices(
+            start_indices, out.shape[-2:], allow_outside
         )
 
-    return l_side
+        for movement_slice in slices:
+            out[..., movement_slice[0], movement_slice[1]] = value
 
+    def get_dig_cells(
+        self,
+        start_indices: tuple[int, int],
+        domain_shape: tuple[int, int],
+        allow_outside: bool = False,
+    ) -> set[tuple[int, int]]:
+        """Returns the indices of the cells that are part of the current dig
 
-def apply_dig(A, L: DIG, v: float):
-    """
-    Applies a constant value the bathymetry, on a list of positions
-    Arguments:
-    A : 2D ndarray, original bathymetry
-    L: list of tuples(i,j) of positions
-    Returns: 2D ndarray of the corrected bathymetry
-    """
-    n = len(L)
-    for k in range(n):
-        i, j = L[k]
-        A[j, i] = v
-    return A
+        This method returns the indices of the cells that would have been
+        filled if the method `fill_dig_mask` had been called with the same
+        start_indices and domain_shape.
 
+        The result is returned as a tuple of coordinate pairs, each
+        representing a cell in the path of the dig.
 
-def sequence_side(
-    nHorCells: int, i_start: int, j_start: int, movements: List[Movement]
-) -> Tuple[DIG, DIG]:
-    """
-    Draws the path of the river having width expressed in cells.
-    The sequence is:
-     - draw the main path
-     - then a path on the right
-     - then a path of the left
-     and so on up to 8.
+        Args:
+            start_indices: The starting indices (row, column) for the dig
+            domain_shape: The shape of the grid as a tuple (rows, columns)
 
-    Arguments:
-    nHorCells: width in cells of the river, max=8
-    i_start,j_start: start point
-    Segmentlist:  list of movements
+        Returns:
+            A set of tuples, where each tuple represents the (row, column)
+            coordinates of a cell of the dig.
+        """
+        cells: set[tuple[int, int]] = set()
 
-    Return:
-    Two list of tuples (i,j)
-    - L_out with the points (i,j) of the river bed
-    - riversources with the points (i,j) of the sources
-    """
-    if nHorCells not in range(1, 9):
-        raise ValueError(f"nHorCells must be in range 1..8, got {nHorCells}")
+        slices = self._get_dig_slices(
+            start_indices, domain_shape, allow_outside=allow_outside
+        )
 
-    L_out = []
-    riversources = []
-    for k in range(nHorCells):
-        if k == 0:
-            L = main_river_cell_list(i_start, j_start, movements)
-            L_out.extend(L)
-            riversources.append(L[-1])
-        if k == 1:
-            L1 = cells_side(L, segno=1)
-            L_out.extend(L1)
-            riversources.append(L1[-1])
-        if k == 2:
-            L2 = cells_side(L, segno=-1)
-            L_out.extend(L2)
-            riversources.append(L2[-1])
-        if k == 3:
-            L3 = cells_side(L1, segno=1)
-            L_out.extend(L3)
-            riversources.append(L3[-1])
-        if k == 4:
-            L4 = cells_side(L2, segno=-1)
-            L_out.extend(L4)
-            riversources.append(L4[-1])
-        if k == 5:
-            L5 = cells_side(L3, segno=1)
-            L_out.extend(L5)
-            riversources.append(L5[-1])
-        if k == 6:
-            L6 = cells_side(L4, segno=-1)
-            L_out.extend(L6)
-            riversources.append(L6[-1])
-        if k == 7:
-            L7 = cells_side(L5, segno=1)
-            L_out.extend(L7)
-            riversources.append(L7[-1])
-        if k == 8:
-            L8 = cells_side(L6, segno=-1)
-            L_out.extend(L8)
-            riversources.append(L8[-1])
-    return L_out, riversources
+        for slice_x, slice_y in slices:
+            assert slice_x.step is None or slice_x.step == 1
+            assert slice_y.step is None or slice_y.step == 1
+            cells.update(
+                cart_prod(
+                    range(slice_x.start, slice_x.stop),
+                    range(slice_y.start, slice_y.stop),
+                )
+            )
 
+        return cells
 
-if __name__ == "__main__":
-    import pylab as pl
+    def get_dig_source(
+        self, start_indices: tuple[int, int], domain_shape: tuple[int, int]
+    ) -> set[tuple[int, int]]:
+        """Returns the last cells of the dig that are part of the domain
 
-    A = np.zeros((50, 50))
+        We can imagine a dig as a path drawn by a square that moves from the
+        position described by the starting indices to its last position
+        following the movements. This method returns the indices of the last
+        cells that have been dig. This means that the output is a vertical or
+        horizontal line made of `thick` cells and with width equal to one.
+        If this dig represents a river, then those cells are the river's source.
 
-    # DIGlist=["5E","3S","10E","3N","3W","4N"]
-    DIGlist = ["30E", "20S", "10W", "5N"]
-    movement_list = [Movement.from_str(s) for s in DIGlist]
+        Args:
+            start_indices: The starting indices (row, column) for the dig
+            domain_shape: The shape of the grid as a tuple (rows, columns)
 
-    seedx, seedy = 10, 40
-    v = 10
-    nHcells = 3
+        Returns:
+            A set of tuples, where each tuple represents the (row, column)
+            coordinates of the last cells dug by this object.
+        """
+        slices = self._get_dig_slices(
+            start_indices, domain_shape, allow_outside=False
+        )
 
-    L, riversources = sequence_side(nHcells, seedx, seedy, movement_list)
+        assert len(slices) == len(self.movements)
 
-    # L = main_river_cell_list(seedx, seedy, DIGlist)
-    # L1 = cells_side(L,segno=1)
-    # L2 = cells_side(L,segno=-1)
-    # L3 = cells_side(L1,segno=1)
-    #
-    A = apply_dig(A, L, v / 2)
-    # A = apply_dig(A,L1,v)
-    # A = apply_dig(A,L2,v*2)
-    # A = apply_dig(A,L3,v*3)
+        # We get the last slice associated with this dig. This is the last
+        # rectangle that we have dug.
+        last_slice = slices[-1]
 
-    pl.close("all")
-    fig, ax = pl.subplots()
-    ax.imshow(A)
-    ax.invert_yaxis()
-    fig.show()
+        # We identify the indices along with the last movement has dug. The
+        # line of the cells of the source will be perpendicular to this index.
+        if self.movements[-1].direction in (Direction.EAST, Direction.WEST):
+            moving_index = 1
+        else:
+            moving_index = 0
+
+        # This is the other index, the one the source cells are aligned with.
+        fixed_index: int = 1 - moving_index
+
+        # The dig related to the last slice moves between
+        # last_slice[moving_index].start and last_slice[moving_index].stop - 1;
+        # how do we identify which one we must choose?
+        if self.movements[-1].direction in (Direction.WEST, Direction.SOUTH):
+            get_index = min
+        else:
+
+            def get_index(*args):
+                return max(*args) - 1
+
+        # Along the fixed_index, the width of the dig must be equal to the
+        # thickness of the dig.
+        assert (
+            last_slice[fixed_index].stop - last_slice[fixed_index].start
+            == self.thick
+        )
+
+        # This is the position of the sources (one of their two indices)
+        d_index = get_index(
+            last_slice[moving_index].start, last_slice[moving_index].stop
+        )
+
+        cells = set()
+        for i in range(
+            last_slice[fixed_index].start, last_slice[fixed_index].stop
+        ):
+            current_cell = [None, None]
+            current_cell[moving_index] = d_index
+            current_cell[fixed_index] = i
+            cells.add(tuple(current_cell))
+
+        return cells
