@@ -25,6 +25,7 @@ from bitsea.components.component_mask_2d import ComponentMask2D
 from bathytools.actions import SimpleAction
 from bathytools.output_appendix import OutputAppendix
 from bathytools.utilities.dig import Dig
+from bathytools.utilities.dig import DigOutsideShape
 from bathytools.utilities.dig import Direction
 from bathytools.utilities.dig import Movement
 from bathytools.utilities.dig import StartIndexStrategy
@@ -508,13 +509,9 @@ class DigRivers(SimpleAction):
             moving_axis = 1 - fixed_axis
 
             for river_id, river_name in side_rivers:
-                river_model, _, source_cells_lon_lat = river_sources[
+                river_model, _, source_cells = river_sources[
                     (river_id, river_name)
                 ]
-
-                # Invert the order of the source_cells; now they are lat first,
-                # lon after
-                source_cells = [(a, b) for b, a in source_cells_lon_lat]
 
                 if len(source_cells) == 0:
                     raise ValueError(
@@ -953,10 +950,18 @@ class DigRivers(SimpleAction):
                 thick=n_cells,
                 start_index_strategy=StartIndexStrategy.CENTERED,
             )
-            digging_cells = river_dig.get_dig_cells(
-                (river_lat_index, river_lon_index),
-                bathymetry.elevation.transpose("latitude", "longitude").shape,
-            )
+            try:
+                digging_cells = river_dig.get_dig_cells(
+                    (river_lat_index, river_lon_index),
+                    bathymetry.elevation.transpose(
+                        "latitude", "longitude"
+                    ).shape,
+                )
+            except DigOutsideShape:
+                raise DigOutsideShape(
+                    f"Error while digging river {river.name} (id = {river.id})"
+                    f": dig goes outside the domain"
+                )
             current_river_sources = river_dig.get_dig_source(
                 (river_lat_index, river_lon_index),
                 bathymetry.elevation.transpose("latitude", "longitude").shape,

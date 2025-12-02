@@ -86,6 +86,10 @@ class Movement:
     after movement and parse movement descriptions from different string
     formats.
 
+    Usually, length is a positive integer. It cannot be negative unless it
+    is -1. In this case, the movement is infinite in that direction (up to the
+    end of the domain)
+
     Attributes:
         length: The distance to move in grid units
         direction: The cardinal direction of movement (EAST, WEST, NORTH,
@@ -105,6 +109,16 @@ class Movement:
         Returns:
             New (i, j) coordinates after movement
         """
+        if self.length < 0:
+            if self.length != -1:
+                raise ValueError(f"Invalid movement length: {self.length}")
+            raise ValueError(
+                "This movement is infinite in direction "
+                f"{self.direction.name.lower()}; this object cannot be used "
+                "directly but must be copied with the correct length when "
+                "the dimensions of the domain are known"
+            )
+
         return self.direction.move_indices(i, j, self.length)
 
     @staticmethod
@@ -142,23 +156,43 @@ class Movement:
         Raises:
             ValueError: If the string format is invalid
         """
-        string_mask = re.compile(r"^([+-]?\d+)([mMzZ])$")
+        string_mask = re.compile(
+            r"^(?P<length>[+-]?(\d+|\*))(?P<direction>[mMzZ])$"
+        )
         match = string_mask.match(s)
         if match is None:
             raise ValueError(f"Invalid movement string: {s}")
-        value = int(match.group(1))
-        if match.group(2) in ["m", "M"]:
+        if match.group("direction") in ["m", "M"]:
             direction = Direction.NORTH
-        elif match.group(2) in ["z", "Z"]:
+        elif match.group("direction") in ["z", "Z"]:
             direction = Direction.EAST
         else:
             raise ValueError(f"Invalid direction: {match.group(2)}")
+
+        # In case there is a "*" in the length, we put a -1 in the length to
+        # indicate that the movement is infinite in that direction
+        if match.group("length").endswith("*"):
+            if match.group("length").startswith("-"):
+                direction = -direction
+            return Movement(-1, direction)
+
+        # If we can read the value, we ensure that is always positive in the
+        # right direction
+        value = int(match.group("length"))
 
         if value < 0:
             direction = -direction
             value = -value
 
         return Movement(value, direction)
+
+    def copy(self, length: int = None, direction: Direction = None):
+        """Create a copy of this Movement with modified attributes."""
+        if length is None:
+            length = self.length
+        if direction is None:
+            direction = self.direction
+        return Movement(length, direction)
 
 
 class StartIndexStrategy(Enum):
@@ -323,6 +357,23 @@ class Dig:
             return tuple(slices)
 
         for movement_index, movement in enumerate(self.movements):
+            # If the movement is infinite in a direction, we must create a
+            # new movement of the right length in the same direction.
+            if movement.length == -1:
+                if movement.direction in (Direction.EAST, Direction.WEST):
+                    indx = 1
+                    starting_point = j
+                else:
+                    indx = 0
+                    starting_point = i
+                if movement.direction in (Direction.EAST, Direction.NORTH):
+                    reaching_point = domain_shape[indx] - self.thick
+                else:
+                    reaching_point = 0
+                movement = movement.copy(
+                    length=abs(reaching_point - starting_point)
+                )
+
             # (i, j) is the current position (top-left corner). (new_i, new_j)
             # is the new one after the current movement
             new_i, new_j = movement.move_indices(i, j)
