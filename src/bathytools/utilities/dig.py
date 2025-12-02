@@ -204,7 +204,7 @@ class StartIndexStrategy(Enum):
     a single cell. This enum defines the different strategies for choosing the
     starting point of the dig with respect to a single cell.
 
-    LEFT_TOP: the cell (i, j) is the bottom-left cell of the starting square,
+    BOTTOM_LEFT: the cell (i, j) is the bottom-left cell of the starting square,
         i.e., the starting point is a pair with the smaller indices in both
         the direction of the cells that define the starting square.
     CENTERED: the cell (i, j) is the center of the starting square.
