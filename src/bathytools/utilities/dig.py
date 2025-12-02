@@ -318,7 +318,7 @@ class Dig:
             raise DigOutsideShape(
                 f"Second index {j} of position {(i, j)} is outside the domain"
             )
-        if j < 0 or j + self.thick - 1 >= shape[1]:
+        if j + self.thick - 1 >= shape[1]:
             raise DigOutsideShape(
                 f"The second index of position {(i, j)} draws a rectangle "
                 f"that is too large for the domain (shape: {shape}, side: "
