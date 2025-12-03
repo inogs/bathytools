@@ -360,19 +360,35 @@ class Dig:
             # If the movement is infinite in a direction, we must create a
             # new movement of the right length in the same direction.
             if movement.length == -1:
+                new_direction = movement.direction
+
+                # If the direction is East-Weast, we modify j (the second
+                # index); otherwise we modify i
                 if movement.direction in (Direction.EAST, Direction.WEST):
                     indx = 1
                     starting_point = j
                 else:
                     indx = 0
                     starting_point = i
+
+                # If the direction moves us toward the last index of the domain
                 if movement.direction in (Direction.EAST, Direction.NORTH):
-                    reaching_point = domain_shape[indx] - self.thick
+                    length = domain_shape[indx] - self.thick - starting_point
+                    # if this is negative, it means that we started from
+                    # outside the domain. Then we need to invert the direction
+                    # and reach the last index of the domain
+                    if length < 0:
+                        length = -length
+                        new_direction = -new_direction
                 else:
-                    reaching_point = 0
-                movement = movement.copy(
-                    length=abs(reaching_point - starting_point)
-                )
+                    # In this case, we need to reach the first index; if
+                    # starting_point is negative, it means that we started from
+                    # outside the domain (and we need to invert the direction)
+                    length = starting_point
+                    if starting_point < 0:
+                        new_direction = -new_direction
+                        length *= -1
+                movement = Movement(direction=new_direction, length=length)
 
             # (i, j) is the current position (top-left corner). (new_i, new_j)
             # is the new one after the current movement
