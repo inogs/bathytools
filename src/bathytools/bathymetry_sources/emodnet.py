@@ -57,7 +57,7 @@ class EMODnetBathymetryDownloader:
             self._domain.minimum_latitude - self._domain.resolution,
             self._domain.maximum_latitude + self._domain.resolution,
         )
-        ds = xr.open_dataset(self.URL).sel(
+        ds = xr.open_dataset(self.URL, engine="pydap").sel(
             longitude=lon_slice, latitude=lat_slice
         )
 
