@@ -1,0 +1,53 @@
+---
+name: PAN
+
+domain:
+  minimum_latitude: 38.536459043363
+  maximum_latitude: 38.744792393472
+  minimum_longitude: 14.984375604219
+  maximum_longitude: 15.192708943093
+  resolution: 0.001041666667
+  minimum_h_factor: 0.2
+  vertical_levels:
+    minimum_depth: 0.0
+    maximum_depth: 2500.0
+    first_layer_thickness: 1
+
+
+bathymetry:
+  kind: "EMODnet"
+
+
+actions:
+  - action: SetDepth
+    description: |
+      Set the depth of all the cells that are shallower than 3 meters to exactly
+      3 meters. We believe that this should guarantee a better behaviour
+      around the coasts.
+    where: everywhere
+    args:
+      value: 3.
+      shallower_than: 3.
+
+  - action: RemoveDetachedCells
+    description: Keep only the biggest connected component
+
+  - action: DigChannel
+    description: Open a channel to separate Lisca Bianca and Bottaro islands
+    args:
+      start_point:
+        lat: 38.63698
+        lon: 15.11302
+      end_point:
+        lat: 38.63802
+        lon: 15.11094
+      width: 120
+
+  - action: RemoveDeepTrappedWater
+    description: Remove the water cells on the boundary that are close to land
+    args:
+      n_cells: 2
+
+filters:
+  - filter: RemoveStagnations
+    description: Removes bottom water cells surrounded by land
