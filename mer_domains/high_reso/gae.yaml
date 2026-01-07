@@ -1,0 +1,53 @@
+---
+name: GAE
+
+domain:
+  minimum_latitude: 41.140625987751
+  maximum_latitude: 41.265625987743
+  minimum_longitude: 13.479167271856
+  maximum_longitude: 13.854167271832
+  resolution: 0.001041666667
+  minimum_h_factor: 0.2
+  vertical_levels:
+    minimum_depth: 0.0
+    maximum_depth: 1200.0
+    first_layer_thickness: 1
+
+
+bathymetry:
+  kind: "EMODnet"
+
+
+actions:
+  - action: SetDepth
+    description: |
+      Set the depth of all the cells that are shallower than 3 meters to exactly
+      3 meters. We believe that this should guarantee a better behaviour
+      around the coasts.
+    where: everywhere
+    args:
+      value: 3.
+      shallower_than: 3.
+
+  - action: RemoveDetachedCells
+    description: Keep only the biggest connected component
+
+  - action: DigRivers
+    description: Dig the stems for the rivers
+    args:
+      main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
+      domain_file: ${MAIN_DIR}/mer_domains/rivers/TYR.json
+
+  - action: RemoveTrappedWater
+    description: Remove the water cells on the boundary that are close to land
+
+  - action: WriteBlankTiles
+    description: Write a list of tiles that do not contain water
+    args:
+      file_name: data.exch2_GAE
+      size_tiles_lon: 24
+      size_tiles_lat: 24
+
+filters:
+  - filter: RemoveStagnations
+    description: Removes bottom water cells surrounded by land
