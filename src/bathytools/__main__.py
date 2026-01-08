@@ -1,6 +1,7 @@
 import argparse
 import logging
 import tempfile
+from contextlib import ExitStack
 from os import PathLike
 from pathlib import Path
 from sys import exit as sys_exit
@@ -307,6 +308,26 @@ def generate_bathymetry(
     )
 
     output_appendix = OutputAppendix(output_dir=output_dir)
+
+    half_resolution = bathymetry_config.domain.resolution / 2.0
+    maximum_longitude = (
+        bathymetry_config.domain.longitude[-1] + half_resolution
+    )
+    maximum_latitude = bathymetry_config.domain.latitude[-1] + half_resolution
+
+    output_appendix.add_meshmask_metadata(
+        "domain_minimum_longitude", bathymetry_config.domain.minimum_longitude
+    )
+    output_appendix.add_meshmask_metadata(
+        "domain_minimum_latitude", bathymetry_config.domain.minimum_latitude
+    )
+    output_appendix.add_meshmask_metadata(
+        "domain_maximum_longitude", maximum_longitude
+    )
+    output_appendix.add_meshmask_metadata(
+        "domain_maximum_latitude", maximum_latitude
+    )
+
     domain_bathymetry = apply_actions(
         domain_bathymetry, bathymetry_config.actions, output_appendix
     )
@@ -359,25 +380,24 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     LOGGER.info('Generating mesh for domain "%s"', bathy_config.name)
-    if args.cache is None:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            LOGGER.debug("Using temporary directory %s", tmpdir)
-            output_status = generate_bathymetry(
-                bathy_config,
-                Path(tmpdir),
-                output_dir,
-                volatile_cache=True,
-                compression_level=compression_level,
-                use_mer_format=use_mer_format,
+    with ExitStack() as exec_context:
+        if args.cache is None:
+            t = exec_context.enter_context(tempfile.TemporaryDirectory())
+            temp_dir = Path(t)
+            LOGGER.debug(
+                "No cache directory specified, using temporary directory %s",
+                temp_dir,
             )
-    else:
-        LOGGER.debug("Using temporary directory %s", args.cache)
-        args.cache.mkdir(exist_ok=True)
+        else:
+            temp_dir = args.cache
+            LOGGER.debug("Using cache directory %s", args.cache)
+            temp_dir.mkdir(exist_ok=True)
+
         output_status = generate_bathymetry(
             bathy_config,
-            Path(args.cache),
+            temp_dir,
             output_dir,
-            volatile_cache=False,
+            volatile_cache=args.cache is None,
             compression_level=compression_level,
             use_mer_format=use_mer_format,
         )
