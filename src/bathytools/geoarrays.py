@@ -115,7 +115,10 @@ class GeoArrays:
         return x * y
 
     def _build_mesh_mask_mer(
-        self, water_fractions: WaterFractions, dtype=np.float64
+        self,
+        water_fractions: WaterFractions,
+        output_appendix: OutputAppendix,
+        dtype=np.float64,
     ) -> xr.Dataset:
         meridional_size, zonal_size = self.compute_metric_cell_size()
 
@@ -237,6 +240,8 @@ class GeoArrays:
         )
         mesh_mask.attrs.update(mer_mesh_mask_version="1.0")
 
+        output_appendix.apply_metadata(mesh_mask)
+
         return mesh_mask
 
     def build_mesh_mask(
@@ -248,7 +253,9 @@ class GeoArrays:
         new_e3t=True,
     ) -> xr.Dataset:
         if use_mer_format:
-            return self._build_mesh_mask_mer(water_fractions, dtype=dtype)
+            return self._build_mesh_mask_mer(
+                water_fractions, output_appendix=output_appendix, dtype=dtype
+            )
 
         meridional_size, zonal_size = self.compute_metric_cell_size()
 
@@ -306,7 +313,11 @@ class GeoArrays:
             ]
             mesh_mask_dict[var_name] = (dims, var_data.values)
 
-        return xr.Dataset(mesh_mask_dict)
+        final_output = xr.Dataset(mesh_mask_dict)
+
+        output_appendix.apply_metadata(final_output)
+
+        return final_output
 
     def build_mit_static_data(
         self, water_fractions: WaterFractions, dtype=np.float32

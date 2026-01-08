@@ -166,27 +166,29 @@ class DomainGeometry:
         minimum longitude values.
 
         Returns:
-            int: The number of grid cells along the longitudinal direction calculated by
-            dividing the longitudinal range by the resolution.
+            The number of grid cells along the longitudinal direction
+            calculated by dividing the longitudinal range by the resolution.
         """
-        return int(
-            (self.maximum_longitude - self.minimum_longitude) / self.resolution
-        )
+        raw_number = (
+            self.maximum_longitude - self.minimum_longitude
+        ) / self.resolution
+        return int(round(raw_number))
 
     @property
     def n_y(self):
         """
-        Calculates the number of latitude grid points (n_y) based on the resolution
-        and given latitudinal boundaries. The value is computed by dividing the
-        difference between the maximum and minimum latitude by the spatial
-        resolution and rounding it to the nearest integer.
+        Calculates the number of latitude grid points (n_y) based on the
+        resolution and given latitudinal boundaries. The value is computed by
+        dividing the difference between the maximum and minimum latitude by
+        the spatial resolution and rounding it to the nearest integer.
 
         Returns:
-            int: The number of latitude grid points based on the input parameters.
+            The number of latitude grid points based on the input parameters.
         """
-        return int(
-            (self.maximum_latitude - self.minimum_latitude) / self.resolution
-        )
+        raw_number = (
+            self.maximum_latitude - self.minimum_latitude
+        ) / self.resolution
+        return int(round(raw_number))
 
     @property
     def longitude(self):
@@ -200,11 +202,8 @@ class DomainGeometry:
             numpy.ndarray: A NumPy array containing the linearly spaced
             longitude values.
         """
-        return np.linspace(
-            self.minimum_longitude + self.resolution * 0.5,
-            self.maximum_longitude - self.resolution * 0.5,
-            self.n_x,
-        )
+        steps = np.arange(self.n_x, dtype=np.float64) * self.resolution
+        return (self.minimum_longitude + self.resolution / 2.0) + steps
 
     @property
     def latitude(self):
@@ -216,13 +215,10 @@ class DomainGeometry:
 
         Returns:
             numpy.ndarray: A NumPy array containing the linearly spaced
-            longitude values.
+            latitude values.
         """
-        return np.linspace(
-            self.minimum_latitude + self.resolution * 0.5,
-            self.maximum_latitude - self.resolution * 0.5,
-            self.n_y,
-        )
+        steps = np.arange(self.n_y, dtype=np.float64) * self.resolution
+        return (self.minimum_latitude + self.resolution / 2.0) + steps
 
 
 class BathyInterpolationMethod(Enum):

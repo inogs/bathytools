@@ -51,6 +51,20 @@ class OutputAppendix:
         """
         self._meshmask_metadata[name] = content
 
+    def apply_metadata(self, mask: xr.Dataset):
+        """
+        Apply stored metadata to the given meshmask dataset.
+
+        This method updates the attributes of the provided xarray Dataset
+        in place using the metadata previously added via
+        `add_meshmask_metadata`.
+
+        Args:
+            mask: The meshmask xarray Dataset whose attributes will be
+                updated with the stored metadata.
+        """
+        mask.attrs.update(self._meshmask_metadata)
+
     def add_additional_variable(self, name: str, content: xr.DataArray):
         """
         Adds an xarray DataArray to the meshmask file.
