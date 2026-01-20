@@ -63,7 +63,7 @@ actions:
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
-      n_cells: 2
+      n_cells: 3
 
   - action: WriteBlankTiles
     description: Write a list of tiles that do not contain water
