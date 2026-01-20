@@ -92,12 +92,12 @@
     {
       "id": 96,
       "name": "Pavlla",
-      "enabled": false
+      "enabled": true
     },
     {
       "id": 97,
       "name": "Kalamas Thyamis Glykys",
-      "enabled": false
+      "enabled": true
     }
   ]
 }
