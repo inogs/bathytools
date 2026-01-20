@@ -73,8 +73,10 @@ actions:
         lon: 9.830729
       width: 1000
 
-  - action: RemoveTrappedWater
+  - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
+    args:
+      n_cells: 2
 
   - action: WriteBlankTiles
     description: Write a list of tiles that do not contain water
