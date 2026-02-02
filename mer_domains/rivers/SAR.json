@@ -1,16 +1,6 @@
 {
   "rivers": [
     {
-      "id": 105,
-      "name": "Coghinas",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 110,
-      "name": "Tirso",
-      "concentrations": ["ecoli"]
-    },
-    {
       "id": 114,
       "name": "Le Rizzanese",
       "geometry": {
