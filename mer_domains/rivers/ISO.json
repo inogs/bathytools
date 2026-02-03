@@ -1,13 +1,6 @@
 {
   "rivers": [
     {
-      "id": 77,
-      "name": "Timavo",
-      "geometry": {
-        "stem_length": 15
-      }
-    },
-    {
       "id": 78,
       "name": "Isonzo",
       "geometry":{
