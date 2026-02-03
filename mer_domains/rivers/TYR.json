@@ -1,25 +1,6 @@
 {
   "rivers": [
     {
-      "id": 13,
-      "name": "Tevere",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 15,
-      "name": "Garigliano",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 19,
-      "name": "Sele",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 16,
-      "name": "Volturno",
-      "concentrations": ["ecoli"]
-    },    {
       "id": 22,
       "name": "Noce",
       "geometry": {

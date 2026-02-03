@@ -1,26 +1,6 @@
 {
   "rivers": [
     {
-      "id": 3,
-      "name": "Magra Ligure",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 4,
-      "name": "Serchio",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 5,
-      "name": "Arno",
-      "concentrations": ["ecoli"]
-    },
-    {
-      "id": 9,
-      "name": "Ombrone",
-      "concentrations": ["ecoli"]
-    },
-    {
       "id": 60,
       "name": "Savio",
       "enabled": false

@@ -351,7 +351,8 @@
         "longitude_index": 2114,
         "latitude_index": 1692
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 4,
@@ -368,7 +369,8 @@
         "longitude_index": 2131,
         "latitude_index": 1708
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 5,
@@ -385,7 +387,8 @@
         "longitude_index": 2132,
         "latitude_index": 1714
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 6,
@@ -453,7 +456,8 @@
         "longitude_index": 2176,
         "latitude_index": 1775
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 10,
@@ -521,7 +525,8 @@
         "longitude_index": 2249,
         "latitude_index": 1830
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 14,
@@ -555,7 +560,8 @@
         "longitude_index": 2340,
         "latitude_index": 1861
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 16,
@@ -572,7 +578,8 @@
         "longitude_index": 2350,
         "latitude_index": 1873
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 17,
@@ -623,7 +630,8 @@
         "longitude_index": 2412,
         "latitude_index": 1905
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 20,
@@ -808,7 +816,8 @@
         "longitude_index": 2543,
         "latitude_index": 1982
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 31,
@@ -840,7 +849,8 @@
         "longitude_index": 2506,
         "latitude_index": 1951
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 33,
@@ -874,7 +884,8 @@
         "longitude_index": 2519,
         "latitude_index": 1921
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 35,
@@ -1063,7 +1074,8 @@
         "longitude_index": 2468,
         "latitude_index": 1839
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 46,
@@ -1135,7 +1147,8 @@
         "longitude_index": 2387,
         "latitude_index": 1800
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 50,
@@ -1152,7 +1165,8 @@
         "longitude_index": 2368,
         "latitude_index": 1786
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 51,
@@ -1271,7 +1285,8 @@
         "longitude_index": 2297,
         "latitude_index": 1705
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 58,
@@ -1373,7 +1388,8 @@
         "longitude_index": 2251,
         "latitude_index": 1659
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 64,
@@ -1395,7 +1411,8 @@
         "longitude_index": 2211,
         "latitude_index": 1641
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 65,
@@ -1412,7 +1429,8 @@
         "longitude_index": 2254,
         "latitude_index": 1625
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 66,
@@ -1434,7 +1452,8 @@
         "longitude_index": 2248,
         "latitude_index": 1623
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 67,
@@ -1516,7 +1535,8 @@
         "longitude_index": 2278,
         "latitude_index": 1603
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 71,
@@ -1533,7 +1553,8 @@
         "longitude_index": 2286,
         "latitude_index": 1599
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 72,
@@ -1571,7 +1592,8 @@
         "longitude_index": 2301,
         "latitude_index": 1596
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 74,
@@ -1643,7 +1665,8 @@
         "longitude_index": 2329,
         "latitude_index": 1588
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 78,
@@ -1666,7 +1689,8 @@
         "longitude_index": 2327,
         "latitude_index": 1591
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 79,
@@ -2052,7 +2076,8 @@
         "longitude_index": 2420,
         "latitude_index": 2090
       },
-      "biogeochemical_profile": "adr_ion"
+      "biogeochemical_profile": "adr_ion",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 101,
@@ -2142,7 +2167,8 @@
         "longitude_index": 2043,
         "latitude_index": 1878
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 106,
@@ -2232,7 +2258,8 @@
         "longitude_index": 2027,
         "latitude_index": 1942
       },
-      "biogeochemical_profile": "tyr"
+      "biogeochemical_profile": "tyr",
+      "concentrations": ["ecoli"]
     },
     {
       "id": 111,
