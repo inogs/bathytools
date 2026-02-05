@@ -44,7 +44,11 @@
       "id": 31,
       "name": "Trionto",
       "geometry": {
-        "side": "S"
+        "side": "W",
+        "stem": [
+          "-5m",
+          "-5z"
+        ]
       }
     },
     {

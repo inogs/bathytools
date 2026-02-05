@@ -275,9 +275,9 @@
     "stem_length": 10
   },
   "physical_defaults": {
-    "average_temperature": 10,
+    "average_temperature": 15,
     "temperature_variation": 5,
-    "average_salinity": 5
+    "average_salinity": 10
   },
   "default_model": "stem_flux",
   "rivers": [
@@ -1904,7 +1904,12 @@
       "geometry": {
         "mouth_longitude": 19.3744,
         "mouth_latitude": 41.8514,
-        "side": "N"
+        "side": "E",
+        "stem": [
+          "+7m",
+          "+3z"
+        ],
+        "width": 1000
       },
       "data_source": {
         "type": "EFAS",
@@ -2380,7 +2385,12 @@
       "name": "Le Rizzanese",
       "geometry": {
         "mouth_longitude": 8.87883549999999,
-        "mouth_latitude": 41.6612585999999
+        "mouth_latitude": 41.6612585999999,
+        "side": "N",
+        "stem": [
+          "+11z",
+          "+2m"
+        ]
       },
       "data_source": {
         "type": "EFAS",
