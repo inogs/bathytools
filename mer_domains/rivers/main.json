@@ -1905,10 +1905,10 @@
         "mouth_longitude": 19.3744,
         "mouth_latitude": 41.8514,
         "side": "E",
-	"stem": [
-	  "+7m",
-	  "+3z"
-	],
+        "stem": [
+          "+7m",
+          "+3z"
+        ],
         "width": 1000
       },
       "data_source": {
@@ -2386,7 +2386,7 @@
       "geometry": {
         "mouth_longitude": 8.87883549999999,
         "mouth_latitude": 41.6612585999999,
-	"side": "N",
+        "side": "N",
         "stem": [
           "+11z",
           "+2m"
