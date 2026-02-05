@@ -36,7 +36,6 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-      domain_file: ${MAIN_DIR}/mer_domains/rivers/SAR.json
 
   - action: DigChannel
     description: Open a channel to separate Sant'Antioco island

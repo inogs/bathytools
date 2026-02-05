@@ -9,17 +9,6 @@
       "id": 61,
       "name": "Fiumi uniti",
       "enabled": false
-    },
-    {
-      "id": 114,
-      "name": "Le Rizzanese",
-      "geometry": {
-        "side": "S",
-        "stem": [
-          "+2z",
-          "-8m"
-        ]
-      }
     }
   ]
 }
