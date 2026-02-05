@@ -10,14 +10,14 @@
     {
       "id": 78,
       "name": "Isonzo",
-      "geometry":{
-	"stem": [
+      "geometry": {
+        "stem": [
           "+5m",
           "-45z",
           "+10m"
         ],
         "mouth_latitude": 45.72216,
-	"mouth_longitude": 13.55921
+        "mouth_longitude": 13.55921
       }
     }
   ]
