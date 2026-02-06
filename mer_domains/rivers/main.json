@@ -2468,7 +2468,11 @@
       "geometry": {
         "mouth_longitude": 13.5864,
         "mouth_latitude": 45.4778,
-        "side": "E"
+        "side": "E",
+        "stem": [
+          "-3m",
+          "+8z"
+        ]
       },
       "data_source": {
         "type": "EFAS",
