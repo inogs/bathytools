@@ -2442,6 +2442,42 @@
         "latitude_index": 1810
       },
       "biogeochemical_profile": "tyr"
+    },
+    {
+      "id": 117,
+      "name": "Rizana",
+      "runoff_factor": 3.4,
+      "geometry": {
+        "mouth_longitude": 13.74444,
+        "mouth_latitude": 45.55858,
+        "side": "E"
+      },
+      "data_source": {
+        "type": "EFAS",
+        "longitude": 13.74167,
+        "latitude": 45.55833,
+        "longitude_index": 2339,
+        "latitude_index": 1601
+      },
+      "biogeochemical_profile": "adr_ion"
+    },
+    {
+      "id": 118,
+      "name": "Dragonja",
+      "runoff_factor": 3.4,
+      "geometry": {
+        "mouth_longitude": 13.5864,
+        "mouth_latitude": 45.4778,
+        "side": "E"
+      },
+      "data_source": {
+        "type": "EFAS",
+        "longitude": 13.60833,
+        "latitude": 45.49167,
+        "longitude_index": 2331,
+        "latitude_index": 1605
+      },
+      "biogeochemical_profile": "adr_ion"
     }
   ]
 }
