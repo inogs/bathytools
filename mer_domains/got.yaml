@@ -29,6 +29,18 @@ actions:
       value: 3.
       shallower_than: 3.
 
+  - action: SetDepth
+    description: |
+      Fix some cells near the eastern part of the G-M lagoon
+    where: slice
+    args:
+      min_lon: 13.51
+      max_lon: 13.54
+      min_lat: 45.73
+      max_lat: 45.75
+      value: 3.
+      deeper_than: 3.
+
   - action: RemoveDetachedCells
     description: |
       Remove lakes or cells that are not connected to the main sea
