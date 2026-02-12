@@ -29,6 +29,54 @@ actions:
       value: 3.
       shallower_than: 3.
 
+  - action: SetDepth
+    description: |
+      Fix some cells south of Panarea
+    where: slice
+    args:
+      min_lon: 15.06615
+      max_lon: 15.0724
+      min_lat: 38.61927
+      max_lat: 38.62656
+      value: 50.
+      deeper_than: 80.
+
+  - action: SetDepth
+    description: |
+      Fix some cells west of Panarea
+    where: slice
+    args:
+      min_lon: 15.05
+      max_lon: 15.055
+      min_lat: 38.628
+      max_lat: 38.64
+      value: 30.
+      deeper_than: 80.
+
+  - action: SetDepth
+    description: |
+      Fix some cells west of Basiluzzo Island
+    where: slice
+    args:
+      min_lon: 15.10
+      max_lon: 15.11
+      min_lat: 38.658
+      max_lat: 38.667
+      value: 75.
+      deeper_than: 100.
+
+  - action: SetDepth
+    description: |
+      Fix some cells east of Lisca Bianca Island
+    where: slice
+    args:
+      min_lon: 15.118
+      max_lon: 15.1214
+      min_lat: 38.636
+      max_lat: 38.644
+      value: 120.
+      deeper_than: 150.
+
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
@@ -46,7 +94,7 @@ actions:
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
-      n_cells: 2
+      n_cells: 3
 
 filters:
   - filter: RemoveStagnations
