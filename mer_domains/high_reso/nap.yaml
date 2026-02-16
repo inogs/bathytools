@@ -36,7 +36,6 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-      domain_file: ${MAIN_DIR}/mer_domains/rivers/TYR.json
 
   - action: DigChannel
     description: Open a channel to delete single cell of Land in Pozzuoli Gulf
@@ -50,7 +49,7 @@ actions:
       width: 100
 
   - action: DigChannel
-    description: Open a channel to seprate the Rovigliano Rock
+    description: Open a channel to separate the Rovigliano Rock
     args:
       start_point:
         lat: 40.72712
