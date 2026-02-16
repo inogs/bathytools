@@ -36,12 +36,19 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-      domain_file: ${MAIN_DIR}/mer_domains/rivers/LIG.json
 
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
       n_cells: 3
+
+
+  - action: WriteBlankTiles
+    description: Write a list of tiles that do not contain water
+    args:
+      file_name: data.exch2_FOL
+      size_tiles_lon: 25
+      size_tiles_lat: 30
 
 filters:
   - filter: RemoveStagnations
