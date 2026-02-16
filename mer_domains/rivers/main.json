@@ -1725,8 +1725,7 @@
           "+1m",
           "-9z",
           "+2m"
-        ],
-        "width": 500
+        ]
       },
       "data_source": {
         "type": "EFAS",
