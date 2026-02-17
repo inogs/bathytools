@@ -2,10 +2,10 @@
 name: HGT
 
 domain:
-  minimum_latitude: 45.4583345963333
-  maximum_latitude: 45.8020845963333
-  minimum_longitude: 13.432292295
-  maximum_longitude: 13.807292295
+  minimum_latitude: 45.458334596360
+  maximum_latitude: 45.802084596338
+  minimum_longitude: 13.432292294915
+  maximum_longitude: 13.807292294891
   resolution: 0.001041666667
   minimum_h_factor: 0.2
   vertical_levels:
