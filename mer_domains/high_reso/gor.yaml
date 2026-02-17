@@ -5,7 +5,7 @@ domain:
   minimum_latitude: 44.515626263087
   maximum_latitude: 44.848959596399
   minimum_longitude: 12.234375628325
-  maximum_longitude: 12.401042294981
+  maximum_longitude: 12.390625628315
   resolution: 0.001041666667
   minimum_h_factor: 0.2
   vertical_levels:
@@ -29,7 +29,6 @@ actions:
       value: 3.
       shallower_than: 3.
 
-
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
@@ -37,31 +36,6 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-
-  - action: SetDepth
-    description: |
-      Adding southern Po stem
-    where: slice
-    args:
-      min_lon: 12.393
-      max_lon: 12.3954
-      min_lat: 44.77634
-      max_lat: 44.81
-      value: 3.0
-      report_involved_cells:
-        table: "rivers"
-        value: 64
-
-  - action: DigChannel
-    description: Widening of Po southern mouth
-    args:
-      start_point:
-        lat: 44.79097
-        lon: 12.39738
-      end_point:
-        lat: 44.77
-        lon: 12.40
-      width: 250
 
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
@@ -72,7 +46,7 @@ actions:
     description: Write a list of tiles that do not contain water
     args:
       file_name: data.exch2_GOR
-      size_tiles_lon: 20
+      size_tiles_lon: 25
       size_tiles_lat: 20
 
 filters:
