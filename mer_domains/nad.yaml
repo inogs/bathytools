@@ -221,9 +221,9 @@ actions:
       Adding southern Po stem
     where: slice
     args:
-      min_lon: 12.38
-      max_lon: 12.39
-      min_lat: 44.767
+      min_lon: 12.3984
+      max_lon: 12.405
+      min_lat: 44.77
       max_lat: 44.96615
       value: 6.0
       report_involved_cells:
