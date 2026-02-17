@@ -1,16 +1,6 @@
 {
   "rivers": [
     {
-      "id": 24,
-      "name": "Savuto",
-      "geometry": {
-        "side": "E",
-        "stem": [
-          "8z"
-        ]
-      }
-    },
-    {
       "id": 25,
       "name": "Amato",
       "geometry": {
