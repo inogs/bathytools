@@ -32,11 +32,6 @@ actions:
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
 
-  - action: DigRivers
-    description: Dig the stems for the rivers
-    args:
-      main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
