@@ -51,6 +51,17 @@ actions:
       value: 3.
       deeper_than: 3.
 
+  - action: DigChannel
+    description: Open a channel near to Punta Spigolo
+    args:
+      start_point:
+        lat: 45.72969
+        lon: 13.55365
+      end_point:
+        lat: 45.73177
+        lon: 13.55365
+      width: 100
+
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:

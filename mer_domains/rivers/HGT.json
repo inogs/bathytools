@@ -12,12 +12,11 @@
       "name": "Isonzo",
       "geometry": {
         "stem": [
-          "+5m",
           "-45z",
           "+10m"
         ],
-        "mouth_latitude": 45.72216,
-        "mouth_longitude": 13.55921,
+        "mouth_latitude": 45.72969,
+        "mouth_longitude": 13.55886,
         "width": 200
       }
     }

@@ -29,6 +29,17 @@ actions:
       value: 3.
       shallower_than: 3.
 
+  - action: SetDepth
+    description: |
+      Fix some cells in Panzano-Monfalcone
+    where: slice
+    args:
+      min_lon: 13.55052
+      max_lon: 13.55781
+      min_lat: 45.77761
+      max_lat: 45.7849
+      value: 3.
+      deeper_than: 3.
 
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
@@ -50,6 +61,29 @@ actions:
       max_lat: 45.75
       value: 3.
       deeper_than: 3.
+
+  - action: SetDepth
+    description: |
+      Fix some cells near Dragonja river mouth
+    where: slice
+    args:
+      min_lon: 13.73802
+      max_lon: 13.75677
+      min_lat: 45.56198
+      max_lat: 45.56719
+      value: 3.
+      deeper_than: 5
+
+  - action: DigChannel
+    description: Open a channel near to Punta Spigolo
+    args:
+      start_point:
+        lat: 45.72969
+        lon: 13.55365
+      end_point:
+        lat: 45.73177
+        lon: 13.55365
+      width: 100
 
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
