@@ -3,9 +3,9 @@ name: LAM
 
 domain:
   minimum_latitude: 38.708334166784
-  maximum_latitude: 39.062500833428
-  minimum_longitude: 16.093750716958
-  maximum_longitude: 16.229167383616
+  maximum_latitude: 39.020834166764
+  minimum_longitude: 16.104167383624
+  maximum_longitude: 16.234375716949
   resolution: 0.001041666667
   minimum_h_factor: 0.2
   vertical_levels:
@@ -41,13 +41,13 @@ actions:
   - action: RemoveDeepTrappedWater
     description: Remove the water cells on the boundary that are close to land
     args:
-      n_cells: 3
+      n_cells: 2
 
   - action: WriteBlankTiles
     description: Write a list of tiles that do not contain water
     args:
       file_name: data.exch2_LAM
-      size_tiles_lon: 26
+      size_tiles_lon: 25
       size_tiles_lat: 20
 
 filters:
