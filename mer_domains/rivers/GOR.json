@@ -1,0 +1,11 @@
+{
+  "rivers": [
+    {
+      "id": 63,
+      "name": "Reno",
+      "geometry": {
+        "width": 200
+      }
+    }
+  ]
+}

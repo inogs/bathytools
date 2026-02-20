@@ -1,0 +1,15 @@
+{
+  "rivers": [
+    {
+      "id": 50,
+      "name": "Pescara",
+      "geometry": {
+        "side": "S",
+        "mouth_longitude": 14.23119,
+        "stem": [
+          "-7m"
+        ]
+      }
+    }
+  ]
+}

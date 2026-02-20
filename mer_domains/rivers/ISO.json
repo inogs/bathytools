@@ -1,16 +1,6 @@
 {
   "rivers": [
     {
-      "id": 77,
-      "name": "Timavo",
-      "geometry": {
-        "stem_length": 15,
-        "mouth_latitude": 45.7734,
-        "mouth_longitude": 13.5832,
-        "width": 200
-      }
-    },
-    {
       "id": 78,
       "name": "Isonzo",
       "geometry": {

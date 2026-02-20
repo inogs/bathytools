@@ -1,11 +1,11 @@
 ---
-name: HGT
+name: ISO
 
 domain:
-  minimum_latitude: 45.458334596360
-  maximum_latitude: 45.802084596338
-  minimum_longitude: 13.432292294915
-  maximum_longitude: 13.807292294891
+  minimum_latitude: 45.70833458966666
+  maximum_latitude: 45.75000125633333
+  minimum_longitude: 13.494792331
+  maximum_longitude: 13.57812566433
   resolution: 0.001041666667
   minimum_h_factor: 0.2
   vertical_levels:
@@ -29,17 +29,6 @@ actions:
       value: 3.
       shallower_than: 3.
 
-  - action: SetDepth
-    description: |
-      Fix some cells in Panzano-Monfalcone
-    where: slice
-    args:
-      min_lon: 13.55052
-      max_lon: 13.55781
-      min_lat: 45.77761
-      max_lat: 45.7849
-      value: 3.
-      deeper_than: 3.
 
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
@@ -48,7 +37,7 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
-      domain_file: ${MAIN_DIR}/mer_domains/rivers/HGT.json
+      domain_file: ${MAIN_DIR}/mer_domains/rivers/ISO.json
 
   - action: SetDepth
     description: |
@@ -61,18 +50,6 @@ actions:
       max_lat: 45.75
       value: 3.
       deeper_than: 3.
-
-  - action: SetDepth
-    description: |
-      Fix some cells near Dragonja river mouth
-    where: slice
-    args:
-      min_lon: 13.73802
-      max_lon: 13.75677
-      min_lat: 45.56198
-      max_lat: 45.56719
-      value: 3.
-      deeper_than: 5
 
   - action: DigChannel
     description: Open a channel near to Punta Spigolo
@@ -89,13 +66,6 @@ actions:
     description: Remove the water cells on the boundary that are close to land
     args:
       n_cells: 3
-
-  - action: WriteBlankTiles
-    description: Write a list of tiles that do not contain water
-    args:
-      file_name: data.exch2_HGT
-      size_tiles_lon: 24
-      size_tiles_lat: 22
 
 filters:
   - filter: RemoveStagnations

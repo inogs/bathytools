@@ -1,0 +1,101 @@
+---
+name: PAN
+
+domain:
+  minimum_latitude: 38.536459043363
+  maximum_latitude: 38.744792393472
+  minimum_longitude: 14.984375604219
+  maximum_longitude: 15.192708943093
+  resolution: 0.001041666667
+  minimum_h_factor: 0.2
+  vertical_levels:
+    minimum_depth: 0.0
+    maximum_depth: 2500.0
+    first_layer_thickness: 1
+
+
+bathymetry:
+  kind: "EMODnet"
+
+
+actions:
+  - action: SetDepth
+    description: |
+      Set the depth of all the cells that are shallower than 3 meters to exactly
+      3 meters. We believe that this should guarantee a better behaviour
+      around the coasts.
+    where: everywhere
+    args:
+      value: 3.
+      shallower_than: 3.
+
+  - action: SetDepth
+    description: |
+      Fix some cells south of Panarea
+    where: slice
+    args:
+      min_lon: 15.06615
+      max_lon: 15.0724
+      min_lat: 38.61927
+      max_lat: 38.62656
+      value: 50.
+      deeper_than: 80.
+
+  - action: SetDepth
+    description: |
+      Fix some cells west of Panarea
+    where: slice
+    args:
+      min_lon: 15.05
+      max_lon: 15.055
+      min_lat: 38.628
+      max_lat: 38.64
+      value: 30.
+      deeper_than: 80.
+
+  - action: SetDepth
+    description: |
+      Fix some cells west of Basiluzzo Island
+    where: slice
+    args:
+      min_lon: 15.10
+      max_lon: 15.11
+      min_lat: 38.658
+      max_lat: 38.667
+      value: 75.
+      deeper_than: 100.
+
+  - action: SetDepth
+    description: |
+      Fix some cells east of Lisca Bianca Island
+    where: slice
+    args:
+      min_lon: 15.118
+      max_lon: 15.1214
+      min_lat: 38.636
+      max_lat: 38.644
+      value: 120.
+      deeper_than: 150.
+
+  - action: RemoveDetachedCells
+    description: Keep only the biggest connected component
+
+  - action: DigChannel
+    description: Open a channel to separate Lisca Bianca and Bottaro islands
+    args:
+      start_point:
+        lat: 38.63698
+        lon: 15.11302
+      end_point:
+        lat: 38.63802
+        lon: 15.11094
+      width: 120
+
+  - action: RemoveDeepTrappedWater
+    description: Remove the water cells on the boundary that are close to land
+    args:
+      n_cells: 3
+
+filters:
+  - filter: RemoveStagnations
+    description: Removes bottom water cells surrounded by land

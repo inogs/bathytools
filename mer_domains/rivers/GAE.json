@@ -1,0 +1,13 @@
+{
+  "rivers": [
+    {
+      "id": 15,
+      "name": "Garigliano",
+      "geometry": {
+        "mouth_longitude": 13.759,
+        "mouth_latitude": 41.222,
+        "width": 200
+      }
+    }
+  ]
+}

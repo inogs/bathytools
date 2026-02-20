@@ -1,0 +1,14 @@
+{
+  "rivers": [
+    {
+      "id": 25,
+      "name": "Amato",
+      "geometry": {
+        "side": "E",
+        "stem": [
+          "7z"
+        ]
+      }
+    }
+  ]
+}
