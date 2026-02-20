@@ -8,10 +8,11 @@
           "-45z",
           "+10m"
         ],
-        "mouth_latitude": 45.72969,
-        "mouth_longitude": 13.55886,
-        "width": 200
-      }
+        "mouth_latitude": 45.729,
+        "mouth_longitude": 13.56,
+        "width": 280
+      },
+      "_comment": "Using 300 would produce larger stems"
     }
   ]
 }
