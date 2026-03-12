@@ -181,8 +181,8 @@ class DigRivers(SimpleAction):
     """
 
     @staticmethod
-    def _steam_length_to_stem(
-        steam_length: int, side: Literal["N", "S", "E", "W"]
+    def _stem_length_to_stem(
+        stem_length: int, side: Literal["N", "S", "E", "W"]
     ) -> List[Movement]:
         """
         Converts the "stem_length" parameter into a list of `Movement` objects.
@@ -194,7 +194,7 @@ class DigRivers(SimpleAction):
         its defined side.
 
         Args:
-            steam_length: The length of the river's stem measured in grid
+            stem_length: The length of the river's stem measured in grid
                 cells.
             side: The side of the grid (North, South, East, or West)
                 representing the river's origin.
@@ -204,22 +204,22 @@ class DigRivers(SimpleAction):
             direction and length.
 
         Raises:
-            ValueError: If the provided side is invalid or `steam_length` is not
+            ValueError: If the provided side is invalid or `stem_length` is not
             a positive integer.
         """
         if side not in ("N", "S", "E", "W"):
             raise ValueError(f"Invalid side: {side}")
-        if steam_length <= 0:
+        if stem_length <= 0:
             raise ValueError(
-                "Steam length must be a positive number of cell: received "
-                f"{steam_length}"
+                "Stem length must be a positive number of cell: received "
+                f"{stem_length}"
             )
         river_side = Direction(side)
 
-        output = [Movement(steam_length, river_side)]
+        output = [Movement(stem_length, river_side)]
         LOGGER.debug(
-            'Converting steam length "%s" from side "%s" to stem %s',
-            steam_length,
+            'Converting stem length "%s" from side "%s" to stem %s',
+            stem_length,
             side,
             output,
         )
@@ -441,7 +441,7 @@ class DigRivers(SimpleAction):
                     )
                 else:
                     # noinspection PyTypeChecker
-                    river_geometry["stem"] = self._steam_length_to_stem(
+                    river_geometry["stem"] = self._stem_length_to_stem(
                         river_stem["stem_length"], river_geometry["side"]
                     )
                     del river_stem["stem_length"]
