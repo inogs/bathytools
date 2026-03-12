@@ -587,9 +587,9 @@ class DigRivers(SimpleAction):
                     intervals.append((r_source.lat_indices, r_source.name))
             intervals = sorted(
                 intervals,
-                key=lambda x: x[0].start
-                if isinstance(x[0], Interval)
-                else x[0],
+                key=lambda x: (
+                    x[0].start if isinstance(x[0], Interval) else x[0]
+                ),
             )
             for (i1, r1), (i2, r2) in zip(intervals[:-1], intervals[1:]):
                 # Check for overlapping intervals or identical positions.
