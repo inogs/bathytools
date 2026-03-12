@@ -686,7 +686,9 @@ class DigRivers(SimpleAction):
             allow_broadcast=True,
         )
 
-        # Check if a side is "open", i.e., if it has at least one water cell
+        # Precompute a boolean array of cells that are already underwater
+        # (negative bathymetry). Used later to skip water cells when tracking
+        # river dig cells for intersection detection.
         b_array = bathymetry.elevation.transpose(
             "latitude", "longitude"
         ).values
