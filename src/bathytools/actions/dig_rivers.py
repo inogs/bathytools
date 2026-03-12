@@ -8,7 +8,6 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from itertools import chain
 from logging import getLogger
-from operator import attrgetter
 from operator import itemgetter
 from typing import Dict
 from typing import List
@@ -90,18 +89,18 @@ class RiverDig:
     Represents a river that will be dug into a bathymetry domain
 
     Attributes:
-        id (int): Unique identifier for the river.
-        name (str): Name of the river.
-        model (str): How the river is modelled.
-        mouth_latitude (float): Latitude of the river's mouth.
-        mouth_longitude (float): Longitude of the river's mouth.
-        width (float): Width of the river channel in meters.
-        depth (float): Depth of the river channel in meters.
-        side (Optional[Literal["N", "S", "E", "W"]]): The source side of the
-            river, specifying the direction from where the river originates
-            relative to the grid (North, South, East, West).
-        stem (Optional[list[Movement]]): Sequence of movements representing the
-            course of the river through the bathymetry grid.
+        id: Unique identifier for the river.
+        name: Name of the river.
+        model: How the river is modeled.
+        mouth_latitude: Latitude of the river's mouth.
+        mouth_longitude: Longitude of the river's mouth.
+        width: Width of the river channel in meters.
+        depth: Depth of the river channel in meters.
+        side: The source side of the river, specifying the direction from
+            where the river originates relative to the grid (North, South,
+            East, West).
+        stem: Sequence of movements representing the course of the river
+            through the bathymetry grid.
     """
 
     id: int
@@ -182,8 +181,8 @@ class DigRivers(SimpleAction):
     """
 
     @staticmethod
-    def _steam_length_to_stem(
-        steam_length: int, side: Literal["N", "S", "E", "W"]
+    def _stem_length_to_stem(
+        stem_length: int, side: Literal["N", "S", "E", "W"]
     ) -> List[Movement]:
         """
         Converts the "stem_length" parameter into a list of `Movement` objects.
@@ -195,32 +194,32 @@ class DigRivers(SimpleAction):
         its defined side.
 
         Args:
-            steam_length (int): The length of the river's stem measured in
-                grid cells.
-            side (Literal["N", "S", "E", "W"]): The side of the grid
-                (North, South, East, or West) representing the river's origin.
+            stem_length: The length of the river's stem measured in grid
+                cells.
+            side: The side of the grid (North, South, East, or West)
+                representing the river's origin.
 
         Returns:
-            List[Movement]: A single `Movement`, representing the river's stem
-            based on its direction and length.
+            A single `Movement`, representing the river's stem based on its
+            direction and length.
 
         Raises:
-            ValueError: If the provided side is invalid or `steam_length` is not
+            ValueError: If the provided side is invalid or `stem_length` is not
             a positive integer.
         """
         if side not in ("N", "S", "E", "W"):
             raise ValueError(f"Invalid side: {side}")
-        if steam_length <= 0:
+        if stem_length <= 0:
             raise ValueError(
-                "Steam length must be a positive number of cell: received "
-                f"{steam_length}"
+                "Stem length must be a positive number of cell: received "
+                f"{stem_length}"
             )
         river_side = Direction(side)
 
-        output = [Movement(steam_length, river_side)]
+        output = [Movement(stem_length, river_side)]
         LOGGER.debug(
-            'Converting steam length "%s" from side "%s" to stem %s',
-            steam_length,
+            'Converting stem length "%s" from side "%s" to stem %s',
+            stem_length,
             side,
             output,
         )
@@ -247,12 +246,12 @@ class DigRivers(SimpleAction):
         entries.
 
         Args:
-            previous_stem_value (Mapping): The existing dictionary containing
-                the stem geometry.
-            new_values (Dict): The dictionary with the latest geometry updates.
+            previous_stem_value: The existing dictionary containing the stem
+                geometry.
+            new_values: The dictionary with the latest geometry updates.
 
         Returns:
-            Dict: A combined dictionary representing the current state of the
+            A combined dictionary representing the current state of the
             stem geometry.
 
         Raises:
@@ -442,7 +441,7 @@ class DigRivers(SimpleAction):
                     )
                 else:
                     # noinspection PyTypeChecker
-                    river_geometry["stem"] = self._steam_length_to_stem(
+                    river_geometry["stem"] = self._stem_length_to_stem(
                         river_stem["stem_length"], river_geometry["side"]
                     )
                     del river_stem["stem_length"]
@@ -588,9 +587,9 @@ class DigRivers(SimpleAction):
                     intervals.append((r_source.lat_indices, r_source.name))
             intervals = sorted(
                 intervals,
-                key=lambda x: x[0].start
-                if isinstance(x[0], Interval)
-                else x[0],
+                key=lambda x: (
+                    x[0].start if isinstance(x[0], Interval) else x[0]
+                ),
             )
             for (i1, r1), (i2, r2) in zip(intervals[:-1], intervals[1:]):
                 # Check for overlapping intervals or identical positions.
@@ -605,10 +604,7 @@ class DigRivers(SimpleAction):
         return source_atlas
 
     def save_river_sources(
-        self,
-        river_sources: dict[tuple[int, str], tuple[str, Direction, list]],
-        lat_lon_shape: tuple[int, int],
-        open_side: dict[Direction, bool],
+        self, river_sources: dict[tuple[int, str], tuple[str, Direction, list]]
     ):
         """
         Saves detailed information about river sources into a JSON file and
@@ -626,12 +622,6 @@ class DigRivers(SimpleAction):
                 the values are tuples with:
                 - A `Direction` indicating the originating side of the river.
                 - A list of grid cells from which the river originates.
-            lat_lon_shape (tuple): The shape of the domain grid (number of
-                latitude cells, number of longitude cells).
-            open_side (dict): A dictionary mapping each domain side
-                (`Direction`) to a boolean value indicating whether the
-                boundary is open (True for a boundary with water) or closed
-                (if there are only land cells).
         """
         river_atlas = self.read_river_atlas(river_sources)
 
@@ -649,132 +639,6 @@ class DigRivers(SimpleAction):
         )
         with open(source_file, "w") as f:
             f.write(river_position_content + "\n")
-
-        # Create namelist files to configure river-specific open boundary
-        # conditions for the numerical model. We start by writing the function
-        # that we will use inside our routine when we have to register a river;
-        # it writes
-        def write_obj_interval(length: int, position: int) -> str:
-            return f"{length}*{position},"
-
-        obj_file_content = ""
-        for side in Direction:
-            # Determine the prefix for each line based on the boundary side.
-            if side == Direction.NORTH:
-                line_prefix = "OB_Jnorth="
-            elif side == Direction.SOUTH:
-                line_prefix = "OB_Jsouth="
-            elif side == Direction.EAST:
-                line_prefix = "OB_Ieast="
-            elif side == Direction.WEST:
-                line_prefix = "OB_Iwest="
-            else:
-                raise ValueError(f"Unexpected side: {side}")
-
-            # Calculate the total number of boundary cells for the current side.
-            if side in (Direction.NORTH, Direction.SOUTH):
-                side_length = lat_lon_shape[1]
-                other_side_length = lat_lon_shape[0]
-            else:
-                side_length = lat_lon_shape[0]
-                other_side_length = lat_lon_shape[1]
-
-            # Determine the default position for boundary cells with no rivers.
-            # For open sides, this is 1 (start of axis) or the side length
-            # (end of axis); for closed sides, this is set to 0.
-            if side in (Direction.NORTH, Direction.EAST):
-                no_river_position = other_side_length if open_side[side] else 0
-            else:
-                no_river_position = 1 if open_side[side] else 0
-
-            # Define helper functions to retrieve the river's position on the
-            # side and its offset (translation) with respect to the boundary.
-            if side in (Direction.NORTH, Direction.SOUTH):
-                get_side_coord = attrgetter("lon_indices")
-                get_translation = attrgetter("lat_indices")
-            else:
-                get_side_coord = attrgetter("lat_indices")
-                get_translation = attrgetter("lon_indices")
-
-            # Determine the starting position of a river source along the
-            # domain side.
-            def get_start_point(r: RiverSource):
-                side_position = get_side_coord(r)
-                if isinstance(side_position, Interval):
-                    return side_position.start
-                return side_position
-
-            # Exclude rivers that are modeled as rains
-            side_rivers = [
-                r for r in river_atlas[side] if r.model != "rain_like"
-            ]
-
-            # Sort the sources based on their starting point.
-            current_side_sources = sorted(side_rivers, key=get_start_point)
-
-            # If the side has no rivers, write a single line to assign all
-            # boundary cells to the default value (either open or closed).
-            if len(current_side_sources) == 0:
-                obj_file_content += (
-                    line_prefix
-                    + write_obj_interval(side_length, no_river_position)
-                    + "\n"
-                )
-                continue
-
-            # Begin writing the line for the current domain side.
-            obj_file_content += f"{line_prefix}"
-
-            # Track where the previous river ended. At the start, this is set
-            # to 0.
-            previous_position = 0
-            for river in current_side_sources:
-                river_start = get_start_point(river)
-                river_translation = get_translation(river)
-                river_interval = get_side_coord(river)
-                # Ensure the river's position along the side is an interval;
-                # convert it to an interval if it's a single integer.
-                if not isinstance(river_interval, Interval):
-                    river_interval = Interval(
-                        river_interval, river_interval + 1
-                    )
-
-                # Calculate the number of grid cells occupied by the current
-                # river.
-                river_range = river_interval.end - river_start
-
-                # If there is a gap between the current river and the previous
-                # one, add it to the line being written.
-                if river_start != previous_position:
-                    obj_file_content += write_obj_interval(
-                        river_start - previous_position, no_river_position
-                    )
-
-                # Update the ending position for the next river.
-                previous_position = river_interval.end
-
-                # Write the cells occupied by the current river. Add "+ 1" to
-                # the translation for Fortran's 1-based indexing.
-                obj_file_content += write_obj_interval(
-                    river_range, river_translation + 1
-                )
-
-            # If the end of the side has not been reached, fill the remaining
-            # cells with the "no_river" value.
-            if previous_position != side_length:
-                obj_file_content += write_obj_interval(
-                    side_length - previous_position, no_river_position
-                )
-
-            # Finalize and close the line for this side.
-            obj_file_content += "\n"
-
-        obj_file = (
-            self._output_appendix.output_dir / "rivers_open_boundaries.txt"
-        )
-        LOGGER.info("Writing rivers open boundaries to %s", obj_file)
-        with open(obj_file, "w") as f:
-            f.write(obj_file_content)
 
     def __call__(self, bathymetry: xr.DataArray) -> xr.DataArray:
         """
@@ -822,19 +686,14 @@ class DigRivers(SimpleAction):
             allow_broadcast=True,
         )
 
-        # Check if a side is "open", i.e., if it has at least one water cell
+        # Precompute a boolean array of cells that are already underwater
+        # (negative bathymetry). Used later to skip water cells when tracking
+        # river dig cells for intersection detection.
         b_array = bathymetry.elevation.transpose(
             "latitude", "longitude"
         ).values
 
         water_cells = b_array < 0
-        open_sides = {
-            Direction.SOUTH: bool(np.any(water_cells[0, :])),
-            Direction.NORTH: bool(np.any(water_cells[-1, :])),
-            Direction.WEST: bool(np.any(water_cells[:, 0])),
-            Direction.EAST: bool(np.any(water_cells[:, -1])),
-        }
-        LOGGER.debug("Open sides: %s", open_sides)
 
         # Filter rivers to include only those within the domain, ensuring each
         # has the required side and stem data for successful processing.
@@ -1008,6 +867,6 @@ class DigRivers(SimpleAction):
                 },
             ),
         )
-        self.save_river_sources(river_sources, b_array.shape, open_sides)
+        self.save_river_sources(river_sources)
 
         return bathymetry
