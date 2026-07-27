@@ -736,15 +736,21 @@ class DigRivers(SimpleAction):
         LOGGER.debug("%s rivers must be dug", len(rivers_inside))
 
         river_sources = {}
+        river_names: dict[int, str] = {}
 
         additional_variables = self._output_appendix.get_additional_variables()
         if "rivers" in additional_variables:
             river_cells = additional_variables["rivers"].values
         else:
             river_cells = np.zeros(b_array.shape, dtype=int)
+        if "river_sources" in additional_variables:
+            river_sources_map = additional_variables["river_sources"].values
+        else:
+            river_sources_map = np.zeros(b_array.shape, dtype=int)
 
         for river in rivers_inside:
             LOGGER.debug("Digging river %s (id = %s)", river.name, river.id)
+            river_names[river.id] = river.name
             river_lat = river.mouth_latitude
             river_lon = river.mouth_longitude
 
@@ -850,6 +856,8 @@ class DigRivers(SimpleAction):
                 Direction(river.side),
                 current_river_sources,
             )
+            for src_lat, src_lon in current_river_sources:
+                river_sources_map[src_lat, src_lon] = river.id
 
             river_dig.fill_dig_mask(
                 start_indices=(river_lat_index, river_lon_index),
@@ -866,6 +874,20 @@ class DigRivers(SimpleAction):
                     "longitude": bathymetry.longitude,
                 },
             ),
+        )
+        self._output_appendix.add_additional_variable(
+            "river_sources",
+            xr.DataArray(
+                data=river_sources_map,
+                dims=["latitude", "longitude"],
+                coords={
+                    "latitude": bathymetry.latitude,
+                    "longitude": bathymetry.longitude,
+                },
+            ),
+        )
+        self._output_appendix.add_meshmask_metadata(
+            "river_names", json.dumps(river_names)
         )
         self.save_river_sources(river_sources)
 
