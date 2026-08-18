@@ -26,9 +26,26 @@ actions:
       around the coasts.
     where: everywhere
     args:
-      value: 3.
-      shallower_than: 3.
+      value: 2.
+      shallower_than: 2.
 
+  - action: StitchVeniceLagoon
+    description: First test for Venice Lagoon
+    args:
+      input_files:
+        file1: /home/fabio/PhD/PhD_Cafè/VeniceLagoon/lagoons_datasets/Batimetria_2003CORILA_shift_40-15.csv
+        file2: /home/fabio/PhD/PhD_Cafè/VeniceLagoon/lagoons_datasets/Batimetria_2003CORILA_shift_40-15.csv
+      input_crs:
+        file1: EPSG:3004
+        file2: EPSG:3004
+      threshold: 0.5
+      min_depth: 2.0
+      window:
+        min_lon: 12.104167294929702
+        max_lon: 12.90
+        min_lat: 45.00
+        max_lat: 45.70
+  
   - action: SetDepth
     description: |
       Extend land under Susac island since it is near the southern boundary
@@ -154,29 +171,22 @@ actions:
       polygon_name: Laguna_Grado_Marano
       value: 0.
 
-  - action: SetDepth
-    description: |
-      Fix some cells near the western part of the G-M lagoon
-    where: slice
+  - action: StitchMaranoLagoon
+    description: First test for Grado-Marano Lagoon
     args:
-      min_lon: 13.29
-      max_lon: 13.32
-      min_lat: 45.69
-      max_lat: 45.762
-      value: 3.
-      deeper_than: 3.
-
-  - action: SetDepth
-    description: |
-      Fix some cells near the eastern part of the G-M lagoon
-    where: slice
-    args:
-      min_lon: 13.51
-      max_lon: 13.54
-      min_lat: 45.73
-      max_lat: 45.75
-      value: 3.
-      deeper_than: 3.
+      input_files:
+        file1: /home/fabio/PhD/PhD_Cafè/VeniceLagoon/lagoons_datasets/Channels_bathymetry.csv
+        file2: /home/fabio/PhD/PhD_Cafè/VeniceLagoon/lagoons_datasets/Planes_bathymetry_4326.csv
+      input_crs:
+        file1: EPSG:3004
+        file2: EPSG:4326
+      threshold: 0.5
+      min_depth: 2.0
+      window:
+        min_lon: 13.000
+        max_lon: 13.485
+        min_lat: 45.650
+        max_lat: 45.780
 
   - action: RemoveDetachedCells
     description: Keep only the biggest connected component
@@ -185,22 +195,10 @@ actions:
     description: Dig the stems for the rivers
     args:
       main_file: ${MAIN_DIR}/mer_domains/rivers/main.json
+      domain_file: ${MAIN_DIR}/mer_domains/rivers/NAD.json
 
-  - action: SetDepth
-    description: |
-      Reduce land in promontory near right corner before RemoveDeepTrappedWater
-    where: slice
-    args:
-      min_lon: 17.74
-      max_lon: 17.775
-      min_lat: 42.763
-      max_lat: 42.769
-      value: 14.
-
-  - action: RemoveDeepTrappedWater
+  - action: RemoveTrappedWater
     description: Remove the water cells on the boundary that are close to land
-    args:
-      n_cells: 3
 
   - action: SetDepth
     description: |
@@ -212,23 +210,17 @@ actions:
       min_lat: 44.96615
       max_lat: 45.05
       value: 6.0
-      report_involved_cells:
-        table: "rivers"
-        value: 64
 
   - action: SetDepth
     description: |
       Adding southern Po stem
     where: slice
     args:
-      min_lon: 12.3984
-      max_lon: 12.405
-      min_lat: 44.77
+      min_lon: 12.38
+      max_lon: 12.39
+      min_lat: 44.767
       max_lat: 44.96615
       value: 6.0
-      report_involved_cells:
-        table: "rivers"
-        value: 64
 
   - action: WriteBlankTiles
     description: Write a list of tiles that do not contain water
