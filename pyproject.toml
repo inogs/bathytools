@@ -7,23 +7,21 @@ readme = "README.md"
 packages = [{include = "bathytools", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
-bitsea = {git = "https://github.com/inogs/bit.sea.git", rev = "master"}
+python = "^3.11" # orig = ^3.10
+bitsea = { git = "https://github.com/inogs/bit.sea.git", branch = "master" }
 pyyaml = "^6.0.2"
-numpy = "^2.1.1"
+numpy = "2.1.1"
 matplotlib = "^3.10.0"
-xarray = ">=2025.1.1"
+xarray = "^2025.1.1"
 scipy = "^1.15.2"
-mitgcmutils = ">0.2.1"
-pydap = "^3.5.8"
-jinja2 = "^3.1.6"
-geographiclib = "^2.1"
-numba = ">0.62.1"
+mitgcmutils = "^0.2.1"
+pandas = "^2.0"
+geopandas = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^4.5"
-deptry = ">0.21.2"
-pytest = "^9.0.3"
+pre-commit = "^3.8.0"
+deptry = "^0.21.2"
+pytest = "^8.3.4"
 
 [tool.poetry.group.tools]
 optional = true
@@ -44,7 +42,3 @@ exclude = ["tests/", "examples/"]
 [tool.deptry.package_module_name_map]
 netcdf4 = "netCDF4"
 mitgcmutils = "MITgcmutils"
-openpyxl = "openpyxl"
-
-[tool.deptry.per_rule_ignores]
-"DEP002" = ["pydap", "jinja2", "numba", "geographiclib"]
