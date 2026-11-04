@@ -7,12 +7,10 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from dataclasses import dataclass
 from itertools import chain
+from itertools import pairwise
 from logging import getLogger
 from operator import itemgetter
-from typing import Dict
-from typing import List
 from typing import Literal
-from typing import Optional
 
 import numpy as np
 import xarray as xr
@@ -111,8 +109,8 @@ class RiverDig:
     mouth_longitude: float
     width: float
     depth: float
-    side: Optional[Literal["N", "S", "E", "W"]] = None
-    stem: Optional[list[Movement]] = None
+    side: Literal["N", "S", "E", "W"] | None = None
+    stem: list[Movement] | None = None
 
 
 @dataclass
@@ -183,7 +181,7 @@ class DigRivers(SimpleAction):
     @staticmethod
     def _stem_length_to_stem(
         stem_length: int, side: Literal["N", "S", "E", "W"]
-    ) -> List[Movement]:
+    ) -> list[Movement]:
         """
         Converts the "stem_length" parameter into a list of `Movement` objects.
 
@@ -227,8 +225,8 @@ class DigRivers(SimpleAction):
 
     @staticmethod
     def _update_stem_value(
-        previous_stem_value: Mapping, new_values: Dict
-    ) -> Dict:
+        previous_stem_value: Mapping, new_values: dict
+    ) -> dict:
         """
         Updates the geometry dictionary with the most recent description of the
         river's stem.
@@ -278,7 +276,7 @@ class DigRivers(SimpleAction):
         description: str,
         output_appendix: OutputAppendix,
         main_file: str,
-        domain_file: Optional[str] = None,
+        domain_file: str | None = None,
     ):
         super().__init__(name, description, output_appendix=output_appendix)
         self._main_file_path = read_path(main_file)
@@ -407,10 +405,10 @@ class DigRivers(SimpleAction):
 
         # Generate a `RiverDig` instance for each river using the consolidated
         # geometry and stem data, then store these in a list.
-        river_digs: List[RiverDig] = []
-        for river_id, river_name in rivers_dig_data:
+        river_digs: list[RiverDig] = []
+        for (river_id, river_name), river_dig_data in rivers_dig_data.items():
             river_model, river_enabled, river_geometry, river_stem = (
-                rivers_dig_data[(river_id, river_name)]
+                river_dig_data
             )
 
             # If _update_stem_value correctly did its job, this should never
@@ -591,7 +589,7 @@ class DigRivers(SimpleAction):
                     x[0].start if isinstance(x[0], Interval) else x[0]
                 ),
             )
-            for (i1, r1), (i2, r2) in zip(intervals[:-1], intervals[1:]):
+            for (i1, r1), (i2, r2) in pairwise(intervals):
                 # Check for overlapping intervals or identical positions.
                 overlap = isinstance(i1, Interval) and i1.intersect(i2)
                 overlap = overlap or i1 == i2

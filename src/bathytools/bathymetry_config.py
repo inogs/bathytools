@@ -23,16 +23,12 @@ class InvalidBathymetryConfigFile(Exception):
     is invalid.
     """
 
-    pass
-
 
 class ConfigFieldMissingError(InvalidBathymetryConfigFile):
     """
     An error that is raised when a mandatory field is missing in the YAML
     config file
     """
-
-    pass
 
 
 class InvalidActionDescription(InvalidBathymetryConfigFile):
@@ -41,8 +37,6 @@ class InvalidActionDescription(InvalidBathymetryConfigFile):
     YAML config file is invalid.
     """
 
-    pass
-
 
 class InvalidFilterDescription(InvalidBathymetryConfigFile):
     """
@@ -50,15 +44,11 @@ class InvalidFilterDescription(InvalidBathymetryConfigFile):
     YAML config file is invalid.
     """
 
-    pass
-
 
 class InvalidBathymetrySourceError(Exception):
     """
     An error that is raised when an invalid bathymetry source is specified
     """
-
-    pass
 
 
 @dataclass
@@ -124,10 +114,9 @@ class DomainGeometry:
             if callable(getattr(target, attr_name)):
                 return False
             # Avoid properties
-            if isinstance(getattr(type(target), attr_name, None), property):
-                return False
-
-            return True
+            return not isinstance(
+                getattr(type(target), attr_name, None), property
+            )
 
         attributes = [attr for attr in dir(self) if is_data_attribute(attr)]
 
@@ -172,7 +161,7 @@ class DomainGeometry:
         raw_number = (
             self.maximum_longitude - self.minimum_longitude
         ) / self.resolution
-        return int(round(raw_number))
+        return round(raw_number)
 
     @property
     def n_y(self):
@@ -188,7 +177,7 @@ class DomainGeometry:
         raw_number = (
             self.maximum_latitude - self.minimum_latitude
         ) / self.resolution
-        return int(round(raw_number))
+        return round(raw_number)
 
     @property
     def longitude(self):
@@ -303,8 +292,8 @@ class BathymetryConfig:
         self.name = name
         self.domain = domain
         self.bathymetry_source = bathymetry_source
-        self.actions = tuple(actions) if actions is not None else tuple()
-        self.filters = tuple(filters) if filters is not None else tuple()
+        self.actions = tuple(actions) if actions is not None else ()
+        self.filters = tuple(filters) if filters is not None else ()
 
     @staticmethod
     def from_yaml(file_path: PathLike):

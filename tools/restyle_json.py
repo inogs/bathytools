@@ -7,10 +7,7 @@ from numbers import Real
 from operator import attrgetter
 from pathlib import Path
 from typing import Any
-from typing import Dict
-from typing import List
 from typing import Literal
-from typing import Tuple
 
 from bitsea.utilities.argparse_types import dir_to_be_created_if_not_exists
 from bitsea.utilities.argparse_types import existing_dir_path
@@ -70,7 +67,7 @@ class RiverGeometry:
     side: Literal["N", "S", "E", "W"] | None = None
     width: int | None = None
     depth: int | None = None
-    stem: List[str] | None = None
+    stem: list[str] | None = None
     stem_length: Real | None = None
 
     unique_side: bool = True
@@ -81,7 +78,7 @@ class RiverGeometry:
         return RiverGeometry(**raw_dict)
 
     def to_json(self) -> OrderedDict[str, float | Literal["N", "S", "E", "W"]]:
-        data: List[Tuple[str, float | Literal["N", "S", "E", "W"]]] = [
+        data: list[tuple[str, float | Literal["N", "S", "E", "W"]]] = [
             ("mouth_longitude", self.mouth_longitude),
             ("mouth_latitude", self.mouth_latitude),
         ]
@@ -126,11 +123,12 @@ class RiverGeometry:
             self.stem_length = stem_length
             return
 
-        if self.stem is not None or self.stem_length is not None:
-            if self.stem != stem and self.stem_length != stem_length:
-                self.unique_stem_desc = False
-                self.stem = None
-                self.stem_length = None
+        if (self.stem is not None or self.stem_length is not None) and (
+            self.stem != stem and self.stem_length != stem_length
+        ):
+            self.unique_stem_desc = False
+            self.stem = None
+            self.stem_length = None
 
     def update(self, raw_dict):
         if "side" in raw_dict:
@@ -180,7 +178,7 @@ class River:
     runoff_factor: float | None = None
 
     @staticmethod
-    def from_dict(raw_river: Dict[str, Any]):
+    def from_dict(raw_river: dict[str, Any]):
         river_id = int(raw_river["id"])
         name = raw_river["name"]
         model = raw_river["model"]
@@ -200,7 +198,7 @@ class River:
         )
 
     def to_json(self) -> OrderedDict[str, Any]:
-        data: List[Tuple[str, Any]] = [
+        data: list[tuple[str, Any]] = [
             ("id", self.id),
             ("name", self.name),
         ]
@@ -227,10 +225,10 @@ class River:
 @dataclass
 class MainFile:
     variables: OrderedDict[str, Variable]
-    profiles: Dict[str, OrderedDict[str, float]]
-    geometry_defaults: Dict[str, int]
-    rivers: List[River]
-    physical_defaults: Dict[str, Real] = field(
+    profiles: dict[str, OrderedDict[str, float]]
+    geometry_defaults: dict[str, int]
+    rivers: list[River]
+    physical_defaults: dict[str, Real] = field(
         default_factory=lambda: OrderedDict(
             [
                 ("average_temperature", 10),
@@ -240,7 +238,7 @@ class MainFile:
         )
     )
 
-    def to_json(self) -> OrderedDict[str, Dict]:
+    def to_json(self) -> OrderedDict[str, dict]:
         data = [
             ("variables", self.variables),
             ("bgc_profiles", self.profiles),
@@ -261,7 +259,7 @@ class MainFile:
 @dataclass
 class GeometryUpdate:
     side: Literal["N", "S", "E", "W"] | None = None
-    stem: List["float"] | None = None
+    stem: list["float"] | None = None
 
     @staticmethod
     def from_dict(raw_dict):
@@ -294,10 +292,10 @@ class RiverUpdate:
 
 @dataclass
 class DomainSpecificFile:
-    rivers: List[River]
+    rivers: list[River]
 
     @staticmethod
-    def from_dict(dict_content: Dict, main_file: MainFile, domain: Domain):
+    def from_dict(dict_content: dict, main_file: MainFile, domain: Domain):
         enabled_rivers = dict_content["enabled_only"]
 
         rivers = {}
@@ -423,10 +421,10 @@ def read_main_file(main_file_path) -> MainFile:
     for var_name, var_content in data["variables"].items():
         current_var = Variable(name=var_name, **var_content)
         variables_unsorted[var_name] = current_var
-    var_names = sorted(list(var_name for var_name in variables_unsorted))
+    var_names = sorted(var_name for var_name in variables_unsorted)
     variables = OrderedDict([(v, variables_unsorted[v]) for v in var_names])
 
-    profiles: Dict[str : Dict[str, float]] = {}
+    profiles: dict[str : dict[str, float]] = {}
     for profile_name, raw_profile_content in data["defaults"][
         "profiles"
     ].items():
@@ -434,13 +432,13 @@ def read_main_file(main_file_path) -> MainFile:
             v_name: float(v_values)
             for v_name, v_values in raw_profile_content.items()
         }
-        profile_vars = sorted(list(v for v in profile_content_unsorted))
+        profile_vars = sorted(v for v in profile_content_unsorted)
         profile_content = OrderedDict(
             [(v, profile_content_unsorted[v]) for v in profile_vars]
         )
         profiles[profile_name] = profile_content
 
-    geometry_defaults: Dict[str, int] = {}
+    geometry_defaults: dict[str, int] = {}
     for parameter, raw_parameter_content in data["defaults"][
         "geometry"
     ].items():

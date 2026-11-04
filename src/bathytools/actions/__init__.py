@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from abc import ABC
 from abc import abstractmethod
+from collections.abc import Callable
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
-from typing import Callable
 from warnings import warn
 
 import numpy as np
@@ -196,7 +196,7 @@ class MultipleChoiceAction(Action, ABC):
         else:
             choice = init_dict[choice_field]
 
-        valid_choices = sorted(tuple(cls.get_choices().keys()))
+        valid_choices = sorted(cls.get_choices().keys())
         if choice not in valid_choices:
             valid_choices_str = ", ".join([f'"{v}"' for v in valid_choices])
             raise ValueError(
@@ -313,7 +313,7 @@ class CellBroadcastAction(MultipleChoiceAction, ABC):
                 }
                 if involved_cells["dtype"] not in dtype_from_str:
                     allowed = ", ".join(
-                        ['"' + f + '"' for f in dtype_from_str.keys()]
+                        ['"' + f + '"' for f in dtype_from_str]
                     )
                     raise ValueError(
                         'The "dtype" field of the "report_involved_cells" '

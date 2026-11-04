@@ -2,7 +2,6 @@ from os import PathLike
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
-from typing import Dict
 
 import xarray as xr
 
@@ -28,8 +27,8 @@ class OutputAppendix:
                 be stored.
         """
         self._output_dir = Path(output_dir)
-        self._meshmask_metadata: Dict[str:Any] = {}
-        self._additional_vars: Dict[str : xr.DataArray] = {}
+        self._meshmask_metadata: dict[str:Any] = {}
+        self._additional_vars: dict[str : xr.DataArray] = {}
 
     @property
     def output_dir(self) -> Path:

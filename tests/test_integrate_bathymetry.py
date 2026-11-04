@@ -7,7 +7,7 @@ def test_refine_array1():
     a = np.linspace(0, 10, 11)
     b = np.linspace(0, 5, 6) + 1.2
 
-    v, v_indices = refine_array(b, a)
+    v, _v_indices = refine_array(b, a)
 
     expected_v = np.empty((len(a) + len(b),), dtype=b.dtype)
     expected_v[0] = 0.0

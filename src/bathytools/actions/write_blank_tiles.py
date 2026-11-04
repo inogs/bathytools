@@ -53,7 +53,14 @@ TEMPLATE = """
 
 
 class WriteBlankTiles(SimpleAction):
-    """ """
+    """
+    Writes the list of the MITgcm tiles that contain only land cells.
+
+    Given the size of the tiles, this action writes an EXCH2 configuration
+    file (named `file_name`) containing the `blankList` of the land tiles,
+    and also saves the same list into a "blanks.txt" file inside the
+    output directory. The bathymetry is returned unchanged.
+    """
 
     def __init__(
         self,
