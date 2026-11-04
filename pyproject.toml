@@ -48,3 +48,9 @@ openpyxl = "openpyxl"
 
 [tool.deptry.per_rule_ignores]
 "DEP002" = ["pydap", "jinja2", "numba", "geographiclib"]
+
+[tool.ruff.lint.isort]
+# Keep the style enforced by reorder-python-imports: one import per line
+force-single-line = true
+lines-after-imports = 2
+order-by-type = false

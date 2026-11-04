@@ -200,9 +200,9 @@ def write_output_files(
 
     # Prepare the compression value for the encoding of the netCDF file
     if compression_level == 0:
-        compression = dict(zlib=False)
+        compression = {"zlib": False}
     else:
-        compression = dict(zlib=True, complevel=compression_level)
+        compression = {"zlib": True, "complevel": compression_level}
 
     bathy_file = output_dir / "bathy.bin"
     LOGGER.info('Writing bathymetry to "%s"', bathy_file)

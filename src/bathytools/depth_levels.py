@@ -35,7 +35,7 @@ class DepthLevels:
         self._faces.setflags(write=False)
 
     def __repr__(self):
-        return f"DepthLevels(levels={repr(self._levels)})"
+        return f"DepthLevels(levels={self._levels!r})"
 
     def __str__(self):
         return str(self._levels)

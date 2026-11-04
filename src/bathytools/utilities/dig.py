@@ -186,7 +186,7 @@ class Movement:
 
         return Movement(value, direction)
 
-    def copy(self, length: int = None, direction: Direction = None):
+    def copy(self, length: int | None = None, direction: Direction = None):
         """Create a copy of this Movement with modified attributes."""
         if length is None:
             length = self.length
